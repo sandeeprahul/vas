@@ -1,0 +1,105 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class SideMenu extends StatefulWidget {
+  const SideMenu({super.key});
+
+  @override
+  State<SideMenu> createState() => _SideMenuState();
+}
+
+class _SideMenuState extends State<SideMenu> {
+  String? token;
+  String? employeeId;
+  String? name;
+  String? roleId;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadUserDetails();
+  }
+
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString("token");
+      employeeId = prefs.getString("employeeId");
+      name = prefs.getString("name");
+      roleId = prefs.getString("roleId");
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+           UserAccountsDrawerHeader(
+
+            decoration: const BoxDecoration(color: Colors.blue),
+            accountName: Text(name!, style: const TextStyle(fontSize: 18)),
+            accountEmail: null,
+            currentAccountPicture: const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, size: 40, color: Colors.blue),
+            ),
+          ),
+          _buildExpandableTile("Dashboard (1)", [
+            _buildSubMenuItem("Post Data Testing", Icons.arrow_right, () {})
+          ]),
+          _buildExpandableTile("Settings (1)", [
+            _buildSubMenuItem("Master Data", Icons.arrow_right, () {
+              Navigator.pop(context); // Close drawer
+              Navigator.pushNamed(context, '/master_data_screen'); // N
+            })
+          ]),
+          _buildExpandableTile("Management (1)",
+              [_buildSubMenuItem("Change Password", Icons.arrow_right, () {})]),
+          _buildExpandableTile("Cases (6)", [
+            _buildSubMenuItem("Login Report Self", Icons.arrow_right, () {}),
+            _buildSubMenuItem("Live Case v3", Icons.arrow_right, () {}),
+            _buildSubMenuItem("Manage Trip v2", Icons.arrow_right, () {
+              Navigator.pop(context); // Close drawer
+              Navigator.pushNamed(context, '/manage_trip'); // N
+            }),
+            _buildSubMenuItem("Live Case v32", Icons.arrow_right, () {}),
+            _buildSubMenuItem("Case Registration v2", Icons.arrow_right, () {}),
+            _buildSubMenuItem("Case Registration New", Icons.arrow_right, () {
+              Navigator.pop(context); // Close drawer
+              Navigator.pushNamed(context, '/case_registration_new'); // N
+            }),
+          ]),
+          ListTile(
+            title: const Text("FAQ"),
+            onTap: () {},
+          ),
+          ListTile(
+            title: const Text("Logout", style: TextStyle(color: Colors.red)),
+            leading: const Icon(Icons.logout, color: Colors.red),
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExpandableTile(String title, List<Widget> children) {
+    return ExpansionTile(
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+      leading: const Icon(Icons.arrow_forward_ios, size: 18),
+      children: children,
+    );
+  }
+
+  Widget _buildSubMenuItem(String title, IconData icon, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon, size: 18,color: Colors.transparent,),
+      title: Text(title),
+      onTap: onTap,
+    );
+  }
+}

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/screens/dashboard_page.dart';
-import '../controllers/home_master_data_controller.dart';
 import '../widgets/side_menu.dart';
 
 class HomeScreen extends StatefulWidget {

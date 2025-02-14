@@ -31,7 +31,7 @@ class RoundedCornerCardWidget extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       // width: 140,
       decoration: BoxDecoration(
-        color: Colors.blue.shade200,
+        color: Colors.blue,
 
         // gradient: LinearGradient(colors: [gradientStart, gradientEnd]),
         borderRadius: borderRadius,

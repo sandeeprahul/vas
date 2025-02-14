@@ -41,7 +41,7 @@ class _SideMenuState extends State<SideMenu> {
            UserAccountsDrawerHeader(
 
             decoration: const BoxDecoration(color: Colors.blue),
-            accountName: Text(name!, style: const TextStyle(fontSize: 18)),
+            accountName: Text(name??'', style: const TextStyle(fontSize: 18)),
             accountEmail: null,
             currentAccountPicture: const CircleAvatar(
               backgroundColor: Colors.white,

@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/manage_trip': (context) => ManageTripScreen(), // Define route
         '/case_registration_new': (context) => CaseRegistrationNewScreen(), // Define route
-        '/master_data_screen': (context) => const MasterDataScreen(), // Define route
+        '/master_data_screen': (context) =>  MasterDataScreen(), // Define route
       },
     ));
   }

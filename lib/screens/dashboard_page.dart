@@ -7,7 +7,6 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/widgets/rounded_corner_card_widget.dart';
 
-import '../controllers/home_master_data_controller.dart';
 import '../widgets/time_summary_card_widget.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -16,8 +15,7 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  final HomeMasterDataController homeController =
-      Get.put(HomeMasterDataController());
+
 
   String? token;
   String? employeeId;
@@ -51,28 +49,7 @@ class _DashboardPageState extends State<DashboardPage> {
             const SizedBox(
               height: 16,
             ),
-            Obx(() {
-              return homeController.isLoading.value
-                  ? Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: LinearProgressIndicator(
-                          value: homeController.progress.value,
-                          minHeight: 8,
-                          backgroundColor: Colors.grey[300],
-                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.blueAccent),
-                        ),
-                      ),
-                      Text(
-                          "${(homeController.progress.value * 100).toStringAsFixed(0)}% Completed",
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                    ],
-                  )
-                  : const SizedBox.shrink();
-            }),
+
             const SizedBox(
               height: 16,
             ),
@@ -112,10 +89,10 @@ class _DashboardPageState extends State<DashboardPage> {
                           const SizedBox(
                             width: 16,
                           ),
-                          CircleAvatar(
-                            backgroundColor: Colors.blue.shade100,
+                          const CircleAvatar(
+                            backgroundColor: Colors.blue,
                             radius: 38,
-                            child: const Icon(
+                            child: Icon(
                               Icons.person,
                               size: 38,
                               color: Colors.white,
@@ -142,11 +119,12 @@ class _DashboardPageState extends State<DashboardPage> {
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(28),
-                                  color: Colors.blue.shade100, //#dcdee7
+                                  color: Colors.blue, //#dcdee7
                                 ),
                                 child: const Text(
                                   "  BR01GP0033  ",
                                   style: TextStyle(
+                                    color: Colors.white,
                                     fontSize: 16,
                                     fontWeight:
                                         FontWeight.bold, /*color: Colors.black*/

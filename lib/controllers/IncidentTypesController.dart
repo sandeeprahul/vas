@@ -1,0 +1,41 @@
+import 'package:get/get.dart';
+import '../services/api_service.dart';
+import '../shared_pref_helper.dart';
+
+class IncidentTypesController extends GetxController {
+  final ApiService apiService = ApiService();
+  final RxString lastSyncedTime = 'Never'.obs;
+  final RxBool isLoading = false.obs;
+  final RxList<dynamic> incidentTypes = [].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadLastSyncedData();
+  }
+
+  Future<void> loadLastSyncedData() async {
+    lastSyncedTime.value = await SharedPrefHelper.getLastSyncedTime('/GetIncidentTypes') ?? "Never";
+    incidentTypes.value = await SharedPrefHelper.getApiData('/GetIncidentTypes') ?? [];
+  }
+
+  Future<void> syncIncidentTypes() async {
+    isLoading.value = true;
+
+    try {
+      var response = await apiService.getRequestForMaster('/GetIncidentTypes');
+      if (response != null && response is List) {
+        await SharedPrefHelper.saveLastSyncedTime('/GetIncidentTypes');
+        await SharedPrefHelper.saveApiData('/GetIncidentTypes', response);
+        lastSyncedTime.value = DateTime.now().toString();
+        incidentTypes.value = response;
+      } else {
+        print("Error: Expected a List but got something else!");
+      }
+    } catch (e) {
+      print("Error syncing incident types: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}

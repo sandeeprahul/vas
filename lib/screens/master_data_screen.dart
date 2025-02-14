@@ -1,9 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vas/controllers/home_master_data_controller.dart';
+
+import '../controllers/DiseaseTypesController.dart';
+import '../controllers/DriversController.dart';
+import '../controllers/HospitalsController.dart';
+import '../controllers/IncidentSubTypesController.dart';
+import '../controllers/IncidentTypesController.dart';
+import '../controllers/PatientTypesController.dart';
+import '../controllers/PaymentMethodsController.dart';
+import '../controllers/StandardRemarksController.dart';
+import '../controllers/blocks_controller.dart';
+import '../controllers/denial_types_controller.dart';
+import '../controllers/event_types_controller.dart';
+import 'package:get/get.dart';
+import '../controllers/event_types_controller.dart';
+import '../controllers/denial_types_controller.dart';
+import '../controllers/blocks_controller.dart';
+import '../controllers/general_settings_controller.dart';
+import '../controllers/location_controller.dart';
+
+class MasterDataScreen extends StatelessWidget {
+  final EventTypesController eventController = Get.put(EventTypesController());
+  final DenialTypesController denialController = Get.put(DenialTypesController());
+  final BlocksController blocksController = Get.put(BlocksController());
+  final IncidentTypesController incidentTypesController = Get.put(IncidentTypesController());
+  final IncidentSubTypesController incidentSubTypesController = Get.put(IncidentSubTypesController());
+  final PatientTypesController patientTypesController = Get.put(PatientTypesController());
+  final GeneralSettingsController generalSettingsController = Get.put(GeneralSettingsController());
+  final PaymentMethodsController paymentMethodsController = Get.put(PaymentMethodsController());
+  final DiseaseTypesController diseaseTypesController = Get.put(DiseaseTypesController());
+  final StandardRemarksController standardRemarksController = Get.put(StandardRemarksController());
+  final DriversController driversController = Get.put(DriversController());
+  final HospitalsController hospitalsController = Get.put(HospitalsController());
+  final LocationsController locationsController = Get.put(LocationsController());
 
 
-class MasterDataScreen extends StatefulWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Master Data')),
+      body: ListView(
+        children: [
+          buildSyncTile("Event Types", eventController.lastSyncedTime, eventController.syncEventTypes),
+          buildSyncTile("Denial Types", denialController.lastSyncedTime, () => denialController.syncDenialTypes("USER_ID")),
+          buildSyncTile("Blocks", blocksController.lastSyncedTime, () => blocksController.syncBlocks("DISTRICT_ID", "USER_ID")),
+          buildSyncTile("Incident Types", incidentTypesController.lastSyncedTime, incidentTypesController.syncIncidentTypes),
+          buildSyncTile("Incident Subtypes", incidentSubTypesController.lastSyncedTime, incidentSubTypesController.syncIncidentSubTypes),
+          buildSyncTile("Patient Types", patientTypesController.lastSyncedTime, patientTypesController.syncPatientTypes),
+          buildSyncTile("General Settings", generalSettingsController.lastSyncedTime, () => generalSettingsController.syncGeneralSettings("USER_ID")),
+          buildSyncTile("Payment Methods", paymentMethodsController.lastSyncedTime, () => paymentMethodsController.syncPaymentMethods("USER_ID")),
+          buildSyncTile("Disease Types", diseaseTypesController.lastSyncedTime, diseaseTypesController.syncDiseaseTypes),
+          buildSyncTile("Standard Remarks", standardRemarksController.lastSyncedTime, () => standardRemarksController.syncStandardRemarks("USER_ID")),
+          buildSyncTile("Drivers", driversController.lastSyncedTime, () => driversController.syncDrivers("EMP_ID", "ZONE_ID", "BLOCK_ID")),
+          buildSyncTile("Hospitals", hospitalsController.lastSyncedTime, () => hospitalsController.syncHospitals("DEPT_ID", "ZONE_ID", "EMP_ID", 10, 1)),
+          buildSyncTile("Locations", locationsController.lastSyncedTime, () => locationsController.syncLocations("DEP_ID", "ZONE_ID", "EMP_ID", 10, 1)),
+
+        ],
+      ),
+    );
+  }
+  Widget buildSyncTile(String title, RxString lastSyncedTime, VoidCallback syncFunction) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      child: ListTile(
+        title: Text(title),
+        subtitle: Obx(() => Text("Last Synced: ${lastSyncedTime.value}")),
+        trailing: IconButton(
+          icon: Icon(Icons.sync, color: Colors.blue),
+          onPressed: syncFunction,
+        ),
+      ),
+    );
+  }
+}
+
+
+/*class MasterDataScreen extends StatefulWidget {
   const MasterDataScreen({super.key});
 
   @override
@@ -11,32 +83,9 @@ class MasterDataScreen extends StatefulWidget {
 }
 
 class _MasterDataScreenState extends State<MasterDataScreen> {
-  // Mock data for last sync timestamps
-  final Map<String, String> _lastSyncData = {
-    'General Settings': '16/06/2024 10:12:49',
-    'Event Type': '16/06/2024 10:12:50',
-    'Denial Type': '16/06/2024 10:12:50',
-    'Hospitals': '16/06/2024 10:12:50',
-    'Incident Type': '16/06/2024 10:12:58',
-  };
-
-  // Function to handle synchronization
-  void _synchronize(String dataType) {
-    setState(() {
-      // Update the last sync timestamp (mock implementation)
-      _lastSyncData[dataType] = _getCurrentTimestamp();
-    });
-    print('$dataType synchronized at ${_lastSyncData[dataType]}');
-  }
-
-  // Helper function to get the current timestamp
-  String _getCurrentTimestamp() {
-    final now = DateTime.now();
-    return '${now.day}/${now.month}/${now.year} ${now.hour}:${now.minute}:${now
-        .second}';
-  }
-
-  final HomeMasterDataController homeController = Get.find();
+  final EventTypesController eventController = Get.put(EventTypesController());
+  final DenialTypesController denialController = Get.put(DenialTypesController());
+  final BlocksController blocksController = Get.put(BlocksController());
 
   @override
   Widget build(BuildContext context) {
@@ -44,55 +93,67 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
       appBar: AppBar(
         title: const Text('Master Data'),
       ),
-      body: data(),
+      body: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+
+          itemCount: 5,
+
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+          return Container(
+            // width: 200,
+            // height: 200,
+
+            margin: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+                color: Colors.teal.shade100,
+                boxShadow: const [BoxShadow(color: Colors.black12)],
+                borderRadius: BorderRadius.circular(28)),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      boxShadow: const [BoxShadow(color: Colors.grey)],
+                      borderRadius: BorderRadius.circular(28)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Get Event Types',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Last Downloaded: \n02:00 AM",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                InkWell(
+                  // onPressed: () => _synchronize(dataType),
+                  onTap: () {},
+                  child: const Text(textAlign: TextAlign.center,'SYNCHRONIZE\nNOW'),
+                ),
+                // Text('SYNCHRONIZE'),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
-
-  Widget data() {
-    return Obx(() {
-      if (homeController.apiDownloadHistory.isEmpty) {
-        return const Center(child: Text("No history available"));
-      }
-
-      return ListView.builder(
-          itemCount: homeController.apiDownloadHistory.length,
-
-          itemBuilder: (context, index) {
-            var history = homeController.apiDownloadHistory[index];
-
-            return Card(
-              margin: const EdgeInsets.only(bottom: 16),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      history["endpoint"]!,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Last Downloaded: ${history["lastDownloaded"]}",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      // onPressed: () => _synchronize(dataType),
-                      onPressed: () {  },
-                      child: const Text('SYNCHRONIZE'),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          });
-    });
-  }
-}
+}*/

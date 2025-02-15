@@ -18,48 +18,127 @@ import '../controllers/denial_types_controller.dart';
 import '../controllers/blocks_controller.dart';
 import '../controllers/general_settings_controller.dart';
 import '../controllers/location_controller.dart';
+import '../controllers/user_controller.dart';
+import '../shared_pref_helper.dart';
 
-class MasterDataScreen extends StatelessWidget {
+class MasterDataScreen extends StatefulWidget {
+  @override
+  State<MasterDataScreen> createState() => _MasterDataScreenState();
+}
+
+class _MasterDataScreenState extends State<MasterDataScreen> {
+  String userID = '0';
+
   final EventTypesController eventController = Get.put(EventTypesController());
-  final DenialTypesController denialController = Get.put(DenialTypesController());
-  final BlocksController blocksController = Get.put(BlocksController());
-  final IncidentTypesController incidentTypesController = Get.put(IncidentTypesController());
-  final IncidentSubTypesController incidentSubTypesController = Get.put(IncidentSubTypesController());
-  final PatientTypesController patientTypesController = Get.put(PatientTypesController());
-  final GeneralSettingsController generalSettingsController = Get.put(GeneralSettingsController());
-  final PaymentMethodsController paymentMethodsController = Get.put(PaymentMethodsController());
-  final DiseaseTypesController diseaseTypesController = Get.put(DiseaseTypesController());
-  final StandardRemarksController standardRemarksController = Get.put(StandardRemarksController());
-  final DriversController driversController = Get.put(DriversController());
-  final HospitalsController hospitalsController = Get.put(HospitalsController());
-  final LocationsController locationsController = Get.put(LocationsController());
 
+  final DenialTypesController denialController =
+      Get.put(DenialTypesController());
+
+  final BlocksController blocksController = Get.put(BlocksController());
+
+  final IncidentTypesController incidentTypesController =
+      Get.put(IncidentTypesController());
+
+  final IncidentSubTypesController incidentSubTypesController =
+      Get.put(IncidentSubTypesController());
+
+  final PatientTypesController patientTypesController =
+      Get.put(PatientTypesController());
+
+  final GeneralSettingsController generalSettingsController =
+      Get.put(GeneralSettingsController());
+
+  final PaymentMethodsController paymentMethodsController =
+      Get.put(PaymentMethodsController());
+
+  final DiseaseTypesController diseaseTypesController =
+      Get.put(DiseaseTypesController());
+
+  final StandardRemarksController standardRemarksController =
+      Get.put(StandardRemarksController());
+
+  final DriversController driversController = Get.put(DriversController());
+
+  final HospitalsController hospitalsController =
+      Get.put(HospitalsController());
+
+  final LocationsController locationsController =
+      Get.put(LocationsController());
 
   @override
   Widget build(BuildContext context) {
+    final UserController userController = Get.find<UserController>();
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Master Data')),
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+          title: const Text('Master Data',style: TextStyle(color: Colors.white),),iconTheme: IconThemeData(color: Colors.white),),
       body: ListView(
         children: [
-          buildSyncTile("Event Types", eventController.lastSyncedTime, eventController.syncEventTypes),
-          buildSyncTile("Denial Types", denialController.lastSyncedTime, () => denialController.syncDenialTypes("USER_ID")),
-          buildSyncTile("Blocks", blocksController.lastSyncedTime, () => blocksController.syncBlocks("DISTRICT_ID", "USER_ID")),
-          buildSyncTile("Incident Types", incidentTypesController.lastSyncedTime, incidentTypesController.syncIncidentTypes),
-          buildSyncTile("Incident Subtypes", incidentSubTypesController.lastSyncedTime, incidentSubTypesController.syncIncidentSubTypes),
-          buildSyncTile("Patient Types", patientTypesController.lastSyncedTime, patientTypesController.syncPatientTypes),
-          buildSyncTile("General Settings", generalSettingsController.lastSyncedTime, () => generalSettingsController.syncGeneralSettings("USER_ID")),
-          buildSyncTile("Payment Methods", paymentMethodsController.lastSyncedTime, () => paymentMethodsController.syncPaymentMethods("USER_ID")),
-          buildSyncTile("Disease Types", diseaseTypesController.lastSyncedTime, diseaseTypesController.syncDiseaseTypes),
-          buildSyncTile("Standard Remarks", standardRemarksController.lastSyncedTime, () => standardRemarksController.syncStandardRemarks("USER_ID")),
-          buildSyncTile("Drivers", driversController.lastSyncedTime, () => driversController.syncDrivers("EMP_ID", "ZONE_ID", "BLOCK_ID")),
-          buildSyncTile("Hospitals", hospitalsController.lastSyncedTime, () => hospitalsController.syncHospitals("DEPT_ID", "ZONE_ID", "EMP_ID", 10, 1)),
-          buildSyncTile("Locations", locationsController.lastSyncedTime, () => locationsController.syncLocations("DEP_ID", "ZONE_ID", "EMP_ID", 10, 1)),
-
+          buildSyncTile("Event Types", eventController.lastSyncedTime,
+              eventController.syncEventTypes),
+          buildSyncTile(
+              "Denial Types",
+              denialController.lastSyncedTime,
+              () => denialController
+                  .syncDenialTypes(userController.userId.value)),
+          buildSyncTile(
+              "Blocks",
+              blocksController.lastSyncedTime,
+              () => blocksController.syncBlocks(
+                  "DISTRICT_ID", userController.userId.value)),
+          buildSyncTile(
+              "Incident Types",
+              incidentTypesController.lastSyncedTime,
+              incidentTypesController.syncIncidentTypes),
+          buildSyncTile(
+              "Incident Subtypes",
+              incidentSubTypesController.lastSyncedTime,
+              incidentSubTypesController.syncIncidentSubTypes),
+          buildSyncTile("Patient Types", patientTypesController.lastSyncedTime,
+              patientTypesController.syncPatientTypes),
+          buildSyncTile(
+              "General Settings",
+              generalSettingsController.lastSyncedTime,
+              () => generalSettingsController
+                  .syncGeneralSettings(userController.userId.value)),
+          buildSyncTile(
+              "Payment Methods",
+              paymentMethodsController.lastSyncedTime,
+              () => paymentMethodsController
+                  .syncPaymentMethods(userController.userId.value)),
+          buildSyncTile(
+              "Disease Types",
+              diseaseTypesController.lastSyncedTime,
+              () => diseaseTypesController
+                  .syncDiseaseTypes(userController.userId.value)),
+          buildSyncTile(
+              "Standard Remarks",
+              standardRemarksController.lastSyncedTime,
+              () => standardRemarksController
+                  .syncStandardRemarks(userController.userId.value)),
+          buildSyncTile(
+              "Drivers",
+              driversController.lastSyncedTime,
+              () => driversController.syncDrivers(
+                  userController.userId.value, "ZONE_ID", "BLOCK_ID")),
+          buildSyncTile(
+              "Hospitals",
+              hospitalsController.lastSyncedTime,
+              () => hospitalsController.syncHospitals(
+                  "DEPT_ID", "ZONE_ID", userController.userId.value, 1, 1)),
+          buildSyncTile(
+              "Locations",
+              locationsController.lastSyncedTime,
+              () => locationsController.syncLocations(
+                  "DEP_ID", "ZONE_ID", userController.userId.value, 1, 1)),
         ],
       ),
     );
   }
-  Widget buildSyncTile(String title, RxString lastSyncedTime, VoidCallback syncFunction) {
+
+  Widget buildSyncTile(
+      String title, RxString lastSyncedTime, VoidCallback syncFunction) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 5),
       child: ListTile(
@@ -72,8 +151,9 @@ class MasterDataScreen extends StatelessWidget {
       ),
     );
   }
-}
 
+  void loadUserId() {}
+}
 
 /*class MasterDataScreen extends StatefulWidget {
   const MasterDataScreen({super.key});

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/screens/login_screen.dart';
 import '../screens/dashboard_page.dart';
 import '../screens/home_screen.dart';
@@ -19,6 +20,7 @@ class LoginController extends GetxController {
   // Controllers for username & password input fields
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final UserController userController = Get.put(UserController());
 
   var isLoading = false.obs; // Observable loading state
   @override
@@ -75,11 +77,24 @@ class LoginController extends GetxController {
       // Save login data to SharedPrefer
       // ences
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("token", response["token"]);
-      await prefs.setString("employeeId", response["employeeId"]);
-      await prefs.setString("name", response["name"]);
-      await prefs.setString("roleId", response["roleId"]);
+      await prefs.setString("token", response["token"]??'');
+      await prefs.setString("employeeId", response["employeeId"]??'');
+      await prefs.setString("userId", response["employeeId"]??'');
+      await prefs.setString("name", response["name"]??'');
+      await prefs.setString("roleId", response["roleId"]??'');
+      await prefs.setString("deptId", response["deptId"]??'');
+      await prefs.setString("zoneId", response["zoneId"]??'');
+      await prefs.setString("accountId", response["accountId"]??'');
+      await prefs.setString("clientId", response["clientId"]??'');
+      await prefs.setString("blockId", response["blockId"]??'');
+      await prefs.setString("stopId", response["stopId"]??'');
+      await prefs.setString("loadGeneralSettings", response["loadGeneralSettings"]??'');
+      await prefs.setString("vehicleId", response["vehicleId"]??'');
+      await prefs.setString("timerLocationData", response["timerLocationData"]??'');
+      await prefs.setString("imeiNumber", response["imeiNumber"]??'');
+      await prefs.setString("deviceRegnId", response["deviceRegnId"]??'');
       await prefs.setString("loggedInTime", time.toString());
+      userController.saveUserData(response);
 
       Get.snackbar("Success", "Login Successful");
       // Get.offAllNamed("/home"); // Navigate to home screen

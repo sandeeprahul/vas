@@ -61,13 +61,13 @@ class _SideMenuState extends State<SideMenu> {
               [_buildSubMenuItem("Change Password", Icons.arrow_right, () {})]),
           _buildExpandableTile("Cases (6)", [
             _buildSubMenuItem("Login Report Self", Icons.arrow_right, () {}),
-            _buildSubMenuItem("Live Case v3", Icons.arrow_right, () {}),
-            _buildSubMenuItem("Manage Trip v2", Icons.arrow_right, () {
+            _buildSubMenuItem("Live Case ", Icons.arrow_right, () {}),
+            _buildSubMenuItem("Manage Trip ", Icons.arrow_right, () {
               Navigator.pop(context); // Close drawer
               Navigator.pushNamed(context, '/manage_trip'); // N
             }),
-            _buildSubMenuItem("Live Case v32", Icons.arrow_right, () {}),
-            _buildSubMenuItem("Case Registration v2", Icons.arrow_right, () {}),
+            _buildSubMenuItem("Live Case ", Icons.arrow_right, () {}),
+            _buildSubMenuItem("Case Registration ", Icons.arrow_right, () {}),
             _buildSubMenuItem("Case Registration New", Icons.arrow_right, () {
               Navigator.pop(context); // Close drawer
               Navigator.pushNamed(context, '/case_registration_new'); // N

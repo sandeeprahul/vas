@@ -55,11 +55,12 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Manage Trip v2"),
-        backgroundColor: Colors.orange,
+        title: Text("Manage Trip v2",style: TextStyle(color: Colors.white),),
+        backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
-            icon: Icon(Icons.refresh),
+            icon: Icon(Icons.refresh,color: Colors.white,),
             onPressed: () {},
           ),
         ],
@@ -71,7 +72,14 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
           children: [
             buildTripDetail("Name", tripData['name']),
             buildTripDetail("Trip ID", tripData['tripId']),
-            buildTripDetail("District", tripData['district']),
+            // buildTripDetail("District", tripData['district']),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("District", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("Select District", style: TextStyle(color: Colors.blue)),
+              ],
+            ),
             buildTripDetail("Block", tripData['block']),
             buildTripDetail("Ambulance No", tripData['ambulanceNo']),
             buildTripDetail("Doctor Name", tripData['doctorName']),

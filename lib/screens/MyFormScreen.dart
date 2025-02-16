@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vas/controllers/ambulance_controller.dart';
 import 'package:vas/controllers/blocks_controller.dart';
 import 'package:vas/controllers/districts_controller.dart';
 import 'package:vas/controllers/location_sub_type_controller.dart';
@@ -8,6 +11,7 @@ import 'package:vas/controllers/user_controller.dart';
 
 import '../controllers/location_type_controller.dart';
 import '../controllers/trip_from_controller.dart';
+import '../services/api_service.dart';
 
 class MyFormScreen extends StatefulWidget {
   @override
@@ -24,7 +28,10 @@ class _MyFormScreenState extends State<MyFormScreen> {
   final BlocksController blocksController = Get.put(BlocksController());
 
   final UserController userController = Get.put(UserController());
-  final LocationSubTypeController locationSubTypeController = Get.put(LocationSubTypeController());
+  final LocationSubTypeController locationSubTypeController =
+      Get.put(LocationSubTypeController());
+  final AmbulanceController ambulanceController =
+      Get.put(AmbulanceController());
 
   // Initialize your controller
 
@@ -34,6 +41,7 @@ class _MyFormScreenState extends State<MyFormScreen> {
     super.initState();
     locationTypeController.getLocationTypes();
     districtsController.loadLastSyncedData();
+    ambulanceController.getAmbulances();
   }
 
   @override
@@ -47,7 +55,7 @@ class _MyFormScreenState extends State<MyFormScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-        /*    _buildDropdownField(
+            /*    _buildDropdownField(
                 "District",
                 districtsController.selectedDistrict,
                 districtsController.selectedDistrictId,
@@ -107,53 +115,51 @@ class _MyFormScreenState extends State<MyFormScreen> {
             const SizedBox(
               height: 8,
             ),
-            _buildDropdownField(
-                "LocationType",
-                locationTypeController.selectedLocationType,
-                locationTypeController.selectedLocationTypeId,
-                locationTypeController.locationTypes,
-                "stopType_ID",
-                "stopType_Name"),
+            // _buildDropdownField(
+            //     "LocationType",
+            //     locationTypeController.selectedLocationType,
+            //     locationTypeController.selectedLocationTypeId,
+            //     locationTypeController.locationTypes,
+            //     "stopType_ID",
+            //     "stopType_Name"),
             const SizedBox(
               height: 8,
             ),
 
-
             Obx(() => GestureDetector(
-              onTap: () {
-                _showSelectionDialog(
-                    "LocationType",
-                    locationTypeController.selectedLocationType,
-                    locationTypeController.selectedLocationTypeId,
-                    locationTypeController.locationTypes,
-                    "stopType_ID",
-                    "stopType_Name");
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 16),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      locationTypeController.selectedLocationType.value,
-                      style: TextStyle(
-                          color:
-                          locationTypeController.selectedLocationType.value ==
-                              "Location"
-                              ? Colors.grey
-                              : Colors.black),
+                  onTap: () {
+                    _showSelectionDialog(
+                        "LocationType",
+                        locationTypeController.selectedLocationType,
+                        locationTypeController.selectedLocationTypeId,
+                        locationTypeController.locationTypes,
+                        "stopType_ID",
+                        "stopType_Name");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const Icon(Icons.arrow_drop_down),
-                  ],
-                ),
-              ),
-            )),
-
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          locationTypeController.selectedLocationType.value,
+                          style: TextStyle(
+                              color: locationTypeController
+                                          .selectedLocationType.value ==
+                                      "Location"
+                                  ? Colors.grey
+                                  : Colors.black),
+                        ),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
+                )),
 
             const SizedBox(
               height: 8,
@@ -167,13 +173,50 @@ class _MyFormScreenState extends State<MyFormScreen> {
                 "stop_ID",
                 "stop_Name"),
 
-
             const SizedBox(
               height: 8,
             ),
 
             _buildTextField(
                 "Enter Ambulance Number", controller.ambulanceController),
+            const SizedBox(
+              height: 8,
+            ),
+            Obx(() => GestureDetector(
+                  onTap: () {
+                    _showSelectionDialog(
+                        "Ambulance",
+                        ambulanceController.selectedAmbulanceName,
+                        ambulanceController.selectedAmbulanceId,
+                        ambulanceController.ambulanceList,
+                        "id",
+                        "asseT_NO");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          ambulanceController.selectedAmbulanceName.value,
+                          style: TextStyle(
+                              color: ambulanceController
+                                          .selectedAmbulanceName.value ==
+                                      "Ambulance"
+                                  ? Colors.grey
+                                  : Colors.black),
+                        ),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
+                )),
+
             const SizedBox(
               height: 8,
             ),
@@ -202,8 +245,7 @@ class _MyFormScreenState extends State<MyFormScreen> {
 
             // _buildDropdownField("Doctor", controller.selectedDoctor, doctorController.doctors.values.toList().obs, "doctorId", "doctorName"),
             // _buildDropdownField("Driver", controller.selectedDriver, driverController.drivers.values.toList().obs, "driverId", "driverName"),
-            _buildTextField(
-                "Enter Base Odometer", controller.baseOdometerController),
+            _buildTextField("Base Odometer", controller.baseOdometerController),
             const SizedBox(height: 20),
             const Spacer(),
             Obx(() => SizedBox(
@@ -291,15 +333,26 @@ class _MyFormScreenState extends State<MyFormScreen> {
                       return ListTile(
                         title: Text(item[valueField] ?? "Unknown"),
                         onTap: () {
-                          if(title=="District"){
-                            blocksController.getBlocks( userController.userId.value,"${item[keyField]}");
-                          }else if (title=="LocationType"){
-                            locationSubTypeController.getLocations( userController.zoneId.value, userController.blockId.value, userController.userId.value, "${item[keyField]}");
+                          if (title == "District") {
+                            blocksController.getBlocks(
+                                userController.userId.value,
+                                "${item[keyField]}");
+                          } else if (title == "LocationType") {
+                            locationSubTypeController.getLocations(
+                                userController.zoneId.value,
+                                userController.blockId.value,
+                                userController.userId.value,
+                                "${item[keyField]}");
+                          } else if (title == "Ambulance") {
+                            getOdometer("${item[keyField]}");
+                          } else {
+                            selectedValue.value =
+                                item[valueField]?.toString() ??
+                                    ""; // ✅ Display valueField
+                            selectedKey.value = item[keyField]?.toString() ??
+                                ""; // ✅ Store keyField
                           }
-                          selectedValue.value = item[valueField]?.toString() ??
-                              ""; // ✅ Display valueField
-                          selectedKey.value = item[keyField]?.toString() ??
-                              ""; // ✅ Store keyField
+
                           Get.back();
                         },
                       );
@@ -319,5 +372,45 @@ class _MyFormScreenState extends State<MyFormScreen> {
           InputDecoration(labelText: label, border: const OutlineInputBorder()),
       keyboardType: TextInputType.number,
     );
+  }
+
+  final ApiService apiService = ApiService();
+
+  bool isLoading = false;
+
+  Future<void> getOdometer(String ambulanceId) async {
+    controller.isLoading.value = true;
+
+    String userId = userController.userId.value;
+    try {
+      String formattedEndpoint = '/GetLastOdometerReading/$ambulanceId/$userId';
+      var response = await apiService.getRequestForMaster(formattedEndpoint);
+
+      if (response != null) {
+        // var decodedResponse = json.decode(response);
+        String errorCode =
+            response['error_Code'] ?? ""; // Use null-safe operator
+        String errorMessage = response['error_Message'] ?? "";
+        var lastBaseKM = response['last_Base_KM'] ?? 0.00;
+
+        controller.baseOdometerController.text = "$lastBaseKM";
+        // 4. Use the parsed values (example):
+        print("Error Code: $errorCode");
+        print("Error Message: $errorMessage");
+        print("Last Base KM: $lastBaseKM");
+      } else {
+        print("Error: API returned null!");
+      }
+    } catch (e) {
+      print("Error: $e");
+    } finally {
+      controller.isLoading.value = false;
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }

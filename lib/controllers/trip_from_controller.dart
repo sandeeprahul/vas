@@ -21,7 +21,7 @@ class FormController extends GetxController {
 
   // Input controllers
   final TextEditingController ambulanceController = TextEditingController();
-  final TextEditingController baseOdometerController = TextEditingController();
+   TextEditingController baseOdometerController = TextEditingController();
 
   // Data lists
   final RxList<dynamic> districts = <dynamic>[].obs;

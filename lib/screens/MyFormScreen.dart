@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vas/controllers/districts_controller.dart';
 
 
 import '../controllers/location_type_controller.dart';
@@ -15,6 +16,7 @@ class _MyFormScreenState extends State<MyFormScreen> {
   final FormController controller = Get.put(FormController());
 
   final LocationTypeController locationTypeController = Get.put(LocationTypeController());
+  final DistrictsController districtsController = Get.put(DistrictsController());
  // Initialize your controller
 
   @override
@@ -22,6 +24,7 @@ class _MyFormScreenState extends State<MyFormScreen> {
     // TODO: implement initState
     super.initState();
     locationTypeController.getLocationTypes();
+    districtsController.loadLastSyncedData();
   }
   @override
   Widget build(BuildContext context) {
@@ -34,9 +37,13 @@ class _MyFormScreenState extends State<MyFormScreen> {
         child: Column(
           children: [
 
-            _buildDropdownField("District", controller.selectedDistrict,
+            _buildDropdownField("District", districtsController.selectedDistrict,
+                districtsController.selectedDistrictId,
+                districtsController.districtsList, "districtId", "districtName"),
+
+            /*    _buildDropdownField("District", controller.selectedDistrict,
                 controller.selectedDistrictId,
-                controller.districts, "districtId", "districtName"),
+                controller.districts, "districtId", "districtName"),*/
             const SizedBox(height: 8,),
             _buildDropdownField(
                 "Block", controller.selectedBlock,controller.selectedBlockId, controller.blocks, "blockId",

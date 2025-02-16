@@ -8,7 +8,11 @@ class DistrictsController extends GetxController {
   final RxBool isLoading = false.obs;
   // final RxList<dynamic> drivers = [].obs;
   final RxMap<String, dynamic> districts = <String, dynamic>{}.obs;
+  final RxList<Map<String, dynamic>> districtsList = <Map<String, dynamic>>[].obs;
 
+  // Selected values for dropdowns
+  final RxString selectedDistrict = 'Select District'.obs;
+  final RxString selectedDistrictId = ''.obs; // ✅ Stores districtId for submission
   @override
   void onInit() {
     super.onInit();
@@ -21,9 +25,24 @@ class DistrictsController extends GetxController {
     var data = await SharedPrefHelper.getApiData('/GetDistricts');
 
     if (data == null) {
+      print('loadLastSyncedDataDistricts');
+
       districts.value = {}; // ✅ Handle null case with empty list
     } else if (data is  Map<String, dynamic>) {
+      print('loadLastSyncedDataDistricts');
+      print(' Map<String, dynamic>');
+
+      districtsList.value = [Map<String, dynamic>.from(data)];
+
       districts.value = data; // ✅ Assign List directly
+      print(districtsList.length);
+    }
+    else if (data is List) { // Check if it's a List
+      print('loadLastSyncedDataDistricts');
+      print(' List');
+      // Convert to List<Map<String, dynamic>> and assign:
+      districtsList.value = List<Map<String, dynamic>>.from(data); // Correct conversion
+
     }
   }
 

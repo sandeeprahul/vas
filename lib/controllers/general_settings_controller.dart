@@ -17,7 +17,15 @@ class GeneralSettingsController extends GetxController {
 
   Future<void> loadLastSyncedData() async {
     lastSyncedTime.value = await SharedPrefHelper.getLastSyncedTime('/GetGeneralSettings') ?? "Never";
-    generalSettings.value = await SharedPrefHelper.getApiData('/GetGeneralSettings') ?? {};
+    // generalSettings.value = await SharedPrefHelper.getApiData('/GetGeneralSettings') ?? {};
+
+    var data = await SharedPrefHelper.getApiData('/GetGeneralSettings');
+
+    if (data == null) {
+      generalSettings.value = {}; // ✅ Handle null case with empty list
+    } else if (data is  Map<String, dynamic>) {
+      generalSettings.value = data; // ✅ Assign List directly
+    }
   }
 
   Future<void> syncGeneralSettings(String userId) async {

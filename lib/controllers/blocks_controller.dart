@@ -8,11 +8,15 @@ class BlocksController extends GetxController {
   final RxBool isLoading = false.obs;
   // final RxList<dynamic> blocks = [].obs; // Store API data
   final RxMap<String, dynamic> blocks = <String, dynamic>{}.obs;
-
+  final RxList<Map<String, dynamic>> blocksList = <Map<String, dynamic>>[].obs;
+  // Selected values for dropdowns
+  final RxString selectedBlock = 'Select Block'.obs;
+  final RxString selectedBlockId = ''.obs; // ✅ Stores districtId for submission
   @override
   void onInit() {
     super.onInit();
     loadLastSyncedData();
+    // getBlocks();
   }
 
   Future<void> loadLastSyncedData() async {
@@ -77,4 +81,40 @@ class BlocksController extends GetxController {
       isLoading.value = false; // Stop loading
     }
   }
+
+
+  Future<void> getBlocks(String userId,String district) async {
+    isLoading.value = true;
+
+    try {
+      String formattedEndpoint = '/GetBlocks/$district/$userId';
+      var response = await apiService.getRequestForMaster(formattedEndpoint);
+
+      if (response != null) {
+        if (response is List) {
+          blocksList.value = List<Map<String, dynamic>>.from(response); // Correct conversion
+
+
+        } else if (response is Map<String, dynamic>) {
+          // Wrap the Map in a List if that's your intended structure.
+          blocksList.value = [response];
+          // Or, if you want to store the map directly:
+          // locationTypes.value = response;  // If you change the Rx type to RxMap
+
+        } else {
+          print("Error: Unexpected response format: ${response.runtimeType}"); // Print the actual type
+          // Consider throwing an exception here if the format is critical.
+          // throw FormatException("Unexpected response format");
+        }
+      } else {
+        print("Error: API returned null!");
+      }
+    } catch (e) {
+      print("Error syncing LocationTypes: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
 }

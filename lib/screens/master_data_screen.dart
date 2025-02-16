@@ -252,7 +252,7 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
                       Text(title,
                           maxLines: 2,
                           style:
-                              const TextStyle(color: Colors.white, fontSize: 14,fontWeight: FontWeight.bold)),
+                              const TextStyle(color: Colors.white, fontSize: 18,fontWeight: FontWeight.bold)),
                       Obx(() =>  Text(
                         maxLines: 2,
                             // "Last Synced: Never",

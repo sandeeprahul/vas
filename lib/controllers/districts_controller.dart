@@ -21,28 +21,17 @@ class DistrictsController extends GetxController {
 
   Future<void> loadLastSyncedData() async {
     lastSyncedTime.value = await SharedPrefHelper.getLastSyncedTime('/GetDistricts') ?? "Never";
-    // drivers.value = await SharedPrefHelper.getApiData('/GetDrivers') ?? [];
     var data = await SharedPrefHelper.getApiData('/GetDistricts');
 
     if (data == null) {
-      print('loadLastSyncedDataDistricts');
-
-      districts.value = {}; // ✅ Handle null case with empty list
-    } else if (data is  Map<String, dynamic>) {
-      print('loadLastSyncedDataDistricts');
-      print(' Map<String, dynamic>');
-
-      districtsList.value = [Map<String, dynamic>.from(data)];
-
-      districts.value = data; // ✅ Assign List directly
-      print(districtsList.length);
-    }
-    else if (data is List) { // Check if it's a List
-      print('loadLastSyncedDataDistricts');
-      print(' List');
-      // Convert to List<Map<String, dynamic>> and assign:
-      districtsList.value = List<Map<String, dynamic>>.from(data); // Correct conversion
-
+      print('loadLastSyncedDataDistricts - No Data');
+      districtsList.clear();
+    } else if (data is List) { // ✅ Expecting a list
+      print('loadLastSyncedDataDistricts - List');
+      districtsList.value = List<Map<String, dynamic>>.from(data);
+    } else if (data is Map<String, dynamic>) { // ✅ Convert map to list
+      print('loadLastSyncedDataDistricts - Map<String, dynamic>');
+      districtsList.value = [data];
     }
   }
 
@@ -53,19 +42,27 @@ class DistrictsController extends GetxController {
       String formattedEndpoint = '/GetDistricts/$empId';
       // String formattedEndpoint = '/GetDistricts/462/5/38';
       var response = await apiService.getRequestForMaster(formattedEndpoint, );
-
+      print('syncDistricts');
+      print(response);
 
       if (response != null) {
         if (response is List) {
+          print('syncDistricts');
+          print("List");
           var firstItem = response.first;
 
           // ✅ Response is a List, save directly
           await SharedPrefHelper.saveLastSyncedTime('/GetDistricts');
-          await SharedPrefHelper.saveApiData('/GetDistricts', firstItem);
+          await SharedPrefHelper.saveApiData('/GetDistricts', response);
           lastSyncedTime.value = DateTime.now().toString();
-          districts.value = firstItem;
+          // districts.value = firstItem;
+          districtsList.value = List<Map<String, dynamic>>.from(response); // Correct conversion
+          // districtsList.value = List<Map<String, dynamic>>.from(response);
+
         }
         else if (response is Map<String, dynamic>) {
+          print('syncDistricts');
+          print("Map<String, dynamic>");
           // ✅ Response is a Map, wrap it in a List
           await SharedPrefHelper.saveApiData('/GetDistricts', [response]);
 

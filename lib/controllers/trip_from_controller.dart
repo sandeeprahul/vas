@@ -7,8 +7,8 @@ class FormController extends GetxController {
   final RxBool isLoading = false.obs;
 
   // Selected values for dropdowns
-  final RxString selectedDistrict = 'Select District'.obs;
-  final RxString selectedDistrictId = ''.obs; // ✅ Stores districtId for submission
+  // final RxString selectedDistrict = 'Select District'.obs;
+  // final RxString selectedDistrictId = ''.obs; // ✅ Stores districtId for submission
 
   final RxString selectedBlock = 'Select Block'.obs;
   final RxString selectedBlockId = ''.obs; // ✅ Stores districtId for submission
@@ -40,8 +40,8 @@ class FormController extends GetxController {
     isLoading.value = true;
     try {
       // Load districts
-      var districtData = await SharedPrefHelper.getApiData('/GetDistricts');
-      districts.value = (districtData is List) ? districtData : [];
+      // var districtData = await SharedPrefHelper.getApiData('/GetDistricts');
+      // districts.value = (districtData is List) ? districtData : [];
 
       // Load blocks
       var blockData = await SharedPrefHelper.getApiData('/GetBlocks');

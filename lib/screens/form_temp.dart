@@ -25,7 +25,7 @@ class MyFormScreenTEMPPP extends StatelessWidget {
             const Text("Districts", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             Obx(() => Expanded(
               child: ListView.builder(
-                itemCount: districtController.districts.values.length,
+                itemCount: districtController.districtsList.length,
                 itemBuilder: (context, index) {
                   var district = districtController.districts.values.toList()[index];
                   return ListTile(

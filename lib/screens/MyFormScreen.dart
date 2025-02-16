@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vas/controllers/blocks_controller.dart';
 import 'package:vas/controllers/districts_controller.dart';
-
+import 'package:vas/controllers/location_sub_type_controller.dart';
+import 'package:vas/controllers/user_controller.dart';
 
 import '../controllers/location_type_controller.dart';
 import '../controllers/trip_from_controller.dart';
@@ -15,9 +17,16 @@ class MyFormScreen extends StatefulWidget {
 class _MyFormScreenState extends State<MyFormScreen> {
   final FormController controller = Get.put(FormController());
 
-  final LocationTypeController locationTypeController = Get.put(LocationTypeController());
-  final DistrictsController districtsController = Get.put(DistrictsController());
- // Initialize your controller
+  final LocationTypeController locationTypeController =
+      Get.put(LocationTypeController());
+  final DistrictsController districtsController =
+      Get.put(DistrictsController());
+  final BlocksController blocksController = Get.put(BlocksController());
+
+  final UserController userController = Get.put(UserController());
+  final LocationSubTypeController locationSubTypeController = Get.put(LocationSubTypeController());
+
+  // Initialize your controller
 
   @override
   void initState() {
@@ -26,66 +35,193 @@ class _MyFormScreenState extends State<MyFormScreen> {
     locationTypeController.getLocationTypes();
     districtsController.loadLastSyncedData();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Manage trip"), backgroundColor: Colors.blue,
+        title: const Text("Manage trip"),
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-
-            _buildDropdownField("District", districtsController.selectedDistrict,
+        /*    _buildDropdownField(
+                "District",
+                districtsController.selectedDistrict,
                 districtsController.selectedDistrictId,
-                districtsController.districtsList, "districtId", "districtName"),
+                districtsController.districtsList,
+                "id",
+                "name"),*/
+
+            Obx(() => GestureDetector(
+                  onTap: () {
+                    _showSelectionDialog(
+                        "District",
+                        districtsController.selectedDistrict,
+                        districtsController.selectedDistrictId,
+                        districtsController.districtsList,
+                        "id",
+                        "name");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          districtsController.selectedDistrict.value,
+                          style: TextStyle(
+                              color:
+                                  districtsController.selectedDistrict.value ==
+                                          "District"
+                                      ? Colors.grey
+                                      : Colors.black),
+                        ),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
+                )),
 
             /*    _buildDropdownField("District", controller.selectedDistrict,
                 controller.selectedDistrictId,
                 controller.districts, "districtId", "districtName"),*/
-            const SizedBox(height: 8,),
+            const SizedBox(
+              height: 8,
+            ),
             _buildDropdownField(
-                "Block", controller.selectedBlock,controller.selectedBlockId, controller.blocks, "blockId",
-                "blockName"),
-            const SizedBox(height: 8,),
+                "Block",
+                blocksController.selectedBlock,
+                blocksController.selectedBlockId,
+                blocksController.blocksList,
+                "blockId",
+                "name"),
+            //    blocksController.getBlocks(districtsController.selectedDistrictId.value,userController.userId.value);
+            const SizedBox(
+              height: 8,
+            ),
             _buildDropdownField(
-                "LocationType", locationTypeController.selectedLocationType,locationTypeController.selectedLocationTypeId, locationTypeController.locationTypes, "stopType_ID",
+                "LocationType",
+                locationTypeController.selectedLocationType,
+                locationTypeController.selectedLocationTypeId,
+                locationTypeController.locationTypes,
+                "stopType_ID",
                 "stopType_Name"),
-            const SizedBox(height: 8,),
+            const SizedBox(
+              height: 8,
+            ),
 
-            _buildTextField("Enter Ambulance Number", controller.ambulanceController),
-            const SizedBox(height: 8,),
+
+            Obx(() => GestureDetector(
+              onTap: () {
+                _showSelectionDialog(
+                    "LocationType",
+                    locationTypeController.selectedLocationType,
+                    locationTypeController.selectedLocationTypeId,
+                    locationTypeController.locationTypes,
+                    "stopType_ID",
+                    "stopType_Name");
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 16),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      locationTypeController.selectedLocationType.value,
+                      style: TextStyle(
+                          color:
+                          locationTypeController.selectedLocationType.value ==
+                              "Location"
+                              ? Colors.grey
+                              : Colors.black),
+                    ),
+                    const Icon(Icons.arrow_drop_down),
+                  ],
+                ),
+              ),
+            )),
+
+
+            const SizedBox(
+              height: 8,
+            ),
 
             _buildDropdownField(
-                "Doctor", controller.selectedDoctor, controller.selectedDoctorId,controller.doctors,
-                "doctor_ID", "doctor_Name"),
-            const SizedBox(height: 8,),
+                "Location",
+                locationSubTypeController.selectedLocationName,
+                locationSubTypeController.selectedLocationId,
+                locationSubTypeController.location,
+                "stop_ID",
+                "stop_Name"),
+
+
+            const SizedBox(
+              height: 8,
+            ),
+
+            _buildTextField(
+                "Enter Ambulance Number", controller.ambulanceController),
+            const SizedBox(
+              height: 8,
+            ),
 
             _buildDropdownField(
-                "Driver", controller.selectedDriver, controller.selectedDriverId,controller.drivers,
-                "driver_ID", "driver_Name"),
-            const SizedBox(height: 8,),
+                "Doctor",
+                controller.selectedDoctor,
+                controller.selectedDoctorId,
+                controller.doctors,
+                "doctor_ID",
+                "doctor_Name"),
+            const SizedBox(
+              height: 8,
+            ),
+
+            _buildDropdownField(
+                "Driver",
+                controller.selectedDriver,
+                controller.selectedDriverId,
+                controller.drivers,
+                "driver_ID",
+                "driver_Name"),
+            const SizedBox(
+              height: 8,
+            ),
 
             // _buildDropdownField("Doctor", controller.selectedDoctor, doctorController.doctors.values.toList().obs, "doctorId", "doctorName"),
             // _buildDropdownField("Driver", controller.selectedDriver, driverController.drivers.values.toList().obs, "driverId", "driverName"),
-            _buildTextField("Enter Base Odometer", controller.baseOdometerController),
+            _buildTextField(
+                "Enter Base Odometer", controller.baseOdometerController),
             const SizedBox(height: 20),
             const Spacer(),
-            Obx(() =>
-                SizedBox(
+            Obx(() => SizedBox(
                   width: double.infinity,
-
                   child: ElevatedButton(
-                    onPressed: controller.isLoading.value ? null : controller
-                        .submitForm,
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : controller.submitForm,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder( // Add this
-                          borderRadius: BorderRadius.circular(28.0), // Adjust the radius as needed
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          // Add this
+                          borderRadius: BorderRadius.circular(
+                              28.0), // Adjust the radius as needed
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        textStyle:  GoogleFonts.montserrat(fontSize: 16,fontWeight: FontWeight.bold)),
+                        textStyle: GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
                     child: controller.isLoading.value
                         ? const CircularProgressIndicator(color: Colors.white)
                         : const Text("Submit"),
@@ -100,32 +236,36 @@ class _MyFormScreenState extends State<MyFormScreen> {
   Widget _buildDropdownField(
       String title,
       RxString selectedValue, // Stores valueField (UI)
-      RxString selectedKey,   // Stores keyField (Submission)
+      RxString selectedKey, // Stores keyField (Submission)
       List<dynamic> dataList,
       String keyField,
       String valueField) {
     return Obx(() => GestureDetector(
-      onTap: () {
-        _showSelectionDialog(title, selectedValue, selectedKey, dataList, keyField, valueField);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              selectedValue.value,
-              style: TextStyle(color: selectedValue.value == title ? Colors.grey : Colors.black),
+          onTap: () {
+            _showSelectionDialog(title, selectedValue, selectedKey, dataList,
+                keyField, valueField);
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
             ),
-            const Icon(Icons.arrow_drop_down),
-          ],
-        ),
-      ),
-    ));
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  selectedValue.value,
+                  style: TextStyle(
+                      color: selectedValue.value == title
+                          ? Colors.grey
+                          : Colors.black),
+                ),
+                const Icon(Icons.arrow_drop_down),
+              ],
+            ),
+          ),
+        ));
   }
 
   void _showSelectionDialog(
@@ -140,24 +280,33 @@ class _MyFormScreenState extends State<MyFormScreen> {
         title: Text("Select $title"),
         content: dataList.isNotEmpty
             ? SizedBox(
-          height: 300, // ✅ Define height to avoid intrinsic dimensions issue
-          width: double.maxFinite, // ✅ Ensures it takes full width
-          child: SingleChildScrollView( // ✅ Wrap with SingleChildScrollView
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: dataList.map((item) {
-                return ListTile(
-                  title: Text(item[valueField] ?? "Unknown"),
-                  onTap: () {
-                    selectedValue.value = item[valueField]?.toString() ?? ""; // ✅ Display valueField
-                    selectedKey.value = item[keyField]?.toString() ?? ""; // ✅ Store keyField
-                    Get.back();
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-        )
+                height:
+                    300, // ✅ Define height to avoid intrinsic dimensions issue
+                width: double.maxFinite, // ✅ Ensures it takes full width
+                child: SingleChildScrollView(
+                  // ✅ Wrap with SingleChildScrollView
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: dataList.map((item) {
+                      return ListTile(
+                        title: Text(item[valueField] ?? "Unknown"),
+                        onTap: () {
+                          if(title=="District"){
+                            blocksController.getBlocks( userController.userId.value,"${item[keyField]}");
+                          }else if (title=="LocationType"){
+                            locationSubTypeController.getLocations( userController.zoneId.value, userController.blockId.value, userController.userId.value, "${item[keyField]}");
+                          }
+                          selectedValue.value = item[valueField]?.toString() ??
+                              ""; // ✅ Display valueField
+                          selectedKey.value = item[keyField]?.toString() ??
+                              ""; // ✅ Store keyField
+                          Get.back();
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+              )
             : const Center(child: Text("No data available")),
       ),
     );
@@ -166,7 +315,8 @@ class _MyFormScreenState extends State<MyFormScreen> {
   Widget _buildTextField(String label, TextEditingController controller) {
     return TextField(
       controller: controller,
-      decoration: InputDecoration(labelText: label,border: OutlineInputBorder()),
+      decoration:
+          InputDecoration(labelText: label, border: const OutlineInputBorder()),
       keyboardType: TextInputType.number,
     );
   }

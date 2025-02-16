@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
+import '../controllers/location_type_controller.dart';
 import '../controllers/trip_from_controller.dart';
 
 class MyFormScreen extends StatelessWidget {
   final FormController controller = Get.put(FormController());
+  final LocationTypeController locationTypeController = Get.put(LocationTypeController()); // Initialize your controller
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +24,32 @@ class MyFormScreen extends StatelessWidget {
             _buildDropdownField("District", controller.selectedDistrict,
                 controller.selectedDistrictId,
                 controller.districts, "districtId", "districtName"),
-
+            const SizedBox(height: 8,),
             _buildDropdownField(
                 "Block", controller.selectedBlock,controller.selectedBlockId, controller.blocks, "blockId",
                 "blockName"),
-            _buildTextField("Ambulance Number", controller.ambulanceController),
+            const SizedBox(height: 8,),
+            _buildDropdownField(
+                "LocationType", locationTypeController.selectedLocationType,locationTypeController.selectedLocationTypeId, locationTypeController.locationTypes, "stopType_ID",
+                "stopType_Name"),
+            const SizedBox(height: 8,),
+
+            _buildTextField("Enter Ambulance Number", controller.ambulanceController),
+            const SizedBox(height: 8,),
+
             _buildDropdownField(
                 "Doctor", controller.selectedDoctor, controller.selectedDoctorId,controller.doctors,
                 "doctor_ID", "doctor_Name"),
+            const SizedBox(height: 8,),
+
             _buildDropdownField(
                 "Driver", controller.selectedDriver, controller.selectedDriverId,controller.drivers,
                 "driver_ID", "driver_Name"),
+            const SizedBox(height: 8,),
+
             // _buildDropdownField("Doctor", controller.selectedDoctor, doctorController.doctors.values.toList().obs, "doctorId", "doctorName"),
             // _buildDropdownField("Driver", controller.selectedDriver, driverController.drivers.values.toList().obs, "driverId", "driverName"),
-            _buildTextField("Base Odometer", controller.baseOdometerController),
+            _buildTextField("Enter Base Odometer", controller.baseOdometerController),
             const SizedBox(height: 20),
             const Spacer(),
             Obx(() =>
@@ -134,7 +148,7 @@ class MyFormScreen extends StatelessWidget {
   Widget _buildTextField(String label, TextEditingController controller) {
     return TextField(
       controller: controller,
-      decoration: InputDecoration(labelText: label),
+      decoration: InputDecoration(labelText: label,border: OutlineInputBorder()),
       keyboardType: TextInputType.number,
     );
   }

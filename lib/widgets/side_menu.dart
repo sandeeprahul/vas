@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vas/controllers/login_controller.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({super.key});
@@ -15,6 +16,7 @@ class _SideMenuState extends State<SideMenu> {
   String? name;
   String? roleId;
 
+  final LoginController loginController  = LoginController();
   @override
   void initState() {
     // TODO: implement initState
@@ -80,7 +82,7 @@ class _SideMenuState extends State<SideMenu> {
           ListTile(
             title: const Text("Logout", style: TextStyle(color: Colors.red)),
             leading: const Icon(Icons.logout, color: Colors.red),
-            onTap: () {},
+            onTap: loginController.logoutUser,
           ),
         ],
       ),

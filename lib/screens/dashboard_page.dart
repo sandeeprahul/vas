@@ -108,8 +108,11 @@ class _DashboardPageState extends State<DashboardPage> {
                             children: [
                               Text(
                                 " $name",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 18,
+
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),

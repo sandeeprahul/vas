@@ -15,7 +15,6 @@ import '../services/api_service.dart';
 
 
 class LoginController extends GetxController {
-  final String baseUrl = "http://49.207.44.107/MobileAppAPIVAS";
 
   final ApiService apiService = ApiService();
 
@@ -54,6 +53,69 @@ class LoginController extends GetxController {
     await prefs.clear(); // Clear stored data
     Get.offAllNamed("/login");
   }
+
+  Future<void> loginUserSandBox() async {
+    if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
+      showErrorDialog("Error", 'Username and password cannot be empty');
+      return;
+    }
+
+    isLoading.value = true;
+
+    await Future.delayed(const Duration(seconds: 2)); // Simulating API delay
+
+    final response = {
+      "clientId": "0",
+      "employeeId": "462",
+      "imeiNumber": "ABC123456789",
+      "deviceRegnId": "XYZ987654321",
+      "name": "Doctor",
+      "roleId": "2",
+      "deptId": "5",
+      "zoneId": "3",
+      "accountId": "99999",
+      "result": "600",
+      "message": "Login Successful",
+      "timerLocationData": "30",
+      "blockId": "10",
+      "stopId": "15",
+      "vehicleId": "VH123",
+      "loadGeneralSettings": "true",
+      "token": "mock_token_123456"
+    };
+
+    isLoading.value = false;
+
+    if (response["result"] == "600") {
+      var time = DateTime.now();
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString("token", response["token"]??'');
+      await prefs.setString("employeeId", response["employeeId"]??'');
+      await prefs.setString("userId", response["employeeId"]??'');
+      await prefs.setString("name", response["name"]??'');
+      await prefs.setString("roleId", response["roleId"]??'');
+      await prefs.setString("deptId", response["deptId"]??'');
+      await prefs.setString("zoneId", response["zoneId"]??'');
+      await prefs.setString("accountId", response["accountId"]??'');
+      await prefs.setString("clientId", response["clientId"]??'');
+      await prefs.setString("blockId", response["blockId"]??'');
+      await prefs.setString("stopId", response["stopId"]??'');
+      await prefs.setString("loadGeneralSettings", response["loadGeneralSettings"]??'');
+      await prefs.setString("vehicleId", response["vehicleId"]??'');
+      await prefs.setString("timerLocationData", response["timerLocationData"]??'');
+      await prefs.setString("imeiNumber", response["imeiNumber"]??'');
+      await prefs.setString("deviceRegnId", response["deviceRegnId"]??'');
+      await prefs.setString("loggedInTime", time.toString());
+      userController.saveUserData(response);
+
+
+      Get.offAll(const MasterDataScreen(fromLogin: true)); // Auto-login if token exists
+    } else {
+      showErrorDialog("Error", response["message"] ?? "Login failed");
+    }
+  }
+
   Future<void> loginUser() async {
     if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
       Get.snackbar("Error", "Username and password cannot be empty");
@@ -102,10 +164,11 @@ class LoginController extends GetxController {
       Get.snackbar("Success", "Login Successful");
       // Get.offAllNamed("/home"); // Navigate to home screen
       Get.offAll(const MasterDataScreen(fromLogin: true)); // Auto-login if token exists
-      Get.offAll(HomeScreen()); // Auto-login if token exists
+      // Get.offAll(HomeScreen()); // Auto-login if token exists
 
 
     } else {
       showErrorDialog("Error", response?["message"] ?? "Login failed"); // ✅ Use dialog instead of snackbar
     }
-  }}
+  }
+}

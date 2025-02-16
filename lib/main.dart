@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
       routes: {
         // '/manage_trip': (context) => ManageTripScreen(), // Define route
         '/home': (context) => HomeScreen(), // Define route
+        '/login': (context) => const LoginScreen(), // Define route
         '/manage_trip': (context) => MyFormScreen(), // Define route
         '/case_registration_new': (context) => CaseRegistrationNewScreen(), // Define route
         '/master_data_screen': (context) =>  const MasterDataScreen(fromLogin: false,), // Define route

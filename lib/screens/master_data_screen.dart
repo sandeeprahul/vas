@@ -85,113 +85,129 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: ListView(
+      body: Column(
         children: [
-          buildSyncTile(
-            "Event Types",
-            eventController.lastSyncedTime,
-            eventController.syncEventTypes,
-            locationsController.isLoading,
-          ),
-          buildSyncTile(
-              "Denial Types",
-              denialController.lastSyncedTime,
-              () =>
-                  denialController.syncDenialTypes(userController.userId.value),
-              locationsController.isLoading),
-          buildSyncTile(
-              "Blocks",
-              blocksController.lastSyncedTime,
-              () => blocksController.syncBlocks(
-                  "DISTRICT_ID", userController.userId.value),
-              locationsController.isLoading),
-          buildSyncTile(
-              "Incident Types",
-              incidentTypesController.lastSyncedTime,
-              incidentTypesController.syncIncidentTypes,
-              locationsController.isLoading),
-          buildSyncTile(
-              "Incident Subtypes",
-              incidentSubTypesController.lastSyncedTime,
-              incidentSubTypesController.syncIncidentSubTypes,
-              locationsController.isLoading),
-          buildSyncTile(
-              "Patient Types",
-              patientTypesController.lastSyncedTime,
-              patientTypesController.syncPatientTypes,
-              locationsController.isLoading),
-          buildSyncTile(
-              "General Settings",
-              generalSettingsController.lastSyncedTime,
-              () => generalSettingsController
-                  .syncGeneralSettings(userController.userId.value),
-              locationsController.isLoading),
-          buildSyncTile(
-              "Districts",
-              districtsController.lastSyncedTime,
-              () => districtsController
-                  .syncDistricts(userController.userId.value),
-              locationsController.isLoading),
-          buildSyncTile(
-              "Payment Methods",
-              paymentMethodsController.lastSyncedTime,
-              () => paymentMethodsController
-                  .syncPaymentMethods(userController.userId.value),
-              locationsController.isLoading),
-          buildSyncTile(
-              "Disease Types",
-              diseaseTypesController.lastSyncedTime,
-              () => diseaseTypesController
-                  .syncDiseaseTypes(userController.userId.value),
-              locationsController.isLoading),
-          buildSyncTile(
-              "Standard Remarks",
-              standardRemarksController.lastSyncedTime,
-              () => standardRemarksController
-                  .syncStandardRemarks(userController.userId.value),
-              locationsController.isLoading),
-          buildSyncTile(
-              "Doctors",
-              doctorsController.lastSyncedTime,
-              () => doctorsController.syncDoctors(
-                  userController.userId.value, "", ""),
-              locationsController.isLoading),
-          buildSyncTile(
-              "Drivers",
-              driversController.lastSyncedTime,
-              () => driversController.syncDrivers(
-                  userController.userId.value, "ZONE_ID", "BLOCK_ID"),
-              locationsController.isLoading),
-          buildSyncTile(
-              "Hospitals",
-              hospitalsController.lastSyncedTime,
-              () => hospitalsController.syncHospitals(
-                  "DEPT_ID", "ZONE_ID", userController.userId.value, 1, 1),
-              locationsController.isLoading),
-          buildSyncTile(
-              "Locations",
-              locationsController.lastSyncedTime,
-              () => locationsController.syncLocations(
-                  "DEP_ID", "ZONE_ID", userController.userId.value, 1, 1),
-              locationsController.isLoading),
+          Expanded(
+            child: ListView(
+              children: [
+                Row(
+                  children: [
+                    buildSyncTile(
+                      "Event Types",
+                      eventController.lastSyncedTime,
+                      eventController.syncEventTypes,
+                      eventController.isLoading,
+                    ),
+                    buildSyncTile(
+                        "Denial Types",
+                        denialController.lastSyncedTime,
+                        () => denialController
+                            .syncDenialTypes(userController.userId.value),
+                        denialController.isLoading),
 
-          SizedBox(
-            width: double.maxFinite,
-            height: 50,
-            child: ElevatedButton(
-              onPressed:(){
-                Get.offAll(HomeScreen()); // Auto-login if token exists
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder( // Add this
-                    borderRadius: BorderRadius.circular(28.0), // Adjust the radius as needed
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  textStyle:  GoogleFonts.montserrat(fontSize: 16,fontWeight: FontWeight.bold)),
-              child:const Text("Go to Home"),
+                  ],
+                ),
+                buildSyncTile(
+                    "Blocks",
+                    blocksController.lastSyncedTime,
+                        () => blocksController.syncBlocks(
+                        "DISTRICT_ID", userController.userId.value),
+                    blocksController.isLoading),
+                buildSyncTile(
+                    "Incident Types",
+                    incidentTypesController.lastSyncedTime,
+                    incidentTypesController.syncIncidentTypes,
+                    incidentTypesController.isLoading),
+                buildSyncTile(
+                    "Incident Subtypes",
+                    incidentSubTypesController.lastSyncedTime,
+                    incidentSubTypesController.syncIncidentSubTypes,
+                    incidentSubTypesController.isLoading),
+                buildSyncTile(
+                    "Patient Types",
+                    patientTypesController.lastSyncedTime,
+                    patientTypesController.syncPatientTypes,
+                    patientTypesController.isLoading),
+                buildSyncTile(
+                    "General Settings",
+                    generalSettingsController.lastSyncedTime,
+                    () => generalSettingsController
+                        .syncGeneralSettings(userController.userId.value),
+                    generalSettingsController.isLoading),
+                buildSyncTile(
+                    "Districts",
+                    districtsController.lastSyncedTime,
+                    () => districtsController
+                        .syncDistricts(userController.userId.value),
+                    districtsController.isLoading),
+                buildSyncTile(
+                    "Payment Methods",
+                    paymentMethodsController.lastSyncedTime,
+                    () => paymentMethodsController
+                        .syncPaymentMethods(userController.userId.value),
+                    paymentMethodsController.isLoading),
+                buildSyncTile(
+                    "Disease Types",
+                    diseaseTypesController.lastSyncedTime,
+                    () => diseaseTypesController
+                        .syncDiseaseTypes(userController.userId.value),
+                    diseaseTypesController.isLoading),
+                buildSyncTile(
+                    "Standard Remarks",
+                    standardRemarksController.lastSyncedTime,
+                    () => standardRemarksController
+                        .syncStandardRemarks(userController.userId.value),
+                    standardRemarksController.isLoading),
+                buildSyncTile(
+                    "Doctors",
+                    doctorsController.lastSyncedTime,
+                    () => doctorsController.syncDoctors(
+                        userController.userId.value, "", ""),
+                    doctorsController.isLoading),
+                buildSyncTile(
+                    "Drivers",
+                    driversController.lastSyncedTime,
+                    () => driversController.syncDrivers(
+                        userController.userId.value, "ZONE_ID", "BLOCK_ID"),
+                    driversController.isLoading),
+                buildSyncTile(
+                    "Hospitals",
+                    hospitalsController.lastSyncedTime,
+                    () => hospitalsController.syncHospitals("DEPT_ID",
+                        "ZONE_ID", userController.userId.value, 1, 1),
+                    hospitalsController.isLoading),
+                buildSyncTile(
+                    "Locations",
+                    locationsController.lastSyncedTime,
+                    () => locationsController.syncLocations(
+                        "DEP_ID", "ZONE_ID", userController.userId.value, 1, 1),
+                    locationsController.isLoading),
+              ],
             ),
-          )
+          ),
+          widget.fromLogin
+              ? Container(
+                  margin: const EdgeInsets.all(16),
+                  width: double.maxFinite,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.offAll(HomeScreen()); // Auto-login if token exists
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          // Add this
+                          borderRadius: BorderRadius.circular(
+                              28.0), // Adjust the radius as needed
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        textStyle: GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: const Text("Go to Home"),
+                  ),
+                )
+              : const SizedBox.shrink()
         ],
       ),
     );
@@ -199,29 +215,100 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
 
   Widget buildSyncTile(String title, RxString lastSyncedTime,
       VoidCallback syncFunction, RxBool isLoading) {
-    return Card(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        child: ListTile(
-          title: Text(title),
-          subtitle: Obx(() => Text("Last Synced: ${lastSyncedTime.value}")),
-          trailing: Obx(
-            () => isLoading.value
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                        strokeWidth: 2), // ✅ Loading Indicator
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.sync, color: Colors.blue),
-                    onPressed: syncFunction,
+    return Container(
+
+        // height: 100,
+        // width: 200,
+        margin: const EdgeInsets.only(top: 16, left:12,right: 6),
+        decoration:    BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: Colors.blue,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey.shade300, blurRadius: 7, spreadRadius: 0.7)
+            ]),
+        child: Stack(
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 12,top: 12),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.orange),
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(
+                    Icons.event,
+                    color: Colors.white,
                   ),
-          ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title,
+                          maxLines: 2,
+                          style:
+                              const TextStyle(color: Colors.white, fontSize: 14,fontWeight: FontWeight.bold)),
+                      Obx(() => Text(
+                            "Last Synced: ${lastSyncedTime.value}",
+                            style: const TextStyle(color: Colors.white),
+                          )),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  // width: double.infinity,
+                  child: ElevatedButton(
+            
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                      ),
+                      onPressed: syncFunction,
+                      child: const Text(
+                        '    Synchronize    ',
+                        style: TextStyle(color: Colors.black),
+                      )),
+                )
+              ],
+            ),
+             Positioned(
+               top: -16,
+                 right: -36,
+                 child: Icon((Icons.star),size: 150,color: Colors.white.withOpacity(0.1),))
+          ],
         ));
   }
-
-  void loadUserId() {}
 }
+/*
+* ListTile(
+                title: Text(title),
+                subtitle: Obx(() => Text("Last Synced: ${lastSyncedTime.value}")),
+                trailing: Obx(
+                  () => isLoading.value
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2), // ✅ Loading Indicator
+                        )
+                      : IconButton(
+                          icon: const Icon(Icons.sync, color: Colors.blue),
+                          onPressed: syncFunction,
+                        ),
+                ),
+              )*/
 
 /*class MasterDataScreen extends StatefulWidget {
   const MasterDataScreen({super.key});

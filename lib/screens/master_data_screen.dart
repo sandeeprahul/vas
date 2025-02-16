@@ -11,17 +11,19 @@ import '../controllers/PaymentMethodsController.dart';
 import '../controllers/StandardRemarksController.dart';
 import '../controllers/blocks_controller.dart';
 import '../controllers/denial_types_controller.dart';
+import '../controllers/districts_controller.dart';
+import '../controllers/doctors_controller.dart';
 import '../controllers/event_types_controller.dart';
-import 'package:get/get.dart';
-import '../controllers/event_types_controller.dart';
-import '../controllers/denial_types_controller.dart';
-import '../controllers/blocks_controller.dart';
 import '../controllers/general_settings_controller.dart';
 import '../controllers/location_controller.dart';
 import '../controllers/user_controller.dart';
 import '../shared_pref_helper.dart';
 
 class MasterDataScreen extends StatefulWidget {
+  final bool fromLogin;
+
+  const MasterDataScreen({Key? key, required this.fromLogin}) : super(key: key);
+
   @override
   State<MasterDataScreen> createState() => _MasterDataScreenState();
 }
@@ -54,10 +56,13 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
   final DiseaseTypesController diseaseTypesController =
       Get.put(DiseaseTypesController());
 
+
   final StandardRemarksController standardRemarksController =
       Get.put(StandardRemarksController());
 
   final DriversController driversController = Get.put(DriversController());
+  final DistrictsController districtsController = Get.put(DistrictsController());
+  final DoctorsController doctorsController = Get.put(DoctorsController());
 
   final HospitalsController hospitalsController =
       Get.put(HospitalsController());
@@ -103,6 +108,11 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
               () => generalSettingsController
                   .syncGeneralSettings(userController.userId.value)),
           buildSyncTile(
+              "Districts",
+              districtsController.lastSyncedTime,
+              () => districtsController
+                  .syncDistricts(userController.userId.value)),
+          buildSyncTile(
               "Payment Methods",
               paymentMethodsController.lastSyncedTime,
               () => paymentMethodsController
@@ -117,6 +127,11 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
               standardRemarksController.lastSyncedTime,
               () => standardRemarksController
                   .syncStandardRemarks(userController.userId.value)),
+          buildSyncTile(
+              "Doctors",
+              doctorsController.lastSyncedTime,
+              () => doctorsController
+                  .syncDoctors(userController.userId.value,"","")),
           buildSyncTile(
               "Drivers",
               driversController.lastSyncedTime,

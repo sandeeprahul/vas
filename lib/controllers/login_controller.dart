@@ -44,8 +44,7 @@ class LoginController extends GetxController {
 
     } else {
       // Get.offAllNamed("/login");
-      Get.offAll(LoginScreen()); // Auto-login if token exists
-
+      Get.offAll(const LoginScreen()); // Auto-login if token exists
     }
   }
   Future<void> logoutUser() async {

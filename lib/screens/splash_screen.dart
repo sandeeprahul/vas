@@ -9,7 +9,7 @@ class SplashScreen extends StatelessWidget {
     final LoginController loginController = Get.put(LoginController());
 
     // Check login status after 2 seconds
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       loginController.checkLoginStatus();
     });
 

@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:vas/screens/MyFormScreen.dart';
+import 'package:vas/screens/form_temp.dart';
 import 'package:vas/screens/splash_screen.dart';
 import 'package:vas/theme.dart';
 
@@ -40,9 +42,10 @@ class MyApp extends StatelessWidget {
       themeMode: themeController.theme,
       home:  SplashScreen(),
       routes: {
-        '/manage_trip': (context) => ManageTripScreen(), // Define route
+        // '/manage_trip': (context) => ManageTripScreen(), // Define route
+        '/manage_trip': (context) => MyFormScreen(), // Define route
         '/case_registration_new': (context) => CaseRegistrationNewScreen(), // Define route
-        '/master_data_screen': (context) =>  MasterDataScreen(), // Define route
+        '/master_data_screen': (context) =>  const MasterDataScreen(fromLogin: false,), // Define route
       },
     ));
   }

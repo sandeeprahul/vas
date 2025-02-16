@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vas/controllers/DriversController.dart';
-import 'package:vas/controllers/blocks_controller.dart';
-import 'package:vas/controllers/districts_controller.dart';
-import 'package:vas/controllers/doctors_controller.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 import '../controllers/trip_from_controller.dart';
 
@@ -14,7 +12,7 @@ class MyFormScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Submit Form"), backgroundColor: Colors.blue,
+        title: const Text("Manage trip"), backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -39,16 +37,25 @@ class MyFormScreen extends StatelessWidget {
             // _buildDropdownField("Driver", controller.selectedDriver, driverController.drivers.values.toList().obs, "driverId", "driverName"),
             _buildTextField("Base Odometer", controller.baseOdometerController),
             const SizedBox(height: 20),
+            const Spacer(),
             Obx(() =>
-                ElevatedButton(
-                  onPressed: controller.isLoading.value ? null : controller
-                      .submitForm,
-                  style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      textStyle: const TextStyle(fontSize: 16)),
-                  child: controller.isLoading.value
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text("Submit"),
+                SizedBox(
+                  width: double.infinity,
+
+                  child: ElevatedButton(
+                    onPressed: controller.isLoading.value ? null : controller
+                        .submitForm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder( // Add this
+                          borderRadius: BorderRadius.circular(28.0), // Adjust the radius as needed
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        textStyle:  GoogleFonts.montserrat(fontSize: 16,fontWeight: FontWeight.bold)),
+                    child: controller.isLoading.value
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text("Submit"),
+                  ),
                 )),
           ],
         ),

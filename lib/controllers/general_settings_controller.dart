@@ -11,18 +11,13 @@ class GeneralSettingsController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    String? userId = await SharedPrefHelper.getApiData('userId');
-    if (userId != null) {
-      loadLastSyncedData(userId);
-    } else {
-      print("Error: userId is null!");
-    }
-    // loadLastSyncedData();
+
+    loadLastSyncedData();
   }
 
-  Future<void> loadLastSyncedData(String userId) async {
-    lastSyncedTime.value = await SharedPrefHelper.getLastSyncedTime('/GetGeneralSettings/$userId') ?? "Never";
-    generalSettings.value = await SharedPrefHelper.getApiData('/GetGeneralSettings/$userId') ?? {};
+  Future<void> loadLastSyncedData() async {
+    lastSyncedTime.value = await SharedPrefHelper.getLastSyncedTime('/GetGeneralSettings') ?? "Never";
+    generalSettings.value = await SharedPrefHelper.getApiData('/GetGeneralSettings') ?? {};
   }
 
   Future<void> syncGeneralSettings(String userId) async {

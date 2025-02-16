@@ -51,8 +51,7 @@ class DoctorsController extends GetxController {
         else if (response is Map<String, dynamic>) {
           // ✅ Response is a Map, wrap it in a List
           await SharedPrefHelper.saveApiData('/GetDoctors', [response]);
-
-          await SharedPrefHelper.saveLastSyncedTime(formattedEndpoint);
+          await SharedPrefHelper.saveLastSyncedTime('/GetDoctors');
           // await SharedPrefHelper.saveApiData('/GetDrivers/$empId/$zoneId/$blockId', response);
           lastSyncedTime.value = DateTime.now().toString();
           doctors.value  = response;

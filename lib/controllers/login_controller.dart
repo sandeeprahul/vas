@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/screens/login_screen.dart';
+import 'package:vas/screens/master_data_screen.dart';
+import 'package:vas/utils/showErrorDialog.dart';
 import '../screens/dashboard_page.dart';
 import '../screens/home_screen.dart';
 import 'package:http/http.dart' as http;
@@ -55,6 +57,8 @@ class LoginController extends GetxController {
   Future<void> loginUser() async {
     if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
       Get.snackbar("Error", "Username and password cannot be empty");
+      showErrorDialog("Error", 'Username and password cannot be empty'); // ✅ Use dialog instead of snackbar
+
       return;
     }
 
@@ -97,10 +101,11 @@ class LoginController extends GetxController {
 
       Get.snackbar("Success", "Login Successful");
       // Get.offAllNamed("/home"); // Navigate to home screen
+      Get.offAll(const MasterDataScreen(fromLogin: true)); // Auto-login if token exists
       Get.offAll(HomeScreen()); // Auto-login if token exists
 
 
     } else {
-      Get.snackbar("Error", response?["message"] ?? "Login failed");
+      showErrorDialog("Error", response?["message"] ?? "Login failed"); // ✅ Use dialog instead of snackbar
     }
   }}

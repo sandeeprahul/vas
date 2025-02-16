@@ -50,7 +50,7 @@ class DriversController extends GetxController {
           // ✅ Response is a Map, wrap it in a List
           await SharedPrefHelper.saveApiData('/GetDrivers', [response]);
 
-          await SharedPrefHelper.saveLastSyncedTime(formattedEndpoint);
+          await SharedPrefHelper.saveLastSyncedTime('/GetDrivers');
           // await SharedPrefHelper.saveApiData('/GetDrivers/$empId/$zoneId/$blockId', response);
           lastSyncedTime.value = DateTime.now().toString();
           drivers.value  = response;

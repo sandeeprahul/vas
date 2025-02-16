@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:vas/screens/home_screen.dart';
 
 import '../controllers/DiseaseTypesController.dart';
 import '../controllers/DriversController.dart';
@@ -56,12 +58,12 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
   final DiseaseTypesController diseaseTypesController =
       Get.put(DiseaseTypesController());
 
-
   final StandardRemarksController standardRemarksController =
       Get.put(StandardRemarksController());
 
   final DriversController driversController = Get.put(DriversController());
-  final DistrictsController districtsController = Get.put(DistrictsController());
+  final DistrictsController districtsController =
+      Get.put(DistrictsController());
   final DoctorsController doctorsController = Get.put(DoctorsController());
 
   final HospitalsController hospitalsController =
@@ -77,94 +79,145 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-          title: const Text('Master Data',style: TextStyle(color: Colors.white),),iconTheme: IconThemeData(color: Colors.white),),
+        title: const Text(
+          'Master Data',
+          style: TextStyle(color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: ListView(
         children: [
-          buildSyncTile("Event Types", eventController.lastSyncedTime,
-              eventController.syncEventTypes),
+          buildSyncTile(
+            "Event Types",
+            eventController.lastSyncedTime,
+            eventController.syncEventTypes,
+            locationsController.isLoading,
+          ),
           buildSyncTile(
               "Denial Types",
               denialController.lastSyncedTime,
-              () => denialController
-                  .syncDenialTypes(userController.userId.value)),
+              () =>
+                  denialController.syncDenialTypes(userController.userId.value),
+              locationsController.isLoading),
           buildSyncTile(
               "Blocks",
               blocksController.lastSyncedTime,
               () => blocksController.syncBlocks(
-                  "DISTRICT_ID", userController.userId.value)),
+                  "DISTRICT_ID", userController.userId.value),
+              locationsController.isLoading),
           buildSyncTile(
               "Incident Types",
               incidentTypesController.lastSyncedTime,
-              incidentTypesController.syncIncidentTypes),
+              incidentTypesController.syncIncidentTypes,
+              locationsController.isLoading),
           buildSyncTile(
               "Incident Subtypes",
               incidentSubTypesController.lastSyncedTime,
-              incidentSubTypesController.syncIncidentSubTypes),
-          buildSyncTile("Patient Types", patientTypesController.lastSyncedTime,
-              patientTypesController.syncPatientTypes),
+              incidentSubTypesController.syncIncidentSubTypes,
+              locationsController.isLoading),
+          buildSyncTile(
+              "Patient Types",
+              patientTypesController.lastSyncedTime,
+              patientTypesController.syncPatientTypes,
+              locationsController.isLoading),
           buildSyncTile(
               "General Settings",
               generalSettingsController.lastSyncedTime,
               () => generalSettingsController
-                  .syncGeneralSettings(userController.userId.value)),
+                  .syncGeneralSettings(userController.userId.value),
+              locationsController.isLoading),
           buildSyncTile(
               "Districts",
               districtsController.lastSyncedTime,
               () => districtsController
-                  .syncDistricts(userController.userId.value)),
+                  .syncDistricts(userController.userId.value),
+              locationsController.isLoading),
           buildSyncTile(
               "Payment Methods",
               paymentMethodsController.lastSyncedTime,
               () => paymentMethodsController
-                  .syncPaymentMethods(userController.userId.value)),
+                  .syncPaymentMethods(userController.userId.value),
+              locationsController.isLoading),
           buildSyncTile(
               "Disease Types",
               diseaseTypesController.lastSyncedTime,
               () => diseaseTypesController
-                  .syncDiseaseTypes(userController.userId.value)),
+                  .syncDiseaseTypes(userController.userId.value),
+              locationsController.isLoading),
           buildSyncTile(
               "Standard Remarks",
               standardRemarksController.lastSyncedTime,
               () => standardRemarksController
-                  .syncStandardRemarks(userController.userId.value)),
+                  .syncStandardRemarks(userController.userId.value),
+              locationsController.isLoading),
           buildSyncTile(
               "Doctors",
               doctorsController.lastSyncedTime,
-              () => doctorsController
-                  .syncDoctors(userController.userId.value,"","")),
+              () => doctorsController.syncDoctors(
+                  userController.userId.value, "", ""),
+              locationsController.isLoading),
           buildSyncTile(
               "Drivers",
               driversController.lastSyncedTime,
               () => driversController.syncDrivers(
-                  userController.userId.value, "ZONE_ID", "BLOCK_ID")),
+                  userController.userId.value, "ZONE_ID", "BLOCK_ID"),
+              locationsController.isLoading),
           buildSyncTile(
               "Hospitals",
               hospitalsController.lastSyncedTime,
               () => hospitalsController.syncHospitals(
-                  "DEPT_ID", "ZONE_ID", userController.userId.value, 1, 1)),
+                  "DEPT_ID", "ZONE_ID", userController.userId.value, 1, 1),
+              locationsController.isLoading),
           buildSyncTile(
               "Locations",
               locationsController.lastSyncedTime,
               () => locationsController.syncLocations(
-                  "DEP_ID", "ZONE_ID", userController.userId.value, 1, 1)),
+                  "DEP_ID", "ZONE_ID", userController.userId.value, 1, 1),
+              locationsController.isLoading),
+
+          SizedBox(
+            width: double.maxFinite,
+            height: 50,
+            child: ElevatedButton(
+              onPressed:(){
+                Get.offAll(HomeScreen()); // Auto-login if token exists
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder( // Add this
+                    borderRadius: BorderRadius.circular(28.0), // Adjust the radius as needed
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  textStyle:  GoogleFonts.montserrat(fontSize: 16,fontWeight: FontWeight.bold)),
+              child:const Text("Go to Home"),
+            ),
+          )
         ],
       ),
     );
   }
 
-  Widget buildSyncTile(
-      String title, RxString lastSyncedTime, VoidCallback syncFunction) {
+  Widget buildSyncTile(String title, RxString lastSyncedTime,
+      VoidCallback syncFunction, RxBool isLoading) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 5),
-      child: ListTile(
-        title: Text(title),
-        subtitle: Obx(() => Text("Last Synced: ${lastSyncedTime.value}")),
-        trailing: IconButton(
-          icon: Icon(Icons.sync, color: Colors.blue),
-          onPressed: syncFunction,
-        ),
-      ),
-    );
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        child: ListTile(
+          title: Text(title),
+          subtitle: Obx(() => Text("Last Synced: ${lastSyncedTime.value}")),
+          trailing: Obx(
+            () => isLoading.value
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                        strokeWidth: 2), // ✅ Loading Indicator
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.sync, color: Colors.blue),
+                    onPressed: syncFunction,
+                  ),
+          ),
+        ));
   }
 
   void loadUserId() {}

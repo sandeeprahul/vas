@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:vas/screens/MyFormScreen.dart';
 import 'package:vas/screens/form_temp.dart';
+import 'package:vas/screens/home_screen.dart';
 import 'package:vas/screens/splash_screen.dart';
 import 'package:vas/theme.dart';
 
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
       home:  SplashScreen(),
       routes: {
         // '/manage_trip': (context) => ManageTripScreen(), // Define route
+        '/home': (context) => HomeScreen(), // Define route
         '/manage_trip': (context) => MyFormScreen(), // Define route
         '/case_registration_new': (context) => CaseRegistrationNewScreen(), // Define route
         '/master_data_screen': (context) =>  const MasterDataScreen(fromLogin: false,), // Define route

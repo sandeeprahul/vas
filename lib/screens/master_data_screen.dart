@@ -90,23 +90,19 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
           Expanded(
             child: ListView(
               children: [
-                Row(
-                  children: [
-                    buildSyncTile(
-                      "Event Types",
-                      eventController.lastSyncedTime,
-                      eventController.syncEventTypes,
-                      eventController.isLoading,
-                    ),
-                    buildSyncTile(
-                        "Denial Types",
-                        denialController.lastSyncedTime,
-                        () => denialController
-                            .syncDenialTypes(userController.userId.value),
-                        denialController.isLoading),
 
-                  ],
+                buildSyncTile(
+                  "Event Types",
+                  eventController.lastSyncedTime,
+                  eventController.syncEventTypes,
+                  eventController.isLoading,
                 ),
+                buildSyncTile(
+                    "Denial Types",
+                    denialController.lastSyncedTime,
+                        () => denialController
+                        .syncDenialTypes(userController.userId.value),
+                    denialController.isLoading),
                 buildSyncTile(
                     "Blocks",
                     blocksController.lastSyncedTime,
@@ -195,7 +191,7 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
                       Get.offAll(HomeScreen()); // Auto-login if token exists
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.orange,
                         shape: RoundedRectangleBorder(
                           // Add this
                           borderRadius: BorderRadius.circular(
@@ -257,9 +253,11 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
                           maxLines: 2,
                           style:
                               const TextStyle(color: Colors.white, fontSize: 14,fontWeight: FontWeight.bold)),
-                      Obx(() => Text(
+                      Obx(() =>  Text(
+                        maxLines: 2,
+                            // "Last Synced: Never",
                             "Last Synced: ${lastSyncedTime.value}",
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.white),
                           )),
                     ],
                   ),
@@ -284,9 +282,9 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
               ],
             ),
              Positioned(
-               top: -16,
+               top: -30,
                  right: -36,
-                 child: Icon((Icons.star),size: 150,color: Colors.white.withOpacity(0.1),))
+                 child: Icon((Icons.pages_rounded),size: 150,color: Colors.white.withOpacity(0.1),))
           ],
         ));
   }

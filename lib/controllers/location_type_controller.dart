@@ -10,6 +10,14 @@ class LocationTypeController extends GetxController {
   final RxString selectedLocationType = 'Select LocationType'.obs;
   final RxString selectedLocationTypeId = ''.obs; // ✅ Stores districtId for submission
 
+
+  @override
+  void onInit() {
+    super.onInit();
+    getLocationTypes();
+  }
+
+
   Future<void> getLocationTypes() async {
     isLoading.value = true;
 

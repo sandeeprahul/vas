@@ -6,10 +6,23 @@ import 'package:google_fonts/google_fonts.dart';
 import '../controllers/location_type_controller.dart';
 import '../controllers/trip_from_controller.dart';
 
-class MyFormScreen extends StatelessWidget {
-  final FormController controller = Get.put(FormController());
-  final LocationTypeController locationTypeController = Get.put(LocationTypeController()); // Initialize your controller
+class MyFormScreen extends StatefulWidget {
+  @override
+  State<MyFormScreen> createState() => _MyFormScreenState();
+}
 
+class _MyFormScreenState extends State<MyFormScreen> {
+  final FormController controller = Get.put(FormController());
+
+  final LocationTypeController locationTypeController = Get.put(LocationTypeController());
+ // Initialize your controller
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    locationTypeController.getLocationTypes();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,7 +121,6 @@ class MyFormScreen extends StatelessWidget {
     ));
   }
 
-
   void _showSelectionDialog(
       String title,
       RxString selectedValue,
@@ -143,7 +155,6 @@ class MyFormScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildTextField(String label, TextEditingController controller) {
     return TextField(

@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:vas/controllers/ambulance_controller.dart';
+import 'package:vas/controllers/blocks_controller.dart';
 import 'package:vas/controllers/location_type_controller.dart';
 import 'package:vas/controllers/user_controller.dart';
+import '../services/api_service.dart';
 import '../shared_pref_helper.dart';
 import '../utils/showLoadingDialog.dart';
 import 'location_sub_type_controller.dart';
@@ -11,6 +15,7 @@ import 'location_sub_type_controller.dart';
 class FormController extends GetxController {
   // Loading state
   final RxBool isLoading = false.obs;
+  final ApiService apiService = ApiService();
 
   // Selected values for dropdowns
   // final RxString selectedDistrict = 'Select District'.obs;
@@ -90,13 +95,14 @@ class FormController extends GetxController {
       LocationTypeController locationTypeController =
           Get.put(LocationTypeController());
       AmbulanceController ambulanceController = Get.put(AmbulanceController());
+      BlocksController blocksController = Get.put(BlocksController());
       final Map<String, dynamic> formData = {
         "depT_ID": userController.deptId,
         "user_ID": userController.userId,
         "driver_ID": selectedDriverId.value,
         "doctor_ID": selectedDoctorId.value,
         "zone_ID": userController.zoneId,
-        "block_ID": selectedBlockId.value,
+        "block_ID": blocksController.selectedBlockId.value,
         "location_ID": locationSubTypeController.selectedLocationId.value,
         "address": locationTypeController.selectedLocationTypeId.value,
         "vehicle_ID": ambulanceController.selectedAmbulanceId.value,
@@ -109,6 +115,18 @@ class FormController extends GetxController {
       };
 
       print("Submitting Form Data: $formData");
+
+      // Make API POST request
+      final response = await apiService.postRequest("/StartTrip", formData);
+
+      if (response != null) {
+        print("Form submitted successfully: $response");
+        // Handle success (e.g., show success message, navigate, etc.)
+      } else {
+        print("Failed to submit form:$response");
+        // Handle failure (e.g., show error message)
+      }
+
       // TODO: Implement API POST request here
     } catch (e) {
       // isLoading.value = false;
@@ -120,4 +138,5 @@ class FormController extends GetxController {
 
     }
   }
+
 }

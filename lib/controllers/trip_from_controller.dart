@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:vas/controllers/ambulance_controller.dart';
 import 'package:vas/controllers/blocks_controller.dart';
+import 'package:vas/controllers/districts_controller.dart';
 import 'package:vas/controllers/location_type_controller.dart';
 import 'package:vas/controllers/user_controller.dart';
 import '../services/api_service.dart';
@@ -96,21 +97,23 @@ class FormController extends GetxController {
           Get.put(LocationTypeController());
       AmbulanceController ambulanceController = Get.put(AmbulanceController());
       BlocksController blocksController = Get.put(BlocksController());
+      DistrictsController districtsController = Get.put(DistrictsController());
       final Map<String, dynamic> formData = {
-        "depT_ID": userController.deptId,
-        "user_ID": userController.userId,
+        "depT_ID": userController.deptId.value,
+        "user_ID": userController.userId.value,
         "driver_ID": selectedDriverId.value,
         "doctor_ID": selectedDoctorId.value,
-        "zone_ID": userController.zoneId,
+        "zone_ID":districtsController.selectedDistrictId.value ,
         "block_ID": blocksController.selectedBlockId.value,
         "location_ID": locationSubTypeController.selectedLocationId.value,
-        "address": locationTypeController.selectedLocationTypeId.value,
+        "address": "",
         "vehicle_ID": ambulanceController.selectedAmbulanceId.value,
-        "base_KM": baseOdometerController.text,
+        // "base_KM": "",
+        "base_KM": baseOdometerController.value.text,
         "latitude": position.latitude,
         "longitude": position.longitude,
-        "device_Regn_ID": userController.deviceRegnId,
-        "imeI_Number": userController.imeiNumber,
+        "device_Regn_ID": userController.deviceRegnId.value,
+        "imeI_Number": userController.imeiNumber.value,
         "os_Version": "13"
       };
 

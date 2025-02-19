@@ -177,11 +177,11 @@ class _MyFormScreenState extends State<MyFormScreen> {
               height: 8,
             ),
 
-            _buildTextField(
-                "Enter Ambulance Number", controller.ambulanceController),
+            /*_buildTextField(
+                "Enter Ambulance Number", controller.ambulanceController),*//*
             const SizedBox(
               height: 8,
-            ),
+            ),*/
             Obx(() => GestureDetector(
                   onTap: () {
                     _showSelectionDialog(
@@ -334,16 +334,39 @@ class _MyFormScreenState extends State<MyFormScreen> {
                         title: Text(item[valueField] ?? "Unknown"),
                         onTap: () {
                           if (title == "District") {
+                            districtsController.selectedDistrictId.value =
+                                item[keyField]?.toString() ??
+                                    "";
+                            districtsController.selectedDistrict.value =   item[valueField]?.toString() ??
+                                "";
+                            blocksController.blocksList.clear();
+                            blocksController.selectedBlock.value = "Select Block";
                             blocksController.getBlocks(
                                 userController.userId.value,
                                 "${item[keyField]}");
+
                           } else if (title == "LocationType") {
+                            locationTypeController.selectedLocationTypeId.value =
+                                item[keyField]?.toString() ??
+                                    "";
+                            locationTypeController.selectedLocationType.value =   item[valueField]?.toString() ??
+                                "";
+                            locationSubTypeController.location.clear();
+                            locationSubTypeController.selectedLocationName.value = "Select Block";
+
                             locationSubTypeController.getLocations(
                                 userController.zoneId.value,
                                 userController.blockId.value,
                                 userController.userId.value,
                                 "${item[keyField]}");
                           } else if (title == "Ambulance") {
+
+                            ambulanceController.selectedAmbulanceId.value =
+                                item[keyField]?.toString() ??
+                                    "";
+                            ambulanceController.selectedAmbulanceName.value =   item[valueField]?.toString() ??
+                                "";
+
                             getOdometer("${item[keyField]}");
                           } else {
                             selectedValue.value =

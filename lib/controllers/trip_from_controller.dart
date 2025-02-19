@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:vas/controllers/ambulance_controller.dart';
+import 'package:vas/controllers/location_type_controller.dart';
+import 'package:vas/controllers/user_controller.dart';
 import '../shared_pref_helper.dart';
+import '../utils/showLoadingDialog.dart';
+import 'location_sub_type_controller.dart';
 
 class FormController extends GetxController {
   // Loading state
@@ -14,14 +20,15 @@ class FormController extends GetxController {
   final RxString selectedBlockId = ''.obs; // ✅ Stores districtId for submission
 
   final RxString selectedDoctor = 'Select Doctor'.obs;
-  final RxString selectedDoctorId = ''.obs; // ✅ Stores districtId for submission
+  final RxString selectedDoctorId =
+      ''.obs; // ✅ Stores districtId for submission
 
   final RxString selectedDriver = 'Select Driver'.obs;
   final RxString selectedDriverId = ''.obs;
 
   // Input controllers
   final TextEditingController ambulanceController = TextEditingController();
-   TextEditingController baseOdometerController = TextEditingController();
+  TextEditingController baseOdometerController = TextEditingController();
 
   // Data lists
   final RxList<dynamic> districts = <dynamic>[].obs;
@@ -49,16 +56,19 @@ class FormController extends GetxController {
 
       // Load doctors
       var doctorData = await SharedPrefHelper.getApiData('/GetDoctors');
-      doctors.value = (doctorData is List && doctorData.isNotEmpty && doctorData[0] is Map<String, dynamic>)
+      doctors.value = (doctorData is List &&
+              doctorData.isNotEmpty &&
+              doctorData[0] is Map<String, dynamic>)
           ? doctorData[0]['doctorData'] ?? []
           : [];
 
       // Load drivers
       var driverData = await SharedPrefHelper.getApiData('/GetDrivers');
-      drivers.value = (driverData is List && driverData.isNotEmpty && driverData[0] is Map<String, dynamic>)
+      drivers.value = (driverData is List &&
+              driverData.isNotEmpty &&
+              driverData[0] is Map<String, dynamic>)
           ? driverData[0]['driverData'] ?? []
           : [];
-
     } catch (e) {
       print("Error loading last synced data: $e");
     } finally {
@@ -67,26 +77,47 @@ class FormController extends GetxController {
   }
 
   /// Submits form data to the backend
-  void submitForm() {
-    final Map<String, dynamic> formData = {
-      "depT_ID": 0,
-      "user_ID": 0,
-      "driver_ID": selectedDriver.value,
-      "doctor_ID": selectedDoctor.value,
-      "zone_ID": 0,
-      "block_ID": selectedBlock.value,
-      "location_ID": 0,
-      "address": "string",
-      "vehicle_ID": ambulanceController.text,
-      "base_KM": baseOdometerController.text,
-      "latitude": 0,
-      "longitude": 0,
-      "device_Regn_ID": "string",
-      "imeI_Number": "string",
-      "os_Version": "string"
-    };
+  Future<void> submitForm() async {
+    isLoading.value = true;
+    showLoadingDialog();
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
 
-    print("Submitting Form Data: $formData");
-    // TODO: Implement API POST request here
+      UserController userController = Get.put(UserController());
+      LocationSubTypeController locationSubTypeController =
+          Get.put(LocationSubTypeController());
+      LocationTypeController locationTypeController =
+          Get.put(LocationTypeController());
+      AmbulanceController ambulanceController = Get.put(AmbulanceController());
+      final Map<String, dynamic> formData = {
+        "depT_ID": userController.deptId,
+        "user_ID": userController.userId,
+        "driver_ID": selectedDriverId.value,
+        "doctor_ID": selectedDoctorId.value,
+        "zone_ID": userController.zoneId,
+        "block_ID": selectedBlockId.value,
+        "location_ID": locationSubTypeController.selectedLocationId.value,
+        "address": locationTypeController.selectedLocationTypeId.value,
+        "vehicle_ID": ambulanceController.selectedAmbulanceId.value,
+        "base_KM": baseOdometerController.text,
+        "latitude": position.latitude,
+        "longitude": position.longitude,
+        "device_Regn_ID": userController.deviceRegnId,
+        "imeI_Number": userController.imeiNumber,
+        "os_Version": "13"
+      };
+
+      print("Submitting Form Data: $formData");
+      // TODO: Implement API POST request here
+    } catch (e) {
+      // isLoading.value = false;
+      print("Submitting Form Error: $e");
+
+    } finally {
+      isLoading.value = false;
+      hideLoadingDialog();
+
+    }
   }
 }

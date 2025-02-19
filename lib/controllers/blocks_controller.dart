@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:vas/controllers/user_controller.dart';
 import '../services/api_service.dart';
 import '../shared_pref_helper.dart';
 
@@ -34,8 +35,9 @@ class BlocksController extends GetxController {
   }
 
   Future<void> syncBlocks(String districtId, String userId) async {
-    isLoading.value = true; // Start loading
 
+    isLoading.value = true; // Start loading
+    // selectedBlock.value = "Please wait";
     try {
       String formattedEndpoint = '/GetBlocks/0/$userId';
       // String formattedEndpoint = '/GetBlocks/$districtId/$userId';

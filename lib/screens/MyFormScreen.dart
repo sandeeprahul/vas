@@ -332,6 +332,7 @@ class _MyFormScreenState extends State<MyFormScreen> {
                     children: dataList.map((item) {
                       return ListTile(
                         title: Text(item[valueField] ?? "Unknown"),
+
                         onTap: () {
                           if (title == "District") {
                             districtsController.selectedDistrictId.value =

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../utils/showDialogNoContext.dart';
+
 class ApiService {
   final String baseUrl = "http://49.207.44.107/mvas";
 
@@ -17,6 +19,8 @@ class ApiService {
         return jsonDecode(response.body);
       } else {
         print("API Error: ${response.body}");
+        // showErrorDialog('Failure', response.body);
+
         return null;
       }
     } catch (e) {

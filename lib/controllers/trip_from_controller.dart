@@ -8,6 +8,7 @@ import 'package:vas/controllers/blocks_controller.dart';
 import 'package:vas/controllers/districts_controller.dart';
 import 'package:vas/controllers/location_type_controller.dart';
 import 'package:vas/controllers/user_controller.dart';
+import 'package:vas/utils/showDialogNoContext.dart';
 import '../services/api_service.dart';
 import '../shared_pref_helper.dart';
 import '../utils/showLoadingDialog.dart';
@@ -85,7 +86,7 @@ class FormController extends GetxController {
   /// Submits form data to the backend
   Future<void> submitForm() async {
     isLoading.value = true;
-    showLoadingDialog();
+    // showLoadingDialog();
     try {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
@@ -102,8 +103,9 @@ class FormController extends GetxController {
         "depT_ID": userController.deptId.value,
         "user_ID": userController.userId.value,
         "driver_ID": selectedDriverId.value,
-        "doctor_ID": selectedDoctorId.value,
-        "zone_ID":districtsController.selectedDistrictId.value ,
+        "doctor_ID": "23",
+        // "doctor_ID": selectedDoctorId.value,
+        "zone_ID": districtsController.selectedDistrictId.value,
         "block_ID": blocksController.selectedBlockId.value,
         "location_ID": locationSubTypeController.selectedLocationId.value,
         "address": "",
@@ -117,29 +119,76 @@ class FormController extends GetxController {
         "os_Version": "13"
       };
 
+      //Response
+      //{result: 1, message: Trip created, trip_ID: 25021900001, start_Time: 2025-02-19 23:53:22}
+      //sending payload
+      // {depT_ID: 3, user_ID: 1888, driver_ID: 819, doctor_ID: 23,
+      // zone_ID: 3, block_ID: 22, location_ID: 43190, address: ,
+      // vehicle_ID: 3, base_KM: 2.0, latitude: 16.470866, longitude: 80.6065381,
+      // device_Regn_ID: , imeI_Number: 0, os_Version: 13}
+
       print("Submitting Form Data: $formData");
 
       // Make API POST request
       final response = await apiService.postRequest("/StartTrip", formData);
 
       if (response != null) {
+        isLoading.value = false;
+        // hideLoadingDialog();
+
         print("Form submitted successfully: $response");
+        // Form submitted successfully: {result: 0, message: Vehicle already on an emergency trip, trip_ID: 0, start_Time: null}
         // Handle success (e.g., show success message, navigate, etc.)
+
+        if (response['result'] == "1") {
+          clearAllFields();
+          showErrorDialog('Alert', "${response["message"]}");
+          Get.back(); // Closes the current page
+        } else {
+          showErrorDialog('Alert', "${response["message"]}");
+          // clearAllFields();
+        }
       } else {
         print("Failed to submit form:$response");
         // Handle failure (e.g., show error message)
+        showErrorDialog('Failure', "Trip Start Failed");
       }
-
       // TODO: Implement API POST request here
     } catch (e) {
       // isLoading.value = false;
       print("Submitting Form Error: $e");
-
+      showErrorDialog('Failure', "$e");
     } finally {
       isLoading.value = false;
-      hideLoadingDialog();
-
+      // hideLoadingDialog();
     }
   }
 
+  void clearAllFields() {
+    final locationTypeController = Get.find<LocationTypeController>();
+    final locationSubTypeController = Get.find<LocationSubTypeController>();
+
+    final ambulanceController = Get.find<AmbulanceController>();
+    final blocksController = Get.find<BlocksController>();
+    final districtsController = Get.find<DistrictsController>();
+    selectedDriverId.value = "";
+    selectedDriver.value = "Select Driver";
+    selectedDoctorId.value = "";
+    selectedDoctor.value = "Select Doctor";
+    selectedBlockId.value = "";
+    selectedBlock.value = "Select Block";
+    baseOdometerController.text = "";
+    locationSubTypeController.selectedLocationName.value = "Select Location";
+    locationSubTypeController.selectedLocationId.value = "";
+    locationTypeController.selectedLocationType.value = "Select LocationType";
+    locationTypeController.selectedLocationTypeId.value = "";
+    ambulanceController.selectedAmbulanceId.value = "";
+    ambulanceController.selectedAmbulanceName.value = "Select Ambulance";
+    blocksController.selectedBlockId.value = "";
+    blocksController.selectedBlock.value = "Select Block";
+    districtsController.selectedDistrictId.value = "";
+    districtsController.selectedDistrict.value = "Select District";
+
+    print("All fields have been cleared.");
+  }
 }

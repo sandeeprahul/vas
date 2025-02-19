@@ -107,7 +107,7 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
                     "Blocks",
                     blocksController.lastSyncedTime,
                         () => blocksController.syncBlocks(
-                        "DISTRICT_ID", userController.userId.value),
+                        userController.zoneId.value, userController.userId.value),
                     blocksController.isLoading),
                 buildSyncTile(
                     "Incident Types",

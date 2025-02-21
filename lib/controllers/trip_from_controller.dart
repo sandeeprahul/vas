@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/controllers/ambulance_controller.dart';
 import 'package:vas/controllers/blocks_controller.dart';
 import 'package:vas/controllers/districts_controller.dart';
 import 'package:vas/controllers/location_type_controller.dart';
 import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/utils/showDialogNoContext.dart';
+import '../data/TripDetails.dart';
 import '../services/api_service.dart';
 import '../shared_pref_helper.dart';
 import '../utils/showLoadingDialog.dart';
@@ -47,6 +49,7 @@ class FormController extends GetxController {
   void onInit() {
     super.onInit();
     loadLastSyncedData();
+    loadTripDetails("StartTrip"); // Load previously saved trip details
   }
 
   /// Loads last synced API data from SharedPreferences
@@ -141,10 +144,17 @@ class FormController extends GetxController {
         // Handle success (e.g., show success message, navigate, etc.)
 
         if (response['result'] == "1") {
+          int tripId = response['trip_ID']; // Extract trip ID
+
+          TripDetailsModel tripDetails = TripDetailsModel.fromJson(formData);
+
+          await saveTripDetails("StartTrip", tripId, tripDetails);
+
           clearAllFields();
           showErrorDialog('Alert', "${response["message"]}");
           Get.back(); // Closes the current page
         } else {
+          saveTempDetails();
           showErrorDialog('Alert', "${response["message"]}");
           // clearAllFields();
         }
@@ -162,6 +172,67 @@ class FormController extends GetxController {
       isLoading.value = false;
       // hideLoadingDialog();
     }
+  }
+
+  Future<void> saveTripDetails(
+      String tripType, int tripId, TripDetailsModel tripDetails) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    UserController userController = Get.find<UserController>();
+    LocationSubTypeController locationSubTypeController =
+        Get.find<LocationSubTypeController>();
+    LocationTypeController locationTypeController =
+        Get.find<LocationTypeController>();
+    AmbulanceController ambulanceController = Get.find<AmbulanceController>();
+    BlocksController blocksController = Get.find<BlocksController>();
+    DistrictsController districtsController = Get.find<DistrictsController>();
+
+    // Combine tripId and tripDetails into a single object
+    Map<String, dynamic> tripData = {
+      "trip_ID": tripId,
+      "payload": {
+        ...tripDetails.toJson(),
+        "vehicle_Name": ambulanceController.selectedAmbulanceName.value,
+        "location_Name": locationSubTypeController.selectedLocationName.value,
+        "block_Name": blocksController.selectedBlock.value,
+        "zone_Name": districtsController.selectedDistrict.value,
+        "doctor_Name": "Dr. John Doe", // Replace with actual doctor selection
+        "driver_Name": selectedDriver.value,
+      },
+    };
+    print("saved");
+    print(tripData);
+
+    await prefs.setString(tripType, jsonEncode(tripData));
+    loadTripDetails("StartTrip");
+  }
+
+  Rxn<TripDetailsModel> tripDetails = Rxn<TripDetailsModel>();
+
+  Future<TripDetailsModel?> loadTripDetails(String tripType) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonData = prefs.getString(tripType);
+
+    if (jsonData != null) {
+      try {
+        Map<String, dynamic> tripData = jsonDecode(jsonData);
+        Map<String, dynamic> tripDetailsJson = tripData["payload"];
+
+        TripDetailsModel tripDetails =
+            TripDetailsModel.fromJson(tripDetailsJson);
+        print("loadTripDetails");
+        print(tripDetails);
+        return tripDetails;
+      } catch (e) {
+        print("Error loading trip details: $e");
+        return null;
+      }
+    }
+    else {
+      print("No trip data found in SharedPreferences.");
+      return null;
+    }
+
   }
 
   void clearAllFields() {
@@ -190,5 +261,37 @@ class FormController extends GetxController {
     districtsController.selectedDistrict.value = "Select District";
 
     print("All fields have been cleared.");
+  }
+
+  Future<void> saveTempDetails() async {
+    int tripId = 25021900001;
+    TripDetailsModel tripDetails = TripDetailsModel(
+      deptId: 3,
+      userId: 1888,
+      driverId: 819,
+      driverName: "John Doe",
+      doctorId: 23,
+      doctorName: "Dr. Smith",
+      zoneId: 3,
+      zoneName: "Zone A",
+      blockId: 22,
+      blockName: "Block 22",
+      locationId: 43190,
+      locationName: "City Hospital",
+      vehicleId: 3,
+      vehicleName: "Ambulance 101",
+      baseKm: 2.0,
+      deviceRegnId: '',
+      address: "",
+      latitude: 16.470866,
+      longitude: 80.6065381,
+      imeiNumber: '0',
+      osVersion: '13',
+      tripId: tripId,
+      startTime: '2025-02-19 23:53:22',
+    );
+
+    // Save trip details
+    await saveTripDetails("StartTrip", tripId, tripDetails);
   }
 }

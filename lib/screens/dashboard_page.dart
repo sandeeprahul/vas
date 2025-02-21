@@ -7,7 +7,9 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/widgets/rounded_corner_card_widget.dart';
 
+import '../controllers/dash_boardcontroller.dart';
 import '../widgets/time_summary_card_widget.dart';
+import '../widgets/trip_details_widget.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -17,16 +19,20 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
 
 
+
   String? token;
   String? employeeId;
   String? name;
   String? roleId;
+  final DashboardController dashboardController = Get.put(DashboardController()); // Initialize controller
+  final TripController tripController = Get.put(TripController()); // Initialize controller
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _loadUserDetails();
+    tripController.loadTripDetails("StartTrip");
   }
 
   Future<void> _loadUserDetails() async {
@@ -219,7 +225,31 @@ class _DashboardPageState extends State<DashboardPage> {
               ],
             ),
             const TimeSummaryCardWidget(),
+            TripDetailsWidget(),
+       /* Obx(() {
+          final trip = tripController.tripDetails.value;
+          if (trip == null) {
+            return const Center(child: Text("No trip details available."));
+          }
 
+          return Card(
+            elevation: 4,
+            margin: const EdgeInsets.all(10),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Trip ID: ${trip.tripId}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  Text("Location ID: ${trip.payload['location_ID']}"),
+                  Text("Driver ID: ${trip.payload['driver_ID']}"),
+                  Text("Vehicle ID: ${trip.payload['vehicle_ID']}"),
+                ],
+              ),
+            ),
+          );
+        }),*/
             //menu
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 14),

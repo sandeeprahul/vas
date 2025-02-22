@@ -69,6 +69,7 @@ flutter:
   assets:
      - assets/bg_login.png
      - assets/vas_logo.png
+     - assets/trip_image_icon.png
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

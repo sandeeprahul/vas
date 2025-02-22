@@ -264,7 +264,7 @@ class FormController extends GetxController {
   }
 
   Future<void> saveTempDetails() async {
-    int tripId = 25021900001;
+    int tripId = 25021900002;
     TripDetailsModel tripDetails = TripDetailsModel(
       deptId: 3,
       userId: 1888,

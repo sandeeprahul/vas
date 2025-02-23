@@ -8,21 +8,25 @@ void showErrorDialog(String title, String message) {
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
       content: Text(message),
       actions: [
-
-        ElevatedButton(
-          onPressed: () => Get.back(), // ✅ Close dialog
-
-          style: ElevatedButton.styleFrom(
+        TextButton(
+          onPressed: () {
+            Get.back();
+          } // ✅ Close dialog
+          ,
+    /*      style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
-              shape: RoundedRectangleBorder( // Add this
-                borderRadius: BorderRadius.circular(28.0), // Adjust the radius as needed
+              shape: RoundedRectangleBorder(
+                // Add this
+                borderRadius:
+                    BorderRadius.circular(28.0), // Adjust the radius as needed
               ),
               padding: const EdgeInsets.symmetric(vertical: 14),
-              textStyle:  GoogleFonts.montserrat(fontSize: 16,fontWeight: FontWeight.bold)),
-          child:const Text("OK"),
+              textStyle: GoogleFonts.montserrat(
+                  fontSize: 16, fontWeight: FontWeight.bold)),*/
+          child: const Text("OK"),
         ),
 
-      /*
+        /*
         TextButton(
           onPressed: () => Get.back(), // ✅ Close dialog
           child: const Text("OK", style: TextStyle(color: Colors.blue)),

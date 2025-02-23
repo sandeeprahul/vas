@@ -10,10 +10,13 @@ import 'package:vas/controllers/districts_controller.dart';
 import 'package:vas/controllers/location_type_controller.dart';
 import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/utils/showDialogNoContext.dart';
+import 'package:vas/widgets/trip_details_widget.dart';
 import '../data/TripDetails.dart';
+import '../screens/manage_trip_arrival_departure_close_screen.dart';
 import '../services/api_service.dart';
 import '../shared_pref_helper.dart';
 import '../utils/showLoadingDialog.dart';
+import '../utils/showOdodmeterDialog.dart';
 import 'location_sub_type_controller.dart';
 
 class FormController extends GetxController {
@@ -147,15 +150,20 @@ class FormController extends GetxController {
           int tripId = response['trip_ID']; // Extract trip ID
 
           TripDetailsModel tripDetails = TripDetailsModel.fromJson(formData);
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-          await saveTripDetails("StartTrip", tripId, tripDetails);
+          await saveTripDetails("StartTrip", tripId, tripDetails,
+              "${response['start_Time']}");
 
           clearAllFields();
           showErrorDialog('Alert', "${response["message"]}");
-          Get.back(); // Closes the current page
+          Get.to(const ManageTripArrivalDepartureCloseScreen()); // Closes the current page
+
         } else {
           saveTempDetails();
           showErrorDialog('Alert', "${response["message"]}");
+          Get.to(const ManageTripArrivalDepartureCloseScreen()); // Closes the current page
+
           // clearAllFields();
         }
       } else {
@@ -175,7 +183,7 @@ class FormController extends GetxController {
   }
 
   Future<void> saveTripDetails(
-      String tripType, int tripId, TripDetailsModel tripDetails) async {
+      String tripType, int tripId, TripDetailsModel tripDetails,String startTime) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     UserController userController = Get.find<UserController>();
@@ -204,7 +212,12 @@ class FormController extends GetxController {
     print(tripData);
 
     await prefs.setString(tripType, jsonEncode(tripData));
-    loadTripDetails("StartTrip");
+    await prefs.setInt("tripStatus",1);
+    await prefs.setString("tripStartTime",startTime);
+    await prefs.setString("tripSeenArrivalTime",'');
+    await prefs.setString("tripSeenDepartureTime",'');
+
+    // loadTripDetails("StartTrip");
   }
 
   Rxn<TripDetailsModel> tripDetails = Rxn<TripDetailsModel>();
@@ -218,11 +231,11 @@ class FormController extends GetxController {
         Map<String, dynamic> tripData = jsonDecode(jsonData);
         Map<String, dynamic> tripDetailsJson = tripData["payload"];
 
-        TripDetailsModel tripDetails =
+        tripDetails.value =
             TripDetailsModel.fromJson(tripDetailsJson);
         print("loadTripDetails");
-        print(tripDetails);
-        return tripDetails;
+        print(tripDetails.value?.tripId);
+        return tripDetails.value;
       } catch (e) {
         print("Error loading trip details: $e");
         return null;
@@ -234,6 +247,9 @@ class FormController extends GetxController {
     }
 
   }
+
+
+
 
   void clearAllFields() {
     final locationTypeController = Get.find<LocationTypeController>();
@@ -292,6 +308,210 @@ class FormController extends GetxController {
     );
 
     // Save trip details
-    await saveTripDetails("StartTrip", tripId, tripDetails);
+    await saveTripDetails("StartTrip", tripId, tripDetails,'2025-02-19 23:53:22');
+  }
+
+
+  Future<void> submitFormSeen(String value) async {
+    UserController userController = Get.find<UserController>();
+    TripController tripController = Get.find<TripController>();
+
+    // String? odometerValue = await showOdometerDialog(Get.context!);
+    // if (odometerValue == null) return;
+
+
+    Map<String, dynamic> requestData = {
+      "deptId": int.tryParse(userController.deptId.value)??0,
+      "userId": int.tryParse(userController.userId.value),
+      "tripId": 25021900002,
+      // "tripId": tripController.tripDetails.value?.tripId ?? 0,
+      "odometer":double.tryParse(value) ?? 0.0, // Convert to integer
+      "lat":16.470866 ,
+      "lng": 80.6065381
+    };
+    print(requestData);
+
+
+    showLoadingDialog(); // Show loading before API call
+
+
+    try {
+
+      final response = await apiService.postRequest("/TripSeenArrival", requestData);
+      print("submitFormSeen");
+      print(response);
+      if (response != null) {
+        hideLoadingDialog(); // Ensure loading dialog is dismissed
+
+
+        if (response['result'] == 1) {
+          int tripId = response['trip_ID']; // Extract trip ID
+          Future.delayed(const Duration(milliseconds: 300), () {
+            showErrorDialog("Alert!", "${response['message']}");
+          });
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setInt("tripStatus",2);
+          // await prefs.setString("tripTime",response['reach_Time']);
+          await prefs.setString("tripSeenArrivalTime",response['reach_Time']);
+          await prefs.setString("tripSeenDepartureTime",'');
+
+        }else{
+          Future.delayed(const Duration(milliseconds: 300), () {
+            showErrorDialog("Alert!", "$response");
+          });
+        }
+
+      }
+      else{
+        Future.delayed(const Duration(milliseconds: 300), () {
+          showErrorDialog("Alert!", "$response");
+        });
+        hideLoadingDialog(); // Ensure loading dialog is dismissed
+
+      }
+    } catch (e) {
+      // hideLoadingDialog(); // Ensure loading dialog is dismissed
+      showErrorDialog("Alert!","Failed to start trip: $e");
+
+      print("Failed to start trip: $e");
+    }
+    finally{
+      hideLoadingDialog(); // Ensure loading dialog is dismissed
+
+    }
+  }
+  Future<void> submitFormDeparture(String value) async {
+    UserController userController = Get.find<UserController>();
+    TripController tripController = Get.find<TripController>();
+
+    // String? odometerValue = await showOdometerDialog(Get.context!);
+    // if (odometerValue == null) return;
+
+
+    Map<String, dynamic> requestData = {
+      "deptId": int.tryParse(userController.deptId.value)??0,
+      "userId": int.tryParse(userController.userId.value),
+      "tripId": 25021900001,
+      // "tripId": tripController.tripDetails.value?.tripId ?? 0,
+      "odometer":double.tryParse(value) ?? 0.0, // Convert to integer
+      "lat":16.470866 ,
+      "lng": 80.6065381
+    };
+    print(requestData);
+
+
+    showLoadingDialog(); // Show loading before API call
+
+
+    try {
+
+      final response = await apiService.postRequest("/TripSeenDeparture", requestData);
+      print("submitFormDeparture");
+      print(response);
+      if (response != null) {
+        hideLoadingDialog(); // Ensure loading dialog is dismissed
+
+
+        if (response['result'] == 1) {
+          int tripId = response['trip_ID']; // Extract trip ID
+          Future.delayed(const Duration(milliseconds: 300), () {
+            showErrorDialog("Alert!", "${response['message']}");
+          });
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setInt("tripStatus",3);
+          // await prefs.setString("tripSeenArrivalTime",response['depart_Time']);
+          await prefs.setString("tripSeenDepartureTime",response['depart_Time']);
+
+        }else{
+          Future.delayed(const Duration(milliseconds: 300), () {
+            showErrorDialog("Alert!", "$response");
+          });
+        }
+
+      }
+      else{
+        Future.delayed(const Duration(milliseconds: 300), () {
+          showErrorDialog("Alert!", "$response");
+        });
+        hideLoadingDialog(); // Ensure loading dialog is dismissed
+
+      }
+    } catch (e) {
+      // hideLoadingDialog(); // Ensure loading dialog is dismissed
+      showErrorDialog("Alert!","Failed to start trip: $e");
+
+      print("Failed to start trip: $e");
+    }
+    finally{
+      hideLoadingDialog(); // Ensure loading dialog is dismissed
+
+    }
+  }
+  Future<void> submitFormClose(String value) async {
+    UserController userController = Get.find<UserController>();
+    TripController tripController = Get.find<TripController>();
+
+    // String? odometerValue = await showOdometerDialog(Get.context!);
+    // if (odometerValue == null) return;
+
+
+    Map<String, dynamic> requestData = {
+      "deptId": int.tryParse(userController.deptId.value)??0,
+      "userId": int.tryParse(userController.userId.value),
+      "tripId": 25021900001,
+      // "tripId": tripController.tripDetails.value?.tripId ?? 0,
+      "odometer":double.tryParse(value) ?? 0.0, // Convert to integer
+      "lat":16.470866 ,
+      "lng": 80.6065381
+    };
+    print(requestData);
+
+
+    showLoadingDialog(); // Show loading before API call
+
+
+    try {
+
+      final response = await apiService.postRequest("/TripClose", requestData);
+      print("submitFormClose");
+      print(response);
+      if (response != null) {
+        hideLoadingDialog(); // Ensure loading dialog is dismissed
+
+
+        if (response['result'] == 1) {
+          int tripId = response['trip_ID']; // Extract trip ID
+          Future.delayed(const Duration(milliseconds: 300), () {
+            showErrorDialog("Alert!", "${response['message']}");
+          });
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setInt("tripStatus",3);
+          // await prefs.setString("tripSeenArrivalTime",response['depart_Time']);
+          await prefs.setString("tripSeenDepartureTime",response['close_Time']);
+
+        }else{
+          Future.delayed(const Duration(milliseconds: 300), () {
+            showErrorDialog("Alert!", "$response");
+          });
+        }
+
+      }
+      else{
+        Future.delayed(const Duration(milliseconds: 300), () {
+          showErrorDialog("Alert!", "$response");
+        });
+        hideLoadingDialog(); // Ensure loading dialog is dismissed
+
+      }
+    } catch (e) {
+      // hideLoadingDialog(); // Ensure loading dialog is dismissed
+      showErrorDialog("Alert!","Failed to start trip: $e");
+
+      print("Failed to start trip: $e");
+    }
+    finally{
+      hideLoadingDialog(); // Ensure loading dialog is dismissed
+
+    }
   }
 }

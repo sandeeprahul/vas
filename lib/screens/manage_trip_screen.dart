@@ -1,124 +1,445 @@
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:vas/controllers/ambulance_controller.dart';
+import 'package:vas/controllers/blocks_controller.dart';
+import 'package:vas/controllers/districts_controller.dart';
+import 'package:vas/controllers/location_sub_type_controller.dart';
+import 'package:vas/controllers/user_controller.dart';
+
+import '../controllers/location_type_controller.dart';
+import '../controllers/trip_from_controller.dart';
+import '../services/api_service.dart';
+
 class ManageTripScreen extends StatefulWidget {
+  const ManageTripScreen({super.key});
+
   @override
-  _ManageTripScreenState createState() => _ManageTripScreenState();
+  State<ManageTripScreen> createState() => _ManageTripScreenState();
 }
 
 class _ManageTripScreenState extends State<ManageTripScreen> {
-  TextEditingController arrivalOdometerController = TextEditingController();
-  bool isTripStarted = false;
-  bool isOdometerUpdated = false;
+  final FormController controller = Get.put(FormController());
 
-  // Dummy Data
-  Map<String, dynamic> tripData = {
-    "name": "Paravet Two",
-    "tripId": "2016",
-    "district": "RAIPUR",
-    "block": "AARANG",
-    "ambulanceNo": "AARANG - CG02 AU1682",
-    "doctorName": "Kalpak Kayande",
-    "driverName": "Driver Five",
-    "baseOdometer": "9.00",
-    "startOdometer": "10.00 - 16/06/2024 10:15"
-  };
+  final LocationTypeController locationTypeController =
+      Get.put(LocationTypeController());
+  final DistrictsController districtsController =
+      Get.put(DistrictsController());
+  final BlocksController blocksController = Get.put(BlocksController());
 
-  Future<void> updateArrivalOdometer() async {
-    if (arrivalOdometerController.text.isEmpty) {
-      return;
-    }
-    setState(() {
-      isOdometerUpdated = true;
-    });
+  final UserController userController = Get.put(UserController());
+  final LocationSubTypeController locationSubTypeController =
+      Get.put(LocationSubTypeController());
+  final AmbulanceController ambulanceController =
+      Get.put(AmbulanceController());
 
-    // Simulate API call
-    await Future.delayed(Duration(seconds: 2));
+  // Initialize your controller
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Message"),
-        content: Text("Reach Time updated for this trip"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("OK"),
-          )
-        ],
-      ),
-    );
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    locationTypeController.getLocationTypes();
+    districtsController.loadLastSyncedData();
+    ambulanceController.getAmbulances();
+    controller.loadTripDetails('StartTrip');
+    print("controller.loadTripDetails(");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Manage Trip v2",style: TextStyle(color: Colors.white),),
+        title: const Text("Manage trip"),
         backgroundColor: Colors.blue,
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh,color: Colors.white,),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            buildTripDetail("Name", tripData['name']),
-            buildTripDetail("Trip ID", tripData['tripId']),
-            // buildTripDetail("District", tripData['district']),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("District", style: TextStyle(fontWeight: FontWeight.bold)),
-                Text("Select District", style: TextStyle(color: Colors.blue)),
-              ],
-            ),
-            buildTripDetail("Block", tripData['block']),
-            buildTripDetail("Ambulance No", tripData['ambulanceNo']),
-            buildTripDetail("Doctor Name", tripData['doctorName']),
-            buildTripDetail("Driver Name", tripData['driverName']),
-            buildTripDetail("Base Odometer", tripData['baseOdometer']),
-            buildTripDetail("Start Odometer", tripData['startOdometer']),
+            /*    _buildDropdownField(
+                "District",
+                districtsController.selectedDistrict,
+                districtsController.selectedDistrictId,
+                districtsController.districtsList,
+                "id",
+                "name"),*/
 
-            SizedBox(height: 20),
-            Text("Seen Arrival Odometer"),
-            TextField(
-              controller: arrivalOdometerController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(border: OutlineInputBorder()),
+            Obx(() => GestureDetector(
+                  onTap: () {
+                    _showSelectionDialog(
+                        "District",
+                        districtsController.selectedDistrict,
+                        districtsController.selectedDistrictId,
+                        districtsController.districtsList,
+                        "id",
+                        "name");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          districtsController.selectedDistrict.value,
+                          style: TextStyle(
+                              color:
+                                  districtsController.selectedDistrict.value ==
+                                          "District"
+                                      ? Colors.grey
+                                      : Colors.black),
+                        ),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
+                )),
+
+            /*    _buildDropdownField("District", controller.selectedDistrict,
+                controller.selectedDistrictId,
+                controller.districts, "districtId", "districtName"),*/
+            const SizedBox(
+              height: 8,
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: isOdometerUpdated ? null : updateArrivalOdometer,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                minimumSize: Size(double.infinity, 50),
-              ),
-              child: Text("SEEN ARRIVAL"),
+            _buildDropdownField(
+                "Block",
+                blocksController.selectedBlock,
+                blocksController.selectedBlockId,
+                blocksController.blocksList,
+                "blockId",
+                "name"),
+            //    blocksController.getBlocks(districtsController.selectedDistrictId.value,userController.userId.value);
+            const SizedBox(
+              height: 8,
             ),
+            // _buildDropdownField(
+            //     "LocationType",
+            //     locationTypeController.selectedLocationType,
+            //     locationTypeController.selectedLocationTypeId,
+            //     locationTypeController.locationTypes,
+            //     "stopType_ID",
+            //     "stopType_Name"),
+            const SizedBox(
+              height: 8,
+            ),
+
+            Obx(() => GestureDetector(
+                  onTap: () {
+                    _showSelectionDialog(
+                        "LocationType",
+                        locationTypeController.selectedLocationType,
+                        locationTypeController.selectedLocationTypeId,
+                        locationTypeController.locationTypes,
+                        "stopType_ID",
+                        "stopType_Name");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          locationTypeController.selectedLocationType.value,
+                          style: TextStyle(
+                              color: locationTypeController
+                                          .selectedLocationType.value ==
+                                      "Location"
+                                  ? Colors.grey
+                                  : Colors.black),
+                        ),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
+                )),
+
+            const SizedBox(
+              height: 8,
+            ),
+
+            _buildDropdownField(
+                "Location",
+                locationSubTypeController.selectedLocationName,
+                locationSubTypeController.selectedLocationId,
+                locationSubTypeController.location,
+                "stop_ID",
+                "stop_Name"),
+
+            const SizedBox(
+              height: 8,
+            ),
+
+            /*_buildTextField(
+                "Enter Ambulance Number", controller.ambulanceController),*/ /*
+            const SizedBox(
+              height: 8,
+            ),*/
+            Obx(() => GestureDetector(
+                  onTap: () {
+                    _showSelectionDialog(
+                        "Ambulance",
+                        ambulanceController.selectedAmbulanceName,
+                        ambulanceController.selectedAmbulanceId,
+                        ambulanceController.ambulanceList,
+                        "id",
+                        "asseT_NO");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          ambulanceController.selectedAmbulanceName.value,
+                          style: TextStyle(
+                              color: ambulanceController
+                                          .selectedAmbulanceName.value ==
+                                      "Ambulance"
+                                  ? Colors.grey
+                                  : Colors.black),
+                        ),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
+                )),
+
+            const SizedBox(
+              height: 8,
+            ),
+
+            _buildDropdownField(
+                "Doctor",
+                controller.selectedDoctor,
+                controller.selectedDoctorId,
+                controller.doctors,
+                "doctor_ID",
+                "doctor_Name"),
+            const SizedBox(
+              height: 8,
+            ),
+
+            _buildDropdownField(
+                "Driver",
+                controller.selectedDriver,
+                controller.selectedDriverId,
+                controller.drivers,
+                "driver_ID",
+                "driver_Name"),
+            const SizedBox(
+              height: 8,
+            ),
+
+            // _buildDropdownField("Doctor", controller.selectedDoctor, doctorController.doctors.values.toList().obs, "doctorId", "doctorName"),
+            // _buildDropdownField("Driver", controller.selectedDriver, driverController.drivers.values.toList().obs, "driverId", "driverName"),
+            _buildTextField("Base Odometer", controller.baseOdometerController),
+            const SizedBox(height: 20),
+            const Spacer(),
+            Obx(() => SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : controller.submitForm,
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          // Add this
+                          borderRadius: BorderRadius.circular(
+                              28.0), // Adjust the radius as needed
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        textStyle: GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: controller.isLoading.value
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text("Submit"),
+                  ),
+                )),
           ],
         ),
       ),
     );
   }
 
-  Widget buildTripDetail(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(value, style: TextStyle(color: Colors.blue)),
-        ],
+  Widget _buildDropdownField(
+      String title,
+      RxString selectedValue, // Stores valueField (UI)
+      RxString selectedKey, // Stores keyField (Submission)
+      List<dynamic> dataList,
+      String keyField,
+      String valueField) {
+    return Obx(() => GestureDetector(
+          onTap: () {
+            _showSelectionDialog(title, selectedValue, selectedKey, dataList,
+                keyField, valueField);
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  selectedValue.value,
+                  style: TextStyle(
+                      color: selectedValue.value == title
+                          ? Colors.grey
+                          : Colors.black),
+                ),
+                const Icon(Icons.arrow_drop_down),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  void _showSelectionDialog(
+      String title,
+      RxString selectedValue,
+      RxString selectedKey, // ✅ Stores keyField (Submission)
+      List<dynamic> dataList,
+      String keyField,
+      String valueField) {
+    Get.dialog(
+      AlertDialog(
+        title: Text("Select $title"),
+        content: dataList.isNotEmpty
+            ? SizedBox(
+                height:
+                    300, // ✅ Define height to avoid intrinsic dimensions issue
+                width: double.maxFinite, // ✅ Ensures it takes full width
+                child: SingleChildScrollView(
+                  // ✅ Wrap with SingleChildScrollView
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: dataList.map((item) {
+
+
+                      return ListTile(
+
+
+                      title: Text(item[valueField] ?? "Unknown"),
+
+                        onTap: () {
+                          if (title == "District") {
+                            districtsController.selectedDistrictId.value =
+                                item[keyField]?.toString() ?? "";
+                            districtsController.selectedDistrict.value =
+                                item[valueField]?.toString() ?? "";
+                            blocksController.blocksList.clear();
+                            blocksController.selectedBlock.value =
+                                "Select Block";
+                            blocksController.getBlocks(
+                                userController.userId.value,
+                                "${item[keyField]}");
+                          } else if (title == "LocationType") {
+                            locationTypeController.selectedLocationTypeId
+                                .value = item[keyField]?.toString() ?? "";
+                            locationTypeController.selectedLocationType.value =
+                                item[valueField]?.toString() ?? "";
+                            locationSubTypeController.location.clear();
+                            locationSubTypeController
+                                .selectedLocationName.value = "Select Block";
+
+                            locationSubTypeController.getLocations(
+                                userController.zoneId.value,
+                                userController.blockId.value,
+                                userController.userId.value,
+                                "${item[keyField]}");
+                          } else if (title == "Ambulance") {
+                            ambulanceController.selectedAmbulanceId.value =
+                                item[keyField]?.toString() ?? "";
+                            ambulanceController.selectedAmbulanceName.value =
+                                item[valueField]?.toString() ?? "";
+
+                            getOdometer("${item[keyField]}");
+                          } else {
+                            selectedValue.value =
+                                item[valueField]?.toString() ??
+                                    ""; // ✅ Display valueField
+                            selectedKey.value = item[keyField]?.toString() ??
+                                ""; // ✅ Store keyField
+                          }
+
+                          Get.back();
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+              )
+            : const Center(child: Text("No data available")),
       ),
     );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller) {
+    return TextField(
+      controller: controller,
+      decoration:
+          InputDecoration(labelText: label, border: const OutlineInputBorder()),
+      keyboardType: TextInputType.number,
+    );
+  }
+
+  final ApiService apiService = ApiService();
+
+  bool isLoading = false;
+
+  Future<void> getOdometer(String ambulanceId) async {
+    controller.isLoading.value = true;
+
+    String userId = userController.userId.value;
+    try {
+      String formattedEndpoint = '/GetLastOdometerReading/$ambulanceId/$userId';
+      var response = await apiService.getRequestForMaster(formattedEndpoint);
+
+      if (response != null) {
+        // var decodedResponse = json.decode(response);
+        String errorCode =
+            response['error_Code'] ?? ""; // Use null-safe operator
+        String errorMessage = response['error_Message'] ?? "";
+        var lastBaseKM = response['last_Base_KM'] ?? 0.00;
+
+        controller.baseOdometerController.text = "$lastBaseKM";
+        // 4. Use the parsed values (example):
+        print("Error Code: $errorCode");
+        print("Error Message: $errorMessage");
+        print("Last Base KM: $lastBaseKM");
+      } else {
+        print("Error: API returned null!");
+      }
+    } catch (e) {
+      print("Error: $e");
+    } finally {
+      controller.isLoading.value = false;
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }

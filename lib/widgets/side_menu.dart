@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/controllers/login_controller.dart';
+import 'package:vas/widgets/trip_details_widget.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({super.key});
@@ -17,6 +18,7 @@ class _SideMenuState extends State<SideMenu> {
   String? roleId;
 
   final LoginController loginController  = LoginController();
+  TripController tripController = Get.find<TripController>();
   @override
   void initState() {
     // TODO: implement initState
@@ -66,7 +68,16 @@ class _SideMenuState extends State<SideMenu> {
             _buildSubMenuItem("Live Case ", Icons.arrow_right, () {}),
             _buildSubMenuItem("Manage Trip ", Icons.arrow_right, () {
               Navigator.pop(context); // Close drawer
-              Navigator.pushNamed(context, '/manage_trip'); // N
+
+              if (tripController.tripStatus.value==1){
+                Navigator.pushNamed(context, '/manage_trip_arrival_departure_close_screen'); // N
+
+
+
+             }else{
+               Navigator.pushNamed(context, '/manage_trip'); // N
+             }
+
             }),
             _buildSubMenuItem("Live Case ", Icons.arrow_right, () {}),
             _buildSubMenuItem("Case Registration ", Icons.arrow_right, () {}),

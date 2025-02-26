@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:vas/utils/showLoadingDialog.dart';
 import '../services/api_service.dart';
 import '../shared_pref_helper.dart';
 
@@ -29,10 +30,10 @@ class DoctorsController extends GetxController {
 
   Future<void> syncDoctors(String empId,String zoneId,String blockId) async {
     isLoading.value = true;
-
+    showLoadingDialog();
     try {
-      String formattedEndpoint = '/GetDoctors/$empId/5/38';
-      // String formattedEndpoint = '/GetDoctors/$empId';
+      // String formattedEndpoint = '/GetDoctors/$empId/5/38';
+      String formattedEndpoint = '/GetDoctors/$empId';
       // http://49.207.44.107/mvas/GetDoctors/462/5/38
 
       var response = await apiService.getRequestForMaster(formattedEndpoint, );
@@ -76,6 +77,8 @@ class DoctorsController extends GetxController {
       print("Error syncing drivers: $e");
     } finally {
       isLoading.value = false;
+      hideLoadingDialog();
+
     }
   }
 }

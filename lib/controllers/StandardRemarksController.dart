@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../services/api_service.dart';
 import '../shared_pref_helper.dart';
+import '../utils/showLoadingDialog.dart';
 
 class StandardRemarksController extends GetxController {
   final ApiService apiService = ApiService();
@@ -23,6 +24,7 @@ class StandardRemarksController extends GetxController {
 
   Future<void> syncStandardRemarks(String userId) async {
     isLoading.value = true;
+    showLoadingDialog();
 
     try {
       String formattedEndpoint = '/GetStandardRemarks/$userId';
@@ -63,6 +65,8 @@ class StandardRemarksController extends GetxController {
       print("Error syncing standard remarks: $e");
     } finally {
       isLoading.value = false;
+      hideLoadingDialog();
+
     }
   }
 }

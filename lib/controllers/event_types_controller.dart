@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:vas/shared_pref_helper.dart';
+import 'package:vas/utils/showLoadingDialog.dart';
 import '../services/api_service.dart';
 
 class EventTypesController extends GetxController {
@@ -29,6 +30,7 @@ class EventTypesController extends GetxController {
   Future<void> syncEventTypes() async {
     isLoading.value = true; // Start loading
 
+    showLoadingDialog();
     try {
       var response = await apiService.getRequestForMaster('/GetEventTypes');
       print("syncEventTypes response:");
@@ -74,6 +76,8 @@ class EventTypesController extends GetxController {
       print("Error syncing event types: $e");
     } finally {
       isLoading.value = false; // Stop loading
+      showLoadingDialog();
+      hideLoadingDialog();
     }
   }
   }

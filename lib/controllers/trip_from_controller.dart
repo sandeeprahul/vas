@@ -297,6 +297,7 @@ class FormController extends GetxController {
       vehicleId: 3,
       vehicleName: "Ambulance 101",
       baseKm: 2.0,
+      startKm: 4.0,
       deviceRegnId: '',
       address: "",
       latitude: 16.470866,

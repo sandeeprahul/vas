@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../services/api_service.dart';
 import '../shared_pref_helper.dart';
+import '../utils/showLoadingDialog.dart';
 
 class DriversController extends GetxController {
   final ApiService apiService = ApiService();
@@ -29,10 +30,10 @@ class DriversController extends GetxController {
 
   Future<void> syncDrivers(String empId, String zoneId, String blockId) async {
     isLoading.value = true;
-
+    showLoadingDialog();
     try {
-      String formattedEndpoint = '/GetDrivers/462/1/0';
-      // String formattedEndpoint = '/GetDrivers/$empId/$zoneId/$blockId';
+      // String formattedEndpoint = '/GetDrivers/462/1/0';
+      String formattedEndpoint = '/GetDrivers/$empId/$zoneId/$blockId';
       var response = await apiService.getRequestForMaster(formattedEndpoint, );
 
 
@@ -75,6 +76,8 @@ class DriversController extends GetxController {
       print("Error syncing drivers: $e");
     } finally {
       isLoading.value = false;
+      hideLoadingDialog();
+
     }
   }
 }

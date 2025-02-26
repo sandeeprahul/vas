@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:vas/screens/manage_trip_arrival_departure_close_screen.dart';
 import 'package:vas/screens/manage_trip_screen.dart';
 import 'package:vas/screens/form_temp.dart';
 import 'package:vas/screens/home_screen.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         '/manage_trip': (context) => const ManageTripScreen(), // Define route
         '/case_registration_new': (context) => CaseRegistrationNewScreen(), // Define route
         '/master_data_screen': (context) =>  const MasterDataScreen(fromLogin: false,), // Define route
+        '/manage_trip_arrival_departure_close_screen': (context) =>   const ManageTripArrivalDepartureCloseScreen(), // Define route
       },
     ));
   }

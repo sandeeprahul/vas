@@ -17,6 +17,7 @@ class TripDetailsModel {
   final String zoneName;
   final String blockName;
   final double baseKm;
+  final double startKm;
   final double latitude;
   final double longitude;
   final String deviceRegnId;
@@ -42,6 +43,7 @@ class TripDetailsModel {
     required this.vehicleId,
     required this.vehicleName,
     required this.baseKm,
+    required this.startKm,
     required this.latitude,
     required this.longitude,
     required this.deviceRegnId,
@@ -69,6 +71,7 @@ class TripDetailsModel {
       vehicleId: json['vehicle_ID']??0,
       vehicleName: json['vehicle_Name'] ?? '',
       baseKm: (json['base_KM']??0.0 as num).toDouble(),
+      startKm: (json['startKm']??0.0 as num).toDouble(),
       latitude: (json['latitude']??0.0 as num).toDouble(),
       longitude: (json['longitude']??0.0 as num).toDouble(),
       deviceRegnId: json['device_Regn_ID']??'',
@@ -97,6 +100,7 @@ class TripDetailsModel {
       "vehicle_ID": vehicleId,
       "vehicle_Name": vehicleName,
       "base_KM": baseKm,
+      "startKm": startKm,
       "latitude": latitude,
       "longitude": longitude,
       "device_Regn_ID": deviceRegnId,

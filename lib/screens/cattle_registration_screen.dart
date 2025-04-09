@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/services/api_service.dart';
 
+import '../data/DiseaseType.dart';
 import '../data/IncidentType.dart';
+import '../data/MedicineItem.dart';
 import '../data/PatientType.dart';
 
 class CattleRegistrationScreen extends StatefulWidget {
@@ -27,7 +31,8 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
 
   Future<void> loadIncidentData() async {
     ApiService apiService = ApiService();
-    final incidentResponse = await apiService.getRequestList("/GetIncidentTypes");
+    final incidentResponse =
+        await apiService.getRequestList("/GetIncidentTypes");
     print(incidentResponse);
     final subIncidentResponse =
         await apiService.getRequestList("/GetIncidentSubTypes");
@@ -119,7 +124,17 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           _buildCaseTypeDropdown(),
           const SizedBox(height: 10),
-          _buildTextField('Remark', 'Remark'),
+          buildDiseaseDropdown(),
+          const SizedBox(height: 66),
+          const Text(
+            'Items',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.black, fontSize: 26, fontWeight: FontWeight.bold),
+          ),
+          buildMedicineSelector(),
+          const SizedBox(height: 10),
+          // _buildTextField('Remark', 'Remark'),
         ];
       case 'Lab Sample':
         return [
@@ -155,7 +170,17 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           _buildTextField('Quantity', 'Quantity'),
           const SizedBox(height: 10),
           _buildTextField('Unit', 'Unit'),
-          _buildTextField('Remark', 'Remark'),
+          buildDiseaseDropdown(),
+          const SizedBox(height: 66),
+          const Text(
+            'Items',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.black, fontSize: 26, fontWeight: FontWeight.bold),
+          ),
+          buildMedicineSelector(),
+          const SizedBox(height: 10),
+          // _buildTextField('Remark', 'Remark'),
         ];
       case 'Mass Registration':
         return [
@@ -189,11 +214,56 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           _buildTextField('Quantity', 'Quantity'),
           const SizedBox(height: 10),
+          buildDiseaseDropdown(),
+          const SizedBox(height: 10),
           _buildTextField('Unit', 'Unit'),
+          const SizedBox(height: 66),
+          const Text(
+            'Items',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.black, fontSize: 26, fontWeight: FontWeight.bold),
+          ),
+          buildMedicineSelector(),
+          const SizedBox(height: 10),
         ];
       default:
         return [];
     }
+  }
+
+  List<DiseaseType> diseaseList = [];
+
+  void showDiseasePopup() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Select Disease Type"),
+          content: Container(
+            width: double.minPositive,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: diseaseList.length,
+              itemBuilder: (context, index) {
+                final disease = diseaseList[index];
+                return ListTile(
+                  title: Text(disease.diseaseName),
+                  onTap: () {
+                    setState(() {
+                      selectedDisease = disease.diseaseName;
+                      selectedMedicines.clear();
+                    });
+                    Navigator.pop(context);
+                    fetchMedicines(); // call here
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 
   List<PatientType> _types = [];
@@ -265,6 +335,140 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     );
   }
 
+  List<MedicineItem> medicineList = []; // from API
+  List<MedicineItem> selectedMedicines = [];
+
+  MedicineItem? selectedMedicine;
+
+  String? selectedDisease;
+  MedicineItem? selectedItem;
+
+  Future<void> fetchMedicines() async {
+    ApiService apiService = ApiService();
+    UserController userController = Get.put(UserController());
+    final response = await apiService
+        .getRequest('/GetMedicines/${userController.userId.value}/1/100');
+    if (response != null) {
+      List<dynamic> records = response['records'];
+      medicineList = records.map((e) {
+        return MedicineItem(
+          itemName: e['item_Name'] ?? '',
+          itemUnit: e['item_Unit'] ?? '',
+          itemNumber: e['item_Number'] ?? '',
+        );
+      }).toList();
+      setState(() {});
+    }
+  }
+
+  TextEditingController quantityController = TextEditingController();
+
+  Widget buildMedicineSelector() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: DropdownButtonFormField<MedicineItem>(
+                value: selectedMedicine,
+                items: medicineList.map((medicine) {
+                  return DropdownMenuItem(
+                    value: medicine,
+                    child: Text('${medicine.itemName} (${medicine.itemUnit})'),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedMedicine = value;
+                  });
+                },
+                decoration: const InputDecoration(labelText: 'Select Medicine'),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextField(
+                controller: quantityController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Quantity'),
+              ),
+            )
+          ],
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              if (selectedMedicine != null &&
+                  quantityController.text.isNotEmpty) {
+                setState(() {
+                  selectedMedicines.add(MedicineItem(
+                    quantity: quantityController.text,
+                    itemName: selectedMedicine!.itemName,
+                    itemUnit: selectedMedicine!.itemUnit,
+                    itemNumber: selectedMedicine!.itemNumber,
+                  ));
+                  quantityController.clear();
+                });
+              }
+            },
+            child: const Text('Add Medicine'),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Card(
+          color: Colors.blue,
+
+          child: Column(
+            children: [
+              Card(
+                // margin: const EdgeInsets.only(top: 6),
+                color: Colors.blue.shade100,
+                child: const Row(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+
+                  children: [
+                    Expanded(
+                        child: Text(
+                      'Item No',
+                      textAlign: TextAlign.center,
+                    )),
+                    Expanded(child: Text('Name', textAlign: TextAlign.center)),
+                    Expanded(
+                        child: Text('Quantity', textAlign: TextAlign.center)),
+                    Expanded(child: Text('Units', textAlign: TextAlign.center)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              ...selectedMedicines.map((entry) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                          child: Text('${entry.itemNumber} ',
+                              textAlign: TextAlign.center,style: TextStyle(color: Colors.white),)),
+                      Expanded(
+                          child: Text('${entry.itemName} ',
+                              textAlign: TextAlign.center,style: TextStyle(color: Colors.white))),
+                      Expanded(
+                          child: Text(entry.quantity,
+                              textAlign: TextAlign.center,style: TextStyle(color: Colors.white))),
+                      Expanded(
+                          child: Text(entry.itemUnit,
+                              textAlign: TextAlign.center,style: TextStyle(color: Colors.white))),
+                    ],
+                  )),
+              const SizedBox(height: 6,),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildDropdown(String label, List<String> options, String key) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(labelText: label),
@@ -294,6 +498,47 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     );
   }
 
+  List<DiseaseType> _diseaseTypes = [];
+
+  Future<void> loadDiseaseTypes() async {
+    ApiService apiService = ApiService();
+    final diseaseResponse =
+        await apiService.getRequestList("/GetDiseaseTypes/1888");
+
+    if (diseaseResponse != null && diseaseResponse is List) {
+      setState(() {
+        _diseaseTypes =
+            diseaseResponse.map((e) => DiseaseType.fromJson(e)).toList();
+      });
+    } else {
+      print("Failed to load disease types or response was not a list");
+    }
+  }
+
+  // String? selectedDisease;
+
+  Widget buildDiseaseDropdown() {
+    return DropdownButtonFormField<String>(
+      decoration: const InputDecoration(
+        labelText: 'Disease Type',
+        // border: OutlineInputBorder(),
+        contentPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+      ),
+      value: selectedDisease,
+      items: _diseaseTypes
+          .map((disease) => DropdownMenuItem<String>(
+                value: disease.diseaseName,
+                child: Text(disease.diseaseName),
+              ))
+          .toList(),
+      onChanged: (value) {
+        setState(() {
+          selectedDisease = value;
+        });
+      },
+    );
+  }
+
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -314,6 +559,11 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     /// loads incident types + subtypes
 
     loadIncidentData();
+
+    ///loads desease type
+    loadDiseaseTypes();
+    // fetchDiseases();x
+    fetchMedicines();
   }
 
   @override
@@ -334,7 +584,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                 value: _registrationType,
                 items: [
                   'Individual Registration',
-                  'Lab Sample',
+                  // 'Lab Sample',
                   'Mass Registration',
                 ].map((type) {
                   return DropdownMenuItem(
@@ -361,4 +611,18 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
       ),
     );
   }
+}
+
+class SelectedMedicine {
+  final MedicineItem medicine;
+  final String quantity;
+
+  SelectedMedicine({required this.medicine, required this.quantity});
+}
+
+class MedicineEntry {
+  final MedicineItem medicine;
+  final String quantity;
+
+  MedicineEntry({required this.medicine, required this.quantity});
 }

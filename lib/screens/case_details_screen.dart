@@ -33,9 +33,9 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
     if (_formKey.currentState!.validate()) {
       // Process the form data
       final formData = {
-        'Ambulance No': _ambulanceNoController.text,
-        'Owner\'s Contact No': _ownerContactNoController.text,
-        'Owner\'s Name': _ownerNameController.text,
+        'AmbulanceNo': _ambulanceNoController.text,
+        'OwnersContactNo': _ownerContactNoController.text,
+        'Owners Name': _ownerNameController.text,
         'District': _districtController.text,
         'Block': _blockController.text,
         'Village': _villageController.text,

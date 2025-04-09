@@ -1,8 +1,17 @@
+import 'dart:convert';
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:vas/controllers/user_controller.dart';
+import 'package:vas/screens/case_details_screen.dart';
+import 'package:vas/screens/dashboard_page.dart';
 import 'package:vas/services/api_service.dart';
 
+import '../controllers/live_stock_controller.dart';
 import '../data/DiseaseType.dart';
 import '../data/IncidentType.dart';
 import '../data/MedicineItem.dart';
@@ -421,7 +430,6 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
         ),
         Card(
           color: Colors.blue,
-
           child: Column(
             children: [
               Card(
@@ -448,20 +456,28 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                          child: Text('${entry.itemNumber} ',
-                              textAlign: TextAlign.center,style: TextStyle(color: Colors.white),)),
+                          child: Text(
+                        '${entry.itemNumber} ',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.white),
+                      )),
                       Expanded(
                           child: Text('${entry.itemName} ',
-                              textAlign: TextAlign.center,style: TextStyle(color: Colors.white))),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Colors.white))),
                       Expanded(
                           child: Text(entry.quantity,
-                              textAlign: TextAlign.center,style: TextStyle(color: Colors.white))),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Colors.white))),
                       Expanded(
                           child: Text(entry.itemUnit,
-                              textAlign: TextAlign.center,style: TextStyle(color: Colors.white))),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Colors.white))),
                     ],
                   )),
-              const SizedBox(height: 6,),
+              const SizedBox(
+                height: 6,
+              ),
             ],
           ),
         ),
@@ -566,6 +582,45 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     fetchMedicines();
   }
 
+
+  Map<String, dynamic> buildLivestockJson() {
+    final liveCaseController = Get.put(LivestockController());
+    final formData = liveCaseController.formData;
+    return {
+      // 'ambulance_no': formData['AmbulanceNo'],
+      "LocationID": 29078,
+      "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
+      "CattleCount": 1,
+      "ImeiNumber": "OnePlus_NE2211_347695b2fc87f884",
+      "UserId": 800,
+      "VehicleId": 330,
+      "latitude": 43.73155,
+      "longitude": -79.76242,
+      "OwnerNo": liveCaseController.formData['OwnersContactNo'],
+      "OwnerName": liveCaseController.formData['Owners Name'],
+      "districtId": 1,
+      "blockId": 1,
+      "villageId": -1,
+      "Address": "-",
+      "CattleName": liveCaseController.formData['Category'],
+      "Gender": _formData['Gender'],
+      "YearAge": _formData['Years'],
+      "MonthAge": _formData['Months'],
+      "DaysAge": _formData['Days'],
+      "CattleType": _selectedType,
+      "CattleSubType": _selectedBreed,
+      "IncidentType": _selectedEventType,
+      "IncidentSubType": _selectedCaseType,
+      "ApprovalRemark": liveCaseController.approvalRemark.value,
+      "RegnRemark": liveCaseController.registrationRemark.value,
+      "PatientNumber": "",
+      'docname1': liveCaseController.fileName,
+      'doc1': liveCaseController.base64File,
+      // 'selected_medicines': selectedMedicines.map((med) => med.toJson()).toList(),
+    };
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -602,7 +657,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
               ..._buildFormFields(),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _submitForm,
+                onPressed: showApprovalDialog,
                 child: const Text('Register Case'),
               ),
             ],
@@ -611,6 +666,193 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
       ),
     );
   }
+  void showApprovalDialog() {
+    final liveCaseController = Get.put(LivestockController());
+    final TextEditingController approvalController = TextEditingController();
+    final TextEditingController registrationController = TextEditingController();
+
+    Get.defaultDialog(
+      title: 'Submit Remarks',
+      content: Column(
+        children: [
+          TextField(
+            controller: approvalController,
+            decoration: const InputDecoration(labelText: 'Approval Remark'),
+          ),
+          TextField(
+            controller: registrationController,
+            decoration: const InputDecoration(labelText: 'Registration Remark'),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.camera_alt_outlined,size: 44,),
+                // label: const Text("Pick Image"),
+                onPressed: () async {
+
+                  var status = await Permission.camera.status;
+
+                  if (!status.isGranted) {
+                    status = await Permission.camera.request();
+                    if (!status.isGranted) {
+                      Get.defaultDialog(
+                        middleText: 'Please grant camera permission',
+                      );
+                      print('Camera permission denied');
+                      return;
+                    }
+                  }
+
+                  final picker = ImagePicker();
+                  final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+                  if (pickedFile != null) {
+                    final bytes = await pickedFile.readAsBytes();
+                    final base64Str = base64Encode(bytes);
+                    final filename = pickedFile.name; // 👈 gets the actual filename
+                    Get.put(LivestockController()).setSelectedFile(File(pickedFile.path));
+
+                    liveCaseController.setBase64File(base64Str, filename); // pass both
+                    Get.snackbar('Success', 'Image selected successfully');
+                  } else {
+                    Get.snackbar('No image selected', '', snackPosition: SnackPosition.BOTTOM);
+                  }
+                },
+              ),
+              const Text('or'),
+              IconButton(
+                icon: const Icon(Icons.upload_file_rounded,size: 44),
+                // label: const Text("Pick File"),
+                onPressed: () async {
+
+
+
+                  final picker = ImagePicker();
+                  final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+                  if (pickedFile != null) {
+                    final bytes = await pickedFile.readAsBytes();
+                    final base64Str = base64Encode(bytes);
+                    final filename = pickedFile.name; // 👈 gets the actual filename
+
+                    liveCaseController.setBase64File(base64Str, filename); // pass both
+
+                    Get.snackbar('Success', 'File selected successfully');
+                  } else {
+                    Get.snackbar('No file selected', '', snackPosition: SnackPosition.BOTTOM);
+                  }
+                },
+              ),
+
+            ],
+          ),
+          Obx(() {
+            final imageBase64 = liveCaseController.base64File.value;
+            final filename = liveCaseController.fileName.value;
+
+            if (imageBase64.isNotEmpty) {
+              return Column(
+                children: [
+                  Text('Selected: $filename'),
+                  const SizedBox(height: 8),
+                  Image.memory(
+                    base64Decode(imageBase64),
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
+                ],
+              );
+            } else {
+              return const Text('No image selected');
+            }
+          }),
+
+        ],
+      ),
+      textConfirm: 'Submit',
+      textCancel: 'Cancel',
+      onConfirm: () async {
+        // Save remarks
+        liveCaseController.setApprovalRemark(approvalController.text);
+        liveCaseController.setRegistrationRemark(registrationController.text);
+
+        // Build JSON
+        final Map<String, dynamic> payload = buildLivestockJson();
+
+        // Optional: show loading
+        Get.back(); // close the dialog
+        Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+
+        await submitLivestockForm(
+          formFields: buildLivestockJson(),
+          documentFile: liveCaseController.selectedFile.value,
+        );
+        /*try {
+          final response = await ApiService().postRequest('/CreateCase', payload);
+
+
+
+          // Optional: handle response
+          Get.back(); // close loading
+          Get.snackbar('Success', 'Data submitted successfully');
+        } catch (e) {
+          Get.back(); // close loading
+          Get.snackbar('Error', 'Submission failed: $e');
+        }*/
+      },
+    );
+  }
+  Future<void> submitLivestockForm({
+    required Map<String, dynamic> formFields,
+    File? documentFile,
+  }) async {
+    final uri = Uri.parse('http://49.207.44.107/mvas/CreateCase'); // replace with actual URL
+    final request = http.MultipartRequest('POST', uri);
+
+    formFields.forEach((key, value) {
+      request.fields[key] = value.toString();
+    });
+
+    if (documentFile != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('doc1', documentFile.path),
+      );
+    }
+
+    try {
+      final response = await request.send();
+      final result = await http.Response.fromStream(response);
+
+      if (result.statusCode == 200) {
+        Get.back(); // Close loading
+        Get.defaultDialog(
+          title: 'Success',
+          middleText: 'Do you want to continue with the same owner?',
+          textConfirm: 'Yes',
+          textCancel: 'No',
+          onConfirm: () {
+            // Navigate to another screen
+            Get.off(() => const CaseDetailsScreen());
+          },
+          onCancel: () {
+            Get.put(LivestockController()).clearAll();
+            Get.offAll(() => DashboardPage());
+          },
+        );
+      } else {
+        final body = jsonDecode(result.body);
+        Get.back();
+        Get.snackbar('Error', body['reasonPhrase'] ?? 'Unknown error');
+      }
+    } catch (e) {
+      Get.back();
+      Get.snackbar('Error', 'Exception: $e');
+    }
+  }
+
 }
 
 class SelectedMedicine {

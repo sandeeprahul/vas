@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomeScreen(), // Define route
         '/login': (context) => const LoginScreen(), // Define route
         '/manage_trip': (context) => const ManageTripScreen(), // Define route
-        '/case_registration_new': (context) => CaseRegistrationNewScreen(), // Define route
+        '/case_registration_new': (context) => const CaseRegistrationNewScreen(), // Define route
         '/master_data_screen': (context) =>  const MasterDataScreen(fromLogin: false,), // Define route
         '/manage_trip_arrival_departure_close_screen': (context) =>   const ManageTripArrivalDepartureCloseScreen(), // Define route
       },

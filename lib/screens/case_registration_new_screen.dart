@@ -1,70 +1,124 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../widgets/trip_details_widget.dart';
 import 'case_details_screen.dart';
 
-class CaseRegistrationNewScreen extends StatelessWidget {
-  final CaseRegistrationController controller = Get.put(CaseRegistrationController());
+class CaseRegistrationNewScreen extends StatefulWidget {
+  const CaseRegistrationNewScreen({super.key});
+
+  @override
+  State<CaseRegistrationNewScreen> createState() =>
+      _CaseRegistrationNewScreenState();
+}
+
+class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
+  final CaseRegistrationController controller =
+      Get.put(CaseRegistrationController());
+  final TripController tripController = Get.put(TripController());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    tripController.loadTripDetails('StartTrip');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Case Registration New'),
-        backgroundColor: Colors.redAccent,
+        title: const Text('Case Registration New'),
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  buildTextField("Name", controller.name),
-                  buildTextField("Trip ID", controller.tripId),
-                  buildTextField("District", controller.district),
-                  buildTextField("Block", controller.block),
-                  buildTextField("Ambulance No", controller.ambulanceNo),
-                  buildTextField("No Of Cases", controller.noOfCases),
-                  buildTextField("Start Odometer", controller.startOdometer),
-                  buildTextField("Seen Arrival Odometer", controller.seenArrivalOdometer),
-                  buildTextField("Seen Departure Odometer", controller.seenDepartureOdometer),
-                  buildTextField("Location Type", controller.locationType),
-                  buildTextField("Service Village", controller.serviceVillage),
-                ],
+        child: Obx(() {
+          final trip = tripController.tripDetails.value;
+          if (trip == null) {
+            return const Center(child: Text("No trip details available"));
+          }
+
+          return Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    buildTextField("Name","${trip.tripId}"),
+                    buildTextField("Trip ID", "${trip.tripId}"),
+                    // buildTextField("Address", trip.address),
+                    // buildTextField("Block", trip.locationName),
+                    buildTextField("Ambulance No", trip.vehicle),
+                    buildTextField("No Of Cases", controller.noOfCases.value),
+                    buildTextField("Start Odometer", "${trip.startKm}"),
+                    buildTextField("Seen Arrival Odometer",
+                        "${trip.startKm}"),
+                    buildTextField("Seen Departure Odometer",
+                        controller.seenDepartureOdometer.value),
+                    buildTextField(
+                        "Address ", trip.location),
+
+                    // buildTextField("Location Type",trip.address),
+
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                if (_validateFields()) {
-                  Get.to(() => CaseDetailsScreen());
-                } else {
-                  Get.snackbar("Error", "Please fill all fields before continuing.");
-                }
-              },
-              child: Text("Continue"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 32.0),
-                textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  if (_validateFields()) {
+                    Get.to(() => const CaseDetailsScreen());
+                  } else {
+                    Get.snackbar(
+                        "Error", "Please fill all fields before continuing.");
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 32.0),
+                  textStyle: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                child: const Text("Continue"),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        }),
       ),
     );
   }
 
-  Widget buildTextField(String label, RxString value) {
+  Widget buildTextField(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        onChanged: (text) => value.value = text,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
+      child: Row(
+        children: [
+          Expanded(child: Text("$label:")),
+          Expanded(
+            flex: 3,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey), // Grey border
+                borderRadius: BorderRadius.circular(8), // Rounded corners
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      value,
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  // const Icon(Icons.arrow_drop_down), // Dropdown icon
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -78,6 +132,7 @@ class CaseRegistrationNewScreen extends StatelessWidget {
         controller.startOdometer.isNotEmpty;
   }
 }
+
 class CaseRegistrationController extends GetxController {
   var name = "Paravet Two".obs;
   var tripId = "2016".obs;

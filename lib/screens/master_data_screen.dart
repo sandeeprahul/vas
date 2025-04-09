@@ -158,7 +158,7 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
                     "Doctors",
                     doctorsController.lastSyncedTime,
                     () => doctorsController.syncDoctors(
-                        userController.userId.value, "", ""),
+                        userController.userId.value,userController.zoneId.value, userController.blockId.value),
                     doctorsController.isLoading),
                 buildSyncTile(
                     "Drivers",

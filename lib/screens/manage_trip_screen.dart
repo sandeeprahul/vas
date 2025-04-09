@@ -102,9 +102,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                   ),
                 )),
 
-            /*    _buildDropdownField("District", controller.selectedDistrict,
-                controller.selectedDistrictId,
-                controller.districts, "districtId", "districtName"),*/
+
             const SizedBox(
               height: 8,
             ),
@@ -119,13 +117,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
             const SizedBox(
               height: 8,
             ),
-            // _buildDropdownField(
-            //     "LocationType",
-            //     locationTypeController.selectedLocationType,
-            //     locationTypeController.selectedLocationTypeId,
-            //     locationTypeController.locationTypes,
-            //     "stopType_ID",
-            //     "stopType_Name"),
+
             const SizedBox(
               height: 8,
             ),
@@ -334,13 +326,8 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: dataList.map((item) {
-
-
                       return ListTile(
-
-
-                      title: Text(item[valueField] ?? "Unknown"),
-
+                        title: Text(item[valueField] ?? "Unknown"),
                         onTap: () {
                           if (title == "District") {
                             districtsController.selectedDistrictId.value =

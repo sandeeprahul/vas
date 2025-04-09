@@ -161,7 +161,7 @@ class LoginController extends GetxController {
       await prefs.setString("loggedInTime", time.toString());
       userController.saveUserData(response);
 
-      Get.snackbar("Success", "Login Successful");
+      // Get.snackbar("Success", "Login Successful");
       // Get.offAllNamed("/home"); // Navigate to home screen
       Get.offAll(const MasterDataScreen(fromLogin: true)); // Auto-login if token exists
       // Get.offAll(HomeScreen()); // Auto-login if token exists

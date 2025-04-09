@@ -1,43 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/widgets/trip_history_seek_bar.dart';
 import 'dart:convert';
 
 import '../data/TripDetails.dart';
+import '../services/api_service.dart';
 import '../utils/showOdodmeterDialog.dart';
 
 // Model Class
 
 // Controller
 class TripController extends GetxController {
-  // Rxn<TripDetailsModel> tripDetails = Rxn<TripDetailsModel>();
 
-  /* Future<void> loadTripDetails(String tripType) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? jsonData = prefs.getString(tripType);
-
-    if (jsonData != null) {
-      tripDetails.value = TripDetailsModel.fromJsonString(jsonData);
-    }
-    print("loadTripDetails");
-    print(tripDetails.value?.tripId);
-  }*/
 
   @override
   void onInit() {
     super.onInit();
     loadTripDetails("StartTrip");
+
   }
 
   Rxn<TripDetailsModel> tripDetails = Rxn<TripDetailsModel>();
+  var isLoading = false.obs;
 
   var tripStatus = 9.obs;
   var tripStartTime = ''.obs;
   var tripSeenArrivalTime = ''.obs;
   var tripSeenDepartureTime = ''.obs;
+  final ApiService _apiService = ApiService();
 
-  Future<void> loadTripDetails(String tripType) async {
+  Future<void> loadTripDetailsssss(String tripType) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? jsonString = prefs.getString(tripType);
     int? tripStatusInt = prefs.getInt('tripStatus')??9;
@@ -59,7 +53,7 @@ class TripController extends GetxController {
     print("  ${tripDetails.value!.tripId} ");
   }
 
-  Future<TripDetailsModel?> loadTripDetailsOriginal(String tripType) async {
+  Future<TripDetailsModel?> loadTripDetails(String tripType) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? jsonData = prefs.getString(tripType);
 
@@ -70,6 +64,12 @@ class TripController extends GetxController {
 
         TripDetailsModel tripDetails =
             TripDetailsModel.fromJson(tripDetailsJson);
+        print("  tripDetails.value ");
+        print("  ${tripDetails.tripId} ");
+        print("  ${tripDetails.driver} ");
+        print("  ${tripDetails.vehicle}${tripDetails.vehicleId} ");
+        fetchTripDetails(tripDetails.vehicleId); // Or call with a trigger/ID if needed
+        // fetchTripDetails(tripDetails.deptId,tripDetails.vehicleId); // Or call with a trigger/ID if needed
 
         return tripDetails;
       } catch (e) {
@@ -81,7 +81,38 @@ class TripController extends GetxController {
       return null;
     }
   }
+
+
+  void fetchTripDetails( int vehicleId) async {
+    final UserController userController = Get.put(UserController());
+    isLoading.value = true;
+
+    final response = await _apiService.getRequestForMaster("/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/$vehicleId/1/1");
+    print(response);
+
+    if (response != null &&
+        response is Map<String, dynamic> &&
+        response['records'] != null &&
+        response['records'] is List &&
+        response['records'].isNotEmpty) {
+      try {
+        tripDetails.value = TripDetailsModel.fromJson(response['records'][0]);
+        print("${tripDetails.value!.vehicle}");
+        print("${tripDetails.value!.vehicleId}");
+        print("${tripDetails.value!.doctor}");
+      } catch (e) {
+        print("Parsing error: $e");
+        tripDetails.value = null;
+      }
+    } else {
+      print("No records found or invalid format");
+      tripDetails.value = null;
+    }
+
+    isLoading.value = false;
+  }
 }
+
 
 // Widget to Display Trip Details
 class TripDetailsWidget extends StatelessWidget {
@@ -92,9 +123,12 @@ class TripDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
   return  Obx(() {
+    if (controller.isLoading.value) {
+      return const Center(child: CircularProgressIndicator());
+    }
       final trip = controller.tripDetails.value;
       if (trip == null) {
-        return const Center(child: Text("No trip details available."));
+        return const Center(child: Text(""));
       }
 
       return Container(
@@ -148,7 +182,7 @@ class TripDetailsWidget extends StatelessWidget {
                 const SizedBox(width: 4),
                 Expanded(
                     child: Text(
-                      trip.locationName,
+                      trip.location,
                       maxLines: 2,
                     )),
               ],
@@ -158,14 +192,14 @@ class TripDetailsWidget extends StatelessWidget {
               children: [
                 const Icon(Icons.person), // Driver Icon
                 const SizedBox(width: 4),
-                Text("Driver: ${trip.driverName}"),
+                Text("Driver: ${trip.driver}"),
               ],
             ),
             Row(
               children: [
                 const Icon(Icons.directions_car), // Vehicle Icon
                 const SizedBox(width: 4),
-                Text("Vehicle: ${trip.vehicleName}"),
+                Text("Vehicle: ${trip.vehicle}"),
               ],
             ),  Visibility(
               visible: controller.tripStatus.value==0?true:false,
@@ -199,127 +233,6 @@ class TripDetailsWidget extends StatelessWidget {
         ),
       );
     });
-  /*  return FutureBuilder(
-      future: controller.loadTripDetails("StartTrip"),
-      builder: (context, snapshot) {
-        return Obx(() {
-          final trip = controller.tripDetails.value;
-          if (trip == null) {
-            return const Center(child: Text("No trip details available."));
-          }
-
-          return Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(18),
-            margin: const EdgeInsets.symmetric(horizontal: 16, ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(28),
-              image: DecorationImage(
-                image: const AssetImage(
-                  'assets/trip_image_icon.png',
-                ),
-                // fit: BoxFit.values,
-                // centerSlice: Rect.fromLTRB(10, 10, 20, 20), // Example: define the stretchable region
-
-                // alignment: Alignment.center, //
-                colorFilter: ColorFilter.mode(
-                  Colors.white.withOpacity(0.96),
-                  // Adjust opacity here (0.0 to 1.0)
-                  BlendMode.srcOver,
-                ),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  blurRadius: 10,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Trip Details",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Add spacing between title and details
-
-                // Text("Trip ID: ${trip.tripId}"),
-                Row(
-                  children: [
-                    const Icon(Icons.confirmation_number), // Trip ID Icon
-                    const SizedBox(width: 4),
-                    Text("Trip ID: ${trip.tripId}"),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on), // Location Icon
-                    const SizedBox(width: 4),
-                    Expanded(
-                        child: Text(
-                      trip.locationName,
-                      maxLines: 2,
-                    )),
-                  ],
-                ),
-                // Text("Location: ${trip.locationName}"),
-                Row(
-                  children: [
-                    const Icon(Icons.person), // Driver Icon
-                    const SizedBox(width: 4),
-                    Text("Driver: ${trip.driverName}"),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.directions_car), // Vehicle Icon
-                    const SizedBox(width: 4),
-                    Text("Vehicle: ${trip.vehicleName}"),
-                  ],
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-
-                    onPressed: () {
-                      // getOdometerReading();
-                    },
-
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Text('Trip Stared',style: TextStyle(fontWeight: FontWeight.bold),),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      getOdometerReading();
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Text('Seen Arrival',style: TextStyle(fontWeight: FontWeight.bold),),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-      },
-    );*/
   }
   void getOdometerReading() async {
     String? odometerValue = await showOdometerDialog(Get.context!);
@@ -328,17 +241,4 @@ class TripDetailsWidget extends StatelessWidget {
     }
   }
 
-  Widget _buildDetailRow(IconData icon, String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      // Add vertical padding to rows
-      child: Row(
-        children: [
-          Icon(icon, size: 20), // Adjust icon size
-          const SizedBox(width: 8),
-          Text(text),
-        ],
-      ),
-    );
-  }
 }

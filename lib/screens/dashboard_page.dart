@@ -5,9 +5,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/widgets/rounded_corner_card_widget.dart';
 
 import '../controllers/dash_boardcontroller.dart';
+import '../controllers/trip_from_controller.dart';
 import '../widgets/time_summary_card_widget.dart';
 import '../widgets/trip_details_widget.dart';
 
@@ -26,6 +28,8 @@ class _DashboardPageState extends State<DashboardPage> {
   String? roleId;
   final DashboardController dashboardController = Get.put(DashboardController()); // Initialize controller
   final TripController tripController = Get.put(TripController()); // Initialize controller
+  FormController formController = Get.put(FormController());
+  UserController userController = Get.put(UserController());
 
   @override
   void initState() {
@@ -33,6 +37,7 @@ class _DashboardPageState extends State<DashboardPage> {
     super.initState();
     _loadUserDetails();
     tripController.loadTripDetails("StartTrip");
+
   }
 
   Future<void> _loadUserDetails() async {
@@ -130,9 +135,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                   borderRadius: BorderRadius.circular(28),
                                   color: Colors.blue, //#dcdee7
                                 ),
-                                child: const Text(
-                                  "  BR01GP0033  ",
-                                  style: TextStyle(
+                                child:  Text(
+                                  userController.clientId.value,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight:
@@ -251,42 +256,59 @@ class _DashboardPageState extends State<DashboardPage> {
           );
         }),*/
             //menu
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14),
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: RoundedCornerCardWidget(
-                      title: "Live Case",
-                      subtitle: "Case Registration",
-                      // kcal: "525 pending",
-                      // imagePath: "assets/egg.png",
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(28),
-                        bottomRight: Radius.circular(0),
-                        topRight: Radius.circular(0),
-                        bottomLeft: Radius.circular(0),
+                    child: InkWell(
+                      onTap:(){
+                        if (tripController.tripStatus.value==1){
+                          Navigator.pushNamed(context, '/manage_trip_arrival_departure_close_screen'); // N
+
+                        }else{
+                          Navigator.pushNamed(context, '/manage_trip'); // N
+                        }                      },
+                      child: const RoundedCornerCardWidget(
+                        title: "Manage Trip",
+                        subtitle: "Trip",
+                        // kcal: "525 pending",
+                        // imagePath: "assets/egg.png",
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(28),
+                          bottomRight: Radius.circular(0),
+                          topRight: Radius.circular(0),
+                          bottomLeft: Radius.circular(0),
+                        ),
+                        icon: Icons.car_crash,
                       ),
-                      icon: Icons.car_crash,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 6,
                   ),
-                  Expanded(
-                    child: RoundedCornerCardWidget(
-                      title: "Cattle Case",
-                      subtitle: "Case Registration",
-                      // kcal: "5 pending",
-                      // imagePath: "assets/egg.png",
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(0),
-                        bottomRight: Radius.circular(0),
-                        topRight: Radius.circular(28),
-                        bottomLeft: Radius.circular(0),
+                    Expanded(
+                    child: InkWell(
+                      onTap: (){
+                        // formController.saveTempDetails();
+                        //
+                        Navigator.pushNamed(context, '/case_registration_new'); // N
+
+                      },
+                      child: const RoundedCornerCardWidget(
+                        title: "Live Case",
+                        subtitle: "Live Case Registration",
+                        // kcal: "5 pending",
+                        // imagePath: "assets/egg.png",
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0),
+                          topRight: Radius.circular(28),
+                          bottomLeft: Radius.circular(0),
+                        ),
+                        icon: Icons.car_crash,
                       ),
-                      icon: Icons.car_crash,
                     ),
                   ),
                 ],
@@ -303,8 +325,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 children: [
                   Expanded(
                     child: RoundedCornerCardWidget(
-                      title: "Live Case",
-                      subtitle: "Case Registration",
+                      title: "Cattle Register",
+                      subtitle: "Cattle Registration",
                       // kcal: "525 pending",
                       // imagePath: "assets/egg.png",
                       borderRadius: BorderRadius.only(

@@ -44,11 +44,11 @@ class _ManageTripArrivalDepartureCloseScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _textWidget("Trip ID:", "${trip.tripId}"),
-              _textWidget("Driver:", "${trip.driverName}"),
-              _textWidget("Vehicle:", "${trip.vehicleName}"),
-              _textWidget("Location:", "${trip.locationName}"),
-              _textWidget("BaseOdometer:", "${trip.baseKm}"),
-              _textWidget("StartOdometer:", "${trip.startKm}"),
+              _textWidget("Driver:", trip.driver),
+              _textWidget("Vehicle:", trip.vehicle),
+              _textWidget("Location:", trip.location),
+              _textWidget("BaseOdometer:", "${trip.startKm}"),
+              _textWidget("StartOdometer:", "${trip.reachKm}"),
               TextField(
                 controller: controller,
                 decoration: const InputDecoration(
@@ -56,6 +56,7 @@ class _ManageTripArrivalDepartureCloseScreenState
                 keyboardType: TextInputType.number,
               ),
               // _textWidget("Address:","${trip.address}"),
+              const SizedBox(height: 6,),
               Obx(() => SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -84,118 +85,54 @@ class _ManageTripArrivalDepartureCloseScreenState
           );
         }),
       ),
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         onPressed: () {
           tripController.loadTripDetails("StartTrip");
         },
         child: const Icon(Icons.refresh),
-      ),
+      ),*/
     );
   }
 
   Widget _textWidget(String title, String subtitle) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            title,
-            style: const TextStyle(fontSize: 18),
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey), // Grey border
-              borderRadius: BorderRadius.circular(8), // Rounded corners
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 14),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    subtitle,
-                    style: const TextStyle(fontSize: 18),
+          ),
+          Expanded(
+            flex: 3,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey), // Grey border
+                borderRadius: BorderRadius.circular(8), // Rounded corners
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      subtitle,
+                      style: const TextStyle(fontSize: 14),
+                    ),
                   ),
-                ),
-                const Icon(Icons.arrow_drop_down), // Dropdown icon
-              ],
+                  const Icon(Icons.arrow_drop_down), // Dropdown icon
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
 
-  // Future<void> submitFormSeen(String value) async {
-  //   UserController userController = Get.put(UserController());
-  //   TripController tripController = Get.put(TripController());
-  //
-  //   // String? odometerValue = await showOdometerDialog(Get.context!);
-  //   // if (odometerValue == null) return;
-  //
-  //
-  //   Map<String, dynamic> requestData = {
-  //     "deptId": int.tryParse(userController.deptId.value)??0,
-  //     "userId": int.tryParse(userController.userId.value),
-  //     "tripId": 25021900002,
-  //     // "tripId": tripController.tripDetails.value?.tripId ?? 0,
-  //     "odometer":double.tryParse(value) ?? 0.0, // Convert to integer
-  //     "lat":16.470866 ,
-  //     "lng": 80.6065381
-  //   };
-  //   print(requestData);
-  //
-  //
-  //   showLoadingDialog(); // Show loading before API call
-  //
-  //
-  //   try {
-  //
-  //     final response = await apiService.postRequest("/TripSeenArrival", requestData);
-  //     print("submitFormSeen");
-  //     print(response);
-  //     if (response != null) {
-  //       hideLoadingDialog(); // Ensure loading dialog is dismissed
-  //
-  //
-  //       if (response['result'] == 1) {
-  //         int tripId = response['trip_ID']; // Extract trip ID
-  //         Future.delayed(const Duration(milliseconds: 300), () {
-  //           showErrorDialog("Alert!", "${response['message']}");
-  //         });
-  //         SharedPreferences prefs = await SharedPreferences.getInstance();
-  //         await prefs.setInt("tripStatus",2);
-  //         // await prefs.setString("tripTime",response['reach_Time']);
-  //         await prefs.setString("tripSeenArrivalTime",response['reach_Time']);
-  //         await prefs.setString("tripSeenDepartureTime",'');
-  //
-  //       }else{
-  //         Future.delayed(const Duration(milliseconds: 300), () {
-  //           showErrorDialog("Alert!", "$response");
-  //         });
-  //       }
-  //
-  //     }
-  //     else{
-  //       Future.delayed(const Duration(milliseconds: 300), () {
-  //         showErrorDialog("Alert!", "$response");
-  //       });
-  //       hideLoadingDialog(); // Ensure loading dialog is dismissed
-  //
-  //     }
-  //   } catch (e) {
-  //     // hideLoadingDialog(); // Ensure loading dialog is dismissed
-  //     showErrorDialog("Alert!","Failed to start trip: $e");
-  //
-  //     print("Failed to start trip: $e");
-  //   }
-  //   finally{
-  //     hideLoadingDialog(); // Ensure loading dialog is dismissed
-  //
-  //   }
-  // }
+
 
 }

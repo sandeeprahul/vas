@@ -76,7 +76,7 @@ class EventTypesController extends GetxController {
       print("Error syncing event types: $e");
     } finally {
       isLoading.value = false; // Stop loading
-      showLoadingDialog();
+      // showLoadingDialog();
       hideLoadingDialog();
     }
   }

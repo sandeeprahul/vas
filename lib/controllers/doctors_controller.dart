@@ -33,7 +33,7 @@ class DoctorsController extends GetxController {
     showLoadingDialog();
     try {
       // String formattedEndpoint = '/GetDoctors/$empId/5/38';
-      String formattedEndpoint = '/GetDoctors/$empId';
+      String formattedEndpoint = '/GetDoctors/$empId/$zoneId/$blockId';
       // http://49.207.44.107/mvas/GetDoctors/462/5/38
 
       var response = await apiService.getRequestForMaster(formattedEndpoint, );

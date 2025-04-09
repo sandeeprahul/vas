@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/controllers/login_controller.dart';
+import 'package:vas/controllers/trip_from_controller.dart';
 import 'package:vas/widgets/trip_details_widget.dart';
 
 class SideMenu extends StatefulWidget {
@@ -65,22 +66,20 @@ class _SideMenuState extends State<SideMenu> {
               [_buildSubMenuItem("Change Password", Icons.arrow_right, () {})]),
           _buildExpandableTile("Cases (6)", [
             _buildSubMenuItem("Login Report Self", Icons.arrow_right, () {}),
-            _buildSubMenuItem("Live Case ", Icons.arrow_right, () {}),
+            // _buildSubMenuItem("Live Case ", Icons.arrow_right, () {}),
             _buildSubMenuItem("Manage Trip ", Icons.arrow_right, () {
               Navigator.pop(context); // Close drawer
 
               if (tripController.tripStatus.value==1){
                 Navigator.pushNamed(context, '/manage_trip_arrival_departure_close_screen'); // N
 
-
-
              }else{
                Navigator.pushNamed(context, '/manage_trip'); // N
              }
 
             }),
-            _buildSubMenuItem("Live Case ", Icons.arrow_right, () {}),
-            _buildSubMenuItem("Case Registration ", Icons.arrow_right, () {}),
+            // _buildSubMenuItem("Live Case ", Icons.arrow_right, () {}),
+            // _buildSubMenuItem("Case Registration ", Icons.arrow_right, () {}),
             _buildSubMenuItem("Case Registration New", Icons.arrow_right, () {
               Navigator.pop(context); // Close drawer
               Navigator.pushNamed(context, '/case_registration_new'); // N

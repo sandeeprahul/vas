@@ -109,8 +109,8 @@ class FormController extends GetxController {
         "depT_ID": userController.deptId.value,
         "user_ID": userController.userId.value,
         "driver_ID": selectedDriverId.value,
-        "doctor_ID": "23",
-        // "doctor_ID": selectedDoctorId.value,
+        // "doctor_ID": "23",
+        "doctor_ID": selectedDoctorId.value,
         "zone_ID": districtsController.selectedDistrictId.value,
         "block_ID": blocksController.selectedBlockId.value,
         "location_ID": locationSubTypeController.selectedLocationId.value,
@@ -133,7 +133,9 @@ class FormController extends GetxController {
       // vehicle_ID: 3, base_KM: 2.0, latitude: 16.470866, longitude: 80.6065381,
       // device_Regn_ID: , imeI_Number: 0, os_Version: 13}
 
-      print("Submitting Form Data: $formData");
+
+      var forLog = jsonEncode(formData);
+      print("Submitting Form Data: $forLog");
 
       // Make API POST request
       final response = await apiService.postRequest("/StartTrip", formData);
@@ -146,7 +148,7 @@ class FormController extends GetxController {
         // Form submitted successfully: {result: 0, message: Vehicle already on an emergency trip, trip_ID: 0, start_Time: null}
         // Handle success (e.g., show success message, navigate, etc.)
 
-        if (response['result'] == "1") {
+        if (response['result'] == 1) {
           int tripId = response['trip_ID']; // Extract trip ID
 
           TripDetailsModel tripDetails = TripDetailsModel.fromJson(formData);
@@ -160,16 +162,16 @@ class FormController extends GetxController {
           Get.to(const ManageTripArrivalDepartureCloseScreen()); // Closes the current page
 
         } else {
-          saveTempDetails();
+          // saveTempDetails();
           showErrorDialog('Alert', "${response["message"]}");
-          Get.to(const ManageTripArrivalDepartureCloseScreen()); // Closes the current page
+          // Get.to(const ManageTripArrivalDepartureCloseScreen()); // Closes the current page
 
           // clearAllFields();
         }
       } else {
         print("Failed to submit form:$response");
         // Handle failure (e.g., show error message)
-        showErrorDialog('Failure', "Trip Start Failed");
+        showErrorDialog('Failure', "$response");
       }
       // TODO: Implement API POST request here
     } catch (e) {
@@ -186,14 +188,14 @@ class FormController extends GetxController {
       String tripType, int tripId, TripDetailsModel tripDetails,String startTime) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    UserController userController = Get.find<UserController>();
+    UserController userController = Get.put(UserController());
     LocationSubTypeController locationSubTypeController =
-        Get.find<LocationSubTypeController>();
+        Get.put(LocationSubTypeController());
     LocationTypeController locationTypeController =
-        Get.find<LocationTypeController>();
-    AmbulanceController ambulanceController = Get.find<AmbulanceController>();
-    BlocksController blocksController = Get.find<BlocksController>();
-    DistrictsController districtsController = Get.find<DistrictsController>();
+        Get.put(LocationTypeController());
+    AmbulanceController ambulanceController = Get.put(AmbulanceController());
+    BlocksController blocksController = Get.put(BlocksController());
+    DistrictsController districtsController = Get.put(DistrictsController());
 
     // Combine tripId and tripDetails into a single object
     Map<String, dynamic> tripData = {
@@ -279,38 +281,38 @@ class FormController extends GetxController {
     print("All fields have been cleared.");
   }
 
-  Future<void> saveTempDetails() async {
-    int tripId = 25021900002;
-    TripDetailsModel tripDetails = TripDetailsModel(
-      deptId: 3,
-      userId: 1888,
-      driverId: 819,
-      driverName: "John Doe",
-      doctorId: 23,
-      doctorName: "Dr. Smith",
-      zoneId: 3,
-      zoneName: "Zone A",
-      blockId: 22,
-      blockName: "Block 22",
-      locationId: 43190,
-      locationName: "City Hospital",
-      vehicleId: 3,
-      vehicleName: "Ambulance 101",
-      baseKm: 2.0,
-      startKm: 4.0,
-      deviceRegnId: '',
-      address: "",
-      latitude: 16.470866,
-      longitude: 80.6065381,
-      imeiNumber: '0',
-      osVersion: '13',
-      tripId: tripId,
-      startTime: '2025-02-19 23:53:22',
-    );
-
-    // Save trip details
-    await saveTripDetails("StartTrip", tripId, tripDetails,'2025-02-19 23:53:22');
-  }
+  // Future<void> saveTempDetails() async {
+  //   int tripId = 25021900002;
+  //   TripDetailsModel tripDetails = TripDetailsModel(
+  //     deptId: 3,
+  //     userId: 1888,
+  //     driverId: 819,
+  //     driverName: "John Doe",
+  //     doctorId: 23,
+  //     doctorName: "Dr. Smith",
+  //     zoneId: 3,
+  //     zoneName: "Zone A",
+  //     blockId: 22,
+  //     blockName: "Block 22",
+  //     locationId: 43190,
+  //     locationName: "City Hospital",
+  //     vehicleId: 3,
+  //     vehicleName: "Ambulance 101",
+  //     baseKm: 2.0,
+  //     startKm: 4.0,
+  //     deviceRegnId: '',
+  //     address: "",
+  //     latitude: 16.470866,
+  //     longitude: 80.6065381,
+  //     imeiNumber: '0',
+  //     osVersion: '13',
+  //     tripId: tripId,
+  //     startTime: '2025-02-19 23:53:22',
+  //   );
+  //
+  //   // Save trip details
+  //   await saveTripDetails("StartTrip", tripId, tripDetails,'2025-02-19 23:53:22');
+  // }
 
 
   Future<void> submitFormSeen(String value) async {

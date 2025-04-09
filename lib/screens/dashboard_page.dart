@@ -136,7 +136,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   color: Colors.blue, //#dcdee7
                                 ),
                                 child:  Text(
-                                  userController.clientId.value,
+                                  " ClientId: ${userController.clientId.value} ",
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,

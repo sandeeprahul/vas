@@ -17,6 +17,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
       Get.put(CaseRegistrationController());
   final TripController tripController = Get.put(TripController());
 
+
   @override
   void initState() {
     // TODO: implement initState
@@ -57,7 +58,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                     buildTextField("Seen Departure Odometer",
                         controller.seenDepartureOdometer.value),
                     buildTextField(
-                        "Address ", trip.location),
+                        "Service Village ", trip.location),
 
                     // buildTextField("Location Type",trip.address),
 
@@ -65,23 +66,26 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (_validateFields()) {
-                    Get.to(() => const CaseDetailsScreen());
-                  } else {
-                    Get.snackbar(
-                        "Error", "Please fill all fields before continuing.");
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 32.0),
-                  textStyle: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_validateFields()) {
+                      Get.to(() => const CaseDetailsScreen());
+                    } else {
+                      Get.snackbar(
+                          "Error", "Please fill all fields before continuing.",backgroundColor: Colors.red,overlayBlur: 2);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12.0, horizontal: 32.0),
+                    // textStyle: const TextStyle(
+                    //     fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  child: const Text("Continue"),
                 ),
-                child: const Text("Continue"),
               ),
             ],
           );
@@ -90,6 +94,14 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
     );
   }
 
+  Widget _buildTextFieldWithController(String label, TextEditingController controller) {
+    return TextField(
+      controller: controller,
+      decoration:
+      InputDecoration(labelText: label, border: const OutlineInputBorder()),
+      keyboardType: TextInputType.number,
+    );
+  }
   Widget buildTextField(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -129,6 +141,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
         controller.district.isNotEmpty &&
         controller.ambulanceNo.isNotEmpty &&
         controller.noOfCases.isNotEmpty &&
+
         controller.startOdometer.isNotEmpty;
   }
 }

@@ -13,13 +13,10 @@ import '../utils/showOdodmeterDialog.dart';
 
 // Controller
 class TripController extends GetxController {
-
-
   @override
   void onInit() {
     super.onInit();
     loadTripDetails("StartTrip");
-
   }
 
   Rxn<TripDetailsModel> tripDetails = Rxn<TripDetailsModel>();
@@ -34,11 +31,12 @@ class TripController extends GetxController {
   Future<void> loadTripDetailsssss(String tripType) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? jsonString = prefs.getString(tripType);
-    int? tripStatusInt = prefs.getInt('tripStatus')??9;
-    String? tripTime = prefs.getString('tripStartTime')??'';
-    String? tripSeenArrivalTimeString = prefs.getString('tripSeenArrivalTime')??'';
-    String? tripSeenDepartureTimeString = prefs.getString('tripSeenDepartureTime')??'';
-
+    int? tripStatusInt = prefs.getInt('tripStatus') ?? 9;
+    String? tripTime = prefs.getString('tripStartTime') ?? '';
+    String? tripSeenArrivalTimeString =
+        prefs.getString('tripSeenArrivalTime') ?? '';
+    String? tripSeenDepartureTimeString =
+        prefs.getString('tripSeenDepartureTime') ?? '';
 
     if (jsonString != null) {
       Map<String, dynamic> jsonData = jsonDecode(jsonString);
@@ -68,7 +66,8 @@ class TripController extends GetxController {
         print("  ${tripDetails.tripId} ");
         print("  ${tripDetails.driver} ");
         print("  ${tripDetails.vehicle}${tripDetails.vehicleId} ");
-        fetchTripDetails(tripDetails.vehicleId); // Or call with a trigger/ID if needed
+        fetchTripDetails(
+            tripDetails.vehicleId); // Or call with a trigger/ID if needed
         // fetchTripDetails(tripDetails.deptId,tripDetails.vehicleId); // Or call with a trigger/ID if needed
 
         return tripDetails;
@@ -82,12 +81,12 @@ class TripController extends GetxController {
     }
   }
 
-
-  void fetchTripDetails( int vehicleId) async {
+  void fetchTripDetails(int vehicleId) async {
     final UserController userController = Get.put(UserController());
     isLoading.value = true;
 
-    final response = await _apiService.getRequestForMaster("/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/$vehicleId/1/1");
+    final response = await _apiService.getRequestForMaster(
+        "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/$vehicleId/1/1");
     print(response);
 
     if (response != null &&
@@ -113,7 +112,6 @@ class TripController extends GetxController {
   }
 }
 
-
 // Widget to Display Trip Details
 class TripDetailsWidget extends StatelessWidget {
   final TripController controller = Get.put(TripController());
@@ -122,10 +120,10 @@ class TripDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  return  Obx(() {
-    if (controller.isLoading.value) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
       final trip = controller.tripDetails.value;
       if (trip == null) {
         return const Center(child: Text(""));
@@ -134,24 +132,26 @@ class TripDetailsWidget extends StatelessWidget {
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.all(18),
-        margin: const EdgeInsets.symmetric(horizontal: 16, ),
+        margin: const EdgeInsets.symmetric(
+          horizontal: 16,vertical: 4
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(28),
-          image: DecorationImage(
-            image: const AssetImage(
-              'assets/trip_image_icon.png',
-            ),
-            // fit: BoxFit.values,
-            // centerSlice: Rect.fromLTRB(10, 10, 20, 20), // Example: define the stretchable region
-
-            // alignment: Alignment.center, //
-            colorFilter: ColorFilter.mode(
-              Colors.white.withOpacity(0.96),
-              // Adjust opacity here (0.0 to 1.0)
-              BlendMode.srcOver,
-            ),
-          ),
+          // image: DecorationImage(
+          //   image: const AssetImage(
+          //     'assets/trip_image_icon.png',
+          //   ),
+          //   // fit: BoxFit.values,
+          //   // centerSlice: Rect.fromLTRB(10, 10, 20, 20), // Example: define the stretchable region
+          //
+          //   // alignment: Alignment.center, //
+          //   colorFilter: ColorFilter.mode(
+          //     Colors.white.withOpacity(0.96),
+          //     // Adjust opacity here (0.0 to 1.0)
+          //     BlendMode.srcOver,
+          //   ),
+          // ),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2),
@@ -164,7 +164,7 @@ class TripDetailsWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Text(
+            Text(
               "Trip Id: ${trip.tripId}",
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -175,16 +175,18 @@ class TripDetailsWidget extends StatelessWidget {
             // Add spacing between title and details
 
             // Text("Trip ID: ${trip.tripId}"),
-             TripHistorySeekBar(currentStep:controller.tripStatus.value ,),
+            TripHistorySeekBar(
+              currentStep: controller.tripStatus.value,
+            ),
             Row(
               children: [
                 const Icon(Icons.location_on), // Location Icon
                 const SizedBox(width: 4),
                 Expanded(
                     child: Text(
-                      trip.location,
-                      maxLines: 2,
-                    )),
+                  trip.location,
+                  maxLines: 2,
+                )),
               ],
             ),
             // Text("Location: ${trip.locationName}"),
@@ -201,8 +203,9 @@ class TripDetailsWidget extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text("Vehicle: ${trip.vehicle}"),
               ],
-            ),  Visibility(
-              visible: controller.tripStatus.value==0?true:false,
+            ),
+            Visibility(
+              visible: controller.tripStatus.value == 0 ? true : false,
               child: Row(
                 children: [
                   const Icon(Icons.directions_car), // Vehicle Icon
@@ -218,15 +221,33 @@ class TripDetailsWidget extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-
-                    getOdometerReading();
-
+                onPressed:controller.tripStatus.value ==3?null: () {
+                  getOdometerReading();
                 },
-                child:  Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: controller.tripStatus.value==1?const Text('Seen Arrival',style: TextStyle(fontWeight: FontWeight.bold)):controller.tripStatus.value==2?const Text('Departure',style: TextStyle(fontWeight: FontWeight.bold),):controller.tripStatus.value==3?const Text('Close',style: TextStyle(fontWeight: FontWeight.bold),):const Text('Started',style: TextStyle(fontWeight: FontWeight.bold),),
-                ),
+                child: Obx(() {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: controller.tripStatus.value == 1
+                        ? const Text('Departure',
+                            style: TextStyle(fontWeight: FontWeight.bold))
+                        : controller.tripStatus.value == 2
+                            ? const Text(
+                                'Close',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )
+                            : controller.tripStatus.value == 3
+                                ? const Text(
+                                    '',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )
+                                : const Text(
+                                    'Seen Arrival',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                  );
+                }),
               ),
             ),
           ],
@@ -234,11 +255,11 @@ class TripDetailsWidget extends StatelessWidget {
       );
     });
   }
+
   void getOdometerReading() async {
     String? odometerValue = await showOdometerDialog(Get.context!);
     if (odometerValue != null) {
       print("Odometer Entered: $odometerValue");
     }
   }
-
 }

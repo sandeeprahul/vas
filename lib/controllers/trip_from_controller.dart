@@ -219,6 +219,9 @@ class FormController extends GetxController {
     await prefs.setString("tripSeenArrivalTime",'');
     await prefs.setString("tripSeenDepartureTime",'');
 
+    TripController tripController = Get.put(TripController());
+    tripController.tripStatus.value=1;
+
     // loadTripDetails("StartTrip");
   }
 

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../controllers/blocks_controller.dart';
 import '../controllers/districts_controller.dart';
+import '../controllers/live_stock_controller.dart';
 import '../controllers/location_sub_type_controller.dart';
 import '../controllers/location_type_controller.dart';
 import '../controllers/user_controller.dart';
@@ -40,6 +41,8 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
         'Village': _villageController.text,
         'Category': _category,
       };
+      final liveCaseController = Get.put(LivestockController());
+      liveCaseController.saveFormData(formData);
       print('Form Data: $formData');
       // Navigate to the next screen (Cattle Registration)
       Navigator.push(
@@ -52,6 +55,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
   }
 
   final TripController tripController = Get.put(TripController());
+  final LivestockController liveCaseController = Get.put(LivestockController());
 
   @override
   void initState() {
@@ -110,6 +114,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                 controller: _ownerContactNoController,
                 maxLength: 10,
                 decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
                   labelText: 'Owner\'s Contact No',
                   hintText: 'Enter Owner\'s Contact Number',
                 ),
@@ -124,11 +129,13 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: _ownerNameController,
                 decoration: const InputDecoration(
                   labelText: 'Owner\'s Name',
+                  border: OutlineInputBorder(),
+
                   hintText: 'Enter Owner\'s Name',
                 ),
                 validator: (value) {
@@ -138,7 +145,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
               Obx(() => GestureDetector(
                 onTap: () {
                   _showSelectionDialog(
@@ -176,7 +183,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
 
 
               const SizedBox(
-                height: 8,
+                height: 14,
               ),
               _buildDropdownField(
                   "Block",
@@ -187,12 +194,10 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                   "name"),
               //    blocksController.getBlocks(districtsController.selectedDistrictId.value,userController.userId.value);
               const SizedBox(
-                height: 8,
+                height: 14,
               ),
 
-              const SizedBox(
-                height: 8,
-              ),
+
 
               Obx(() => GestureDetector(
                 onTap: () {
@@ -230,7 +235,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
               )),
 
               const SizedBox(
-                height: 8,
+                height: 14,
               ),
 
               _buildDropdownField(
@@ -244,7 +249,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
 
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Category'),
+                decoration: const InputDecoration(labelText: 'Category',border: OutlineInputBorder()),
                 value: _category,
                 items: _categories.map((category) {
                   return DropdownMenuItem(

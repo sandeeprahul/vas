@@ -50,6 +50,24 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>?> getRequestList(String endpoint) async {
+    try {
+      final response = await http.get(
+        Uri.parse("$baseUrl$endpoint"),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print("Failed GET: ${response.statusCode}");
+        return null;
+      }
+    } catch (e) {
+      print("GET Error: $e");
+      return null;
+    }
+  }
 
   Future<dynamic> getRequestForMaster(String endpoint) async {
     try {

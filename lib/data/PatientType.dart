@@ -1,18 +1,29 @@
 class PatientType {
-  final String type;
-  final List<String> subTypes;
+  final int pT_ID;
+  final String pT_TEXT;
 
-  PatientType({required this.type, required this.subTypes});
+  PatientType({required this.pT_ID, required this.pT_TEXT});
 
   factory PatientType.fromJson(Map<String, dynamic> json) {
     return PatientType(
-      type: json['type'],
-      subTypes: List<String>.from(json['subTypes'] ?? []),
+      pT_ID: json['pT_ID'],
+      pT_TEXT: json['pT_TEXT'],
     );
   }
+}
 
-  Map<String, dynamic> toJson() => {
-    'type': type,
-    'subTypes': subTypes,
-  };
+class PatientSubType {
+  final int pT_ID;
+  final int ptS_ID;
+  final String ptS_TEXT;
+
+  PatientSubType({required this.pT_ID, required this.ptS_ID, required this.ptS_TEXT});
+
+  factory PatientSubType.fromJson(Map<String, dynamic> json) {
+    return PatientSubType(
+      pT_ID: json['pT_ID'],
+      ptS_ID: json['ptS_ID'],
+      ptS_TEXT: json['ptS_TEXT'],
+    );
+  }
 }

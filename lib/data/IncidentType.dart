@@ -1,10 +1,10 @@
 class IncidentType {
-  final int incidentId;
-  final String incidentType;
-  final String incidentName;
-  final bool isCovered;
-  final int serviceTypeId;
-  final List<String> regnTypes;
+  final int? incidentId;
+  final String? incidentType;
+  final String? incidentName;
+  final int? isCovered;
+  final int? serviceTypeId;
+  final List<String>? regnTypes;
 
   IncidentType({
     required this.incidentId,
@@ -17,13 +17,14 @@ class IncidentType {
 
   factory IncidentType.fromJson(Map<String, dynamic> json) {
     return IncidentType(
-      incidentId: json['incident_ID'],
-      incidentType: json['incident_Type'],
-      incidentName: json['incident_Name'],
-      isCovered: json['isCovered'],
-      serviceTypeId: json['service_Type_ID'],
-      regnTypes: List<String>.from(json['regn_Types'] ?? []),
-    );
+      incidentId: json['incident_ID']??-1,
+      incidentType: json['incident_Type']??'',
+      incidentName: json['incident_Name']??'',
+      isCovered: json['isCovered']??-1,
+      serviceTypeId: json['service_Type_ID']??-1,
+      regnTypes: (json['regn_Types'] as List<dynamic>)
+          .map((e) => e['regnType'] as String)
+          .toList()??[],    );
   }
 
   Map<String, dynamic> toJson() => {
@@ -34,4 +35,23 @@ class IncidentType {
     'service_Type_ID': serviceTypeId,
     'regn_Types': regnTypes,
   };
+}
+class IncidentSubType {
+  final int incidentID;
+  final int subID;
+  final String subType;
+
+  IncidentSubType({
+    required this.incidentID,
+    required this.subID,
+    required this.subType,
+  });
+
+  factory IncidentSubType.fromJson(Map<String, dynamic> json) {
+    return IncidentSubType(
+      incidentID: json['incident_ID'],
+      subID: json['incident_Sub_ID'],
+      subType: json['incident_Sub_Type'].trim(),
+    );
+  }
 }

@@ -96,9 +96,9 @@ class TripController extends GetxController {
         response['records'].isNotEmpty) {
       try {
         tripDetails.value = TripDetailsModel.fromJson(response['records'][0]);
-        print("${tripDetails.value!.vehicle}");
+        print(tripDetails.value!.vehicle);
         print("${tripDetails.value!.vehicleId}");
-        print("${tripDetails.value!.doctor}");
+        print(tripDetails.value!.doctor);
       } catch (e) {
         print("Parsing error: $e");
         tripDetails.value = null;

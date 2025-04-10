@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:vas/screens/change_password_screen.dart';
+import 'package:vas/screens/generate_fuel_entry_ticket.dart';
+import 'package:vas/screens/login_report_screen.dart';
 import 'package:vas/screens/manage_trip_arrival_departure_close_screen.dart';
 import 'package:vas/screens/manage_trip_screen.dart';
 import 'package:vas/screens/form_temp.dart';
@@ -50,6 +53,9 @@ class MyApp extends StatelessWidget {
         '/case_registration_new': (context) => const CaseRegistrationNewScreen(), // Define route
         '/master_data_screen': (context) =>  const MasterDataScreen(fromLogin: false,), // Define route
         '/manage_trip_arrival_departure_close_screen': (context) =>   const ManageTripArrivalDepartureCloseScreen(), // Define route
+        '/login_report_screen': (context) =>    const LoginReportScreen(), // Define route
+        '/change_password': (context) =>    const ChangePasswordScreen(), // Define route
+        '/fuel_ticket_entry_screen': (context) =>    const GenerateFuelEntryTicket(), // Define route
       },
     ));
   }

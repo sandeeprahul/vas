@@ -53,19 +53,32 @@ class _SideMenuState extends State<SideMenu> {
               child: Icon(Icons.person, size: 40, color: Colors.blue),
             ),
           ),
-          _buildExpandableTile("Dashboard (1)", [
+          _buildExpandableTile("Dashboard ", [
             _buildSubMenuItem("Post Data Testing", Icons.arrow_right, () {})
           ]),
-          _buildExpandableTile("Settings (1)", [
+          _buildExpandableTile("Settings ", [
             _buildSubMenuItem("Master Data", Icons.arrow_right, () {
               Navigator.pop(context); // Close drawer
               Navigator.pushNamed(context, '/master_data_screen'); // N
             })
           ]),
-          _buildExpandableTile("Management (1)",
-              [_buildSubMenuItem("Change Password", Icons.arrow_right, () {})]),
-          _buildExpandableTile("Cases (6)", [
-            _buildSubMenuItem("Login Report Self", Icons.arrow_right, () {}),
+          _buildExpandableTile("Management ", [
+            _buildSubMenuItem("Change Password", Icons.arrow_right, () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/change_password');
+            })
+          ]),
+          _buildExpandableTile("Booking ", [
+            _buildSubMenuItem("Generate Fuel Entry Ticket", Icons.arrow_right, () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/fuel_ticket_entry_screen');
+            })
+          ]),
+          _buildExpandableTile("Cases ", [
+            _buildSubMenuItem("Login Report Self", Icons.arrow_right, () {
+              Navigator.pushNamed(context, '/login_report_screen'); // N
+
+            }),
             // _buildSubMenuItem("Live Case ", Icons.arrow_right, () {}),
             _buildSubMenuItem("Manage Trip ", Icons.arrow_right, () {
               Navigator.pop(context); // Close drawer

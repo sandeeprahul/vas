@@ -101,4 +101,16 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>?> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final endpoint = "$baseUrl/changePassword";
+    final data = {
+      "oldPassword": currentPassword,
+      "newPassword": newPassword,
+    };
+
+    return await postRequest(endpoint, data);
+  }
 }

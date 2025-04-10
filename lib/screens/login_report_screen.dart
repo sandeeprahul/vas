@@ -1,0 +1,126 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+
+import '../controllers/login_report_controller.dart';
+
+
+class LoginReportScreen extends StatefulWidget {
+  const LoginReportScreen({super.key});
+
+  @override
+  State<LoginReportScreen> createState() => _LoginReportScreenState();
+}
+
+class _LoginReportScreenState extends State<LoginReportScreen> {
+  final controller = Get.put(LoginReportController());
+
+  Future<void> _selectDate(BuildContext context, bool isFrom) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: isFrom ? controller.fromDate.value : controller.toDate.value,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      if (isFrom) {
+        controller.fromDate.value = picked;
+      } else {
+        controller.toDate.value = picked;
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Login Report Self")),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          // mainAxisSize: MainAxisSize.min,
+          children: [
+            // Date Range Pickers
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    onTap: () => _selectDate(context, true),
+                    child: Obx(() => Text(
+                      "From: ${DateFormat('dd/MM/yyyy').format(controller.fromDate.value)}",
+                      style: const TextStyle(fontSize: 16),
+                    )),
+                  ),
+                  const Icon(Icons.arrow_drop_down),
+                  Spacer(),
+                  GestureDetector(
+                    onTap: () => _selectDate(context, false),
+                    child: Obx(() => Text(
+                      "To: ${DateFormat('dd/MM/yyyy').format(controller.toDate.value)}",
+                      style: const TextStyle(fontSize: 16),
+                    )),
+                  ),
+                  const Icon(Icons.arrow_drop_down),
+
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => controller.fetchLoginReport(),
+                child: const Text("SHOW"),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // ListView for Report Data
+            Expanded(
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (controller.reportData.isEmpty) {
+                  return const Center(child: Text("No data found."));
+                }
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.reportData.length,
+                  itemBuilder: (context, index) {
+                    final row = controller.reportData[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: ListTile(
+                        title: Text("Login: ${row['login_Time'] ?? ''}"),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Logout: ${row['logout_Time'] ?? ''}"),
+                            Text("Duration: ${row['duration'] ?? ''}"),
+                            Text("Sessions: ${row['sessions'].toString()}"),
+                          ],
+                        ),
+                        leading: CircleAvatar(
+                          child: Text('${row['sn']}'),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }),
+            )
+
+          ],
+        ),
+      ),
+    );
+  }
+}

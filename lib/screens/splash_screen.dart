@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import '../controllers/login_controller.dart';
 
 ///trip id new 25040500001
+///
+///
+
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,3 +30,5 @@ class SplashScreen extends StatelessWidget {
     );
   }
 }
+
+

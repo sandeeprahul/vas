@@ -12,6 +12,8 @@ import 'package:vas/controllers/user_controller.dart';
 import '../controllers/location_type_controller.dart';
 import '../controllers/trip_from_controller.dart';
 import '../services/api_service.dart';
+import '../theme.dart';
+import '../utils/DotPatternPainter.dart';
 
 class ManageTripScreen extends StatefulWidget {
   const ManageTripScreen({super.key});
@@ -50,6 +52,344 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Manage Trip", style: GoogleFonts.montserrat(
+          fontWeight: FontWeight.w600,
+        )),
+        elevation: 0,
+        backgroundColor:  AppThemes.dark.primaryColor,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppThemes.dark.primaryColor.withOpacity(0.05),
+              Colors.white,
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSectionTitle("Location Details"),
+                Obx(
+                   () {
+                    return _buildSelectionCard(
+                      icon: Icons.location_on,
+                      title: "District",
+                      value: districtsController.selectedDistrict.value,
+                      onTap: () => _showSelectionDialog(
+                          "District",
+                          districtsController.selectedDistrict,
+                          districtsController.selectedDistrictId,
+                          districtsController.districtsList,
+                          "id",
+                          "name"
+                      ),
+                    );
+                  }
+                ),
+                const SizedBox(height: 12),
+                Obx(
+                   () {
+                    return _buildSelectionCard(
+                      icon: Icons.map,
+                      title: "Block",
+                      value: blocksController.selectedBlock.value,
+                      onTap: () => _showSelectionDialog(
+                          "Block",
+                          blocksController.selectedBlock,
+                          blocksController.selectedBlockId,
+                          blocksController.blocksList,
+                          "blockId",
+                          "name"
+                      ),
+                    );
+                  }
+                ),
+                const SizedBox(height: 12),
+                Obx(
+                   () {
+                    return _buildSelectionCard(
+                      icon: Icons.place,
+                      title: "Location Type",
+                      value: locationTypeController.selectedLocationType.value,
+                      onTap: () => _showSelectionDialog(
+                          "LocationType",
+                          locationTypeController.selectedLocationType,
+                          locationTypeController.selectedLocationTypeId,
+                          locationTypeController.locationTypes,
+                          "stopType_ID",
+                          "stopType_Name"
+                      ),
+                    );
+                  }
+                ),
+                const SizedBox(height: 12),
+                Obx(
+                   () {
+                    return _buildSelectionCard(
+                      icon: Icons.pin_drop,
+                      title: "Location",
+                      value: locationSubTypeController.selectedLocationName.value,
+                      onTap: () => _showSelectionDialog(
+                          "Location",
+                          locationSubTypeController.selectedLocationName,
+                          locationSubTypeController.selectedLocationId,
+                          locationSubTypeController.location,
+                          "stop_ID",
+                          "stop_Name"
+                      ),
+                    );
+                  }
+                ),
+
+                _buildSectionTitle("Vehicle Details"),
+                Obx(
+                   () {
+                    return _buildSelectionCard(
+                      icon: Icons.local_hospital,
+                      title: "Ambulance",
+                      value: ambulanceController.selectedAmbulanceName.value,
+                      onTap: () => _showSelectionDialog(
+                          "Ambulance",
+                          ambulanceController.selectedAmbulanceName,
+                          ambulanceController.selectedAmbulanceId,
+                          ambulanceController.ambulanceList,
+                          "id",
+                          "asseT_NO"
+                      ),
+                    );
+                  }
+                ),
+                const SizedBox(height: 12),
+                _buildInputCard(
+                  icon: Icons.speed,
+                  title: "Base Odometer",
+                  controller: controller.baseOdometerController,
+                  keyboardType: TextInputType.number,
+                ),
+
+                _buildSectionTitle("Staff Details"),
+                Obx(
+                   () {
+                    return _buildSelectionCard(
+                      icon: Icons.medical_services,
+                      title: "Doctor",
+                      value: controller.selectedDoctor.value,
+                      onTap: () => _showSelectionDialog(
+                          "Doctor",
+                          controller.selectedDoctor,
+                          controller.selectedDoctorId,
+                          controller.doctors,
+                          "doctor_ID",
+                          "doctor_Name"
+                      ),
+                    );
+                  }
+                ),
+                const SizedBox(height: 12),
+                Obx(
+                   () {
+                    return _buildSelectionCard(
+                      icon: Icons.drive_eta,
+                      title: "Driver",
+                      value: controller.selectedDriver.value,
+                      onTap: () => _showSelectionDialog(
+                          "Driver",
+                          controller.selectedDriver,
+                          controller.selectedDriverId,
+                          controller.drivers,
+                          "driver_ID",
+                          "driver_Name"
+                      ),
+                    );
+                  }
+                ),
+
+                const SizedBox(height: 32),
+                Obx(() => Container(
+                  width: double.infinity,
+                  height: 54,
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  child: ElevatedButton(
+                    onPressed: controller.isLoading.value ? null : controller.submitForm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:  AppThemes.dark.primaryColor,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: controller.isLoading.value
+                        ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                        : Text(
+                      "Submit Trip Details",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )),
+                const SizedBox(height: 24),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 24, 4, 12),
+      child: Text(
+        title,
+        style: GoogleFonts.montserrat(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color:  AppThemes.dark.primaryColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSelectionCard({
+    required IconData icon,
+    required String title,
+    required String value,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color:  AppThemes.dark.primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color:  AppThemes.dark.primaryColor),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      value,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.grey.shade400,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInputCard({
+    required IconData icon,
+    required String title,
+    required TextEditingController controller,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color:  AppThemes.dark.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: AppThemes.dark.primaryColor),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  TextField(
+                    controller: controller,
+                    keyboardType: keyboardType,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    style: GoogleFonts.montserrat(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget builddd(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Manage trip"),

@@ -16,7 +16,8 @@ class TripController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadTripDetails("StartTrip");
+    // loadTripDetails("StartTrip");
+    fetchTripDetails();
   }
 
   Rxn<TripDetailsModel> tripDetails = Rxn<TripDetailsModel>();
@@ -62,12 +63,8 @@ class TripController extends GetxController {
 
         TripDetailsModel tripDetails =
             TripDetailsModel.fromJson(tripDetailsJson);
-        print("  tripDetails.value ");
-        print("  ${tripDetails.tripId} ");
-        print("  ${tripDetails.driver} ");
-        print("  ${tripDetails.vehicle}${tripDetails.vehicleId} ");
-        fetchTripDetails(
-            tripDetails.vehicleId); // Or call with a trigger/ID if needed
+
+        fetchTripDetails(); // Or call with a trigger/ID if needed
         // fetchTripDetails(tripDetails.deptId,tripDetails.vehicleId); // Or call with a trigger/ID if needed
 
         return tripDetails;
@@ -81,13 +78,16 @@ class TripController extends GetxController {
     }
   }
 
-  void fetchTripDetails(int vehicleId) async {
+  void fetchTripDetails() async {
     final UserController userController = Get.put(UserController());
     isLoading.value = true;
 
     final response = await _apiService.getRequestForMaster(
-        "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/$vehicleId/1/1");
+        "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/2/1/1");
     print(response);
+    // final response = await _apiService.getRequestForMaster(
+    //     "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/${userController.vehicleId.value}/1/1");
+    // print(response);
 
     if (response != null &&
         response is Map<String, dynamic> &&
@@ -110,6 +110,14 @@ class TripController extends GetxController {
 
     isLoading.value = false;
   }
+
+  void updateDeparture(int km) {
+
+  }
+
+  void closeTrip(int km) {}
+
+  void updateReach(int km) {}
 }
 
 // Widget to Display Trip Details
@@ -132,26 +140,10 @@ class TripDetailsWidget extends StatelessWidget {
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.all(18),
-        margin: const EdgeInsets.symmetric(
-          horizontal: 16,vertical: 4
-        ),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(28),
-          // image: DecorationImage(
-          //   image: const AssetImage(
-          //     'assets/trip_image_icon.png',
-          //   ),
-          //   // fit: BoxFit.values,
-          //   // centerSlice: Rect.fromLTRB(10, 10, 20, 20), // Example: define the stretchable region
-          //
-          //   // alignment: Alignment.center, //
-          //   colorFilter: ColorFilter.mode(
-          //     Colors.white.withOpacity(0.96),
-          //     // Adjust opacity here (0.0 to 1.0)
-          //     BlendMode.srcOver,
-          //   ),
-          // ),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2),
@@ -221,9 +213,11 @@ class TripDetailsWidget extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed:controller.tripStatus.value ==3?null: () {
-                  getOdometerReading();
-                },
+                onPressed: controller.tripStatus.value == 3
+                    ? null
+                    : () {
+                        getOdometerReading();
+                      },
                 child: Obx(() {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),

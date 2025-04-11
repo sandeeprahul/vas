@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vas/theme.dart';
 
 void showErrorDialog(String title, String message) {
   Get.dialog(
     AlertDialog(
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      content: Text(message),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold,)),
+      //
+      content: Text(message,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600)),
       actions: [
-        TextButton(
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: AppThemes.light.primaryColor),
           onPressed: () {
             Get.back();
           } // ✅ Close dialog
@@ -23,7 +26,7 @@ void showErrorDialog(String title, String message) {
               padding: const EdgeInsets.symmetric(vertical: 14),
               textStyle: GoogleFonts.montserrat(
                   fontSize: 16, fontWeight: FontWeight.bold)),*/
-          child: const Text("OK"),
+          child: const Text("OK",),
         ),
 
         /*

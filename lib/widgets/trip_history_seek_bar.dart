@@ -16,10 +16,11 @@ class TripHistorySeekBar extends StatelessWidget {
       final currentStatus = tripController.tripStatus.value;
       print("TripHistorySeekBar");
       print(currentStatus);
+      print(currentStep);
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(steps.length, (index) {
-          final isCompleted = index <= currentStatus; // <= instead of <
+          final isCompleted = index <= currentStep; // <= instead of <
 
           return Expanded(
             child: Column(

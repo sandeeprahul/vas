@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../theme.dart';
 import '../widgets/trip_details_widget.dart';
 import 'case_details_screen.dart';
 
@@ -29,11 +31,23 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         title: const Text('Case Registration New'),
-        backgroundColor: Colors.blue,
+        backgroundColor:  AppThemes.dark.primaryColor,
+
       ),
-      body: Padding(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppThemes.dark.primaryColor.withOpacity(0.05),
+              Colors.white,
+            ],
+          ),
+        ),
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {
           final trip = tripController.tripDetails.value;
@@ -46,19 +60,27 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
               Expanded(
                 child: ListView(
                   children: [
-                    buildTextField("Name","${trip.tripId}"),
-                    buildTextField("Trip ID", "${trip.tripId}"),
-                    // buildTextField("Address", trip.address),
-                    // buildTextField("Block", trip.locationName),
-                    buildTextField("Ambulance No", trip.vehicle),
-                    buildTextField("No Of Cases", controller.noOfCases.value),
-                    buildTextField("Start Odometer", "${trip.startKm}"),
-                    buildTextField("Seen Arrival Odometer",
-                        "${trip.startKm}"),
-                    buildTextField("Seen Departure Odometer",
-                        controller.seenDepartureOdometer.value),
-                    buildTextField(
-                        "Service Village ", trip.location),
+                    _buildInputCard(icon: Icons.near_me, title: 'Name', value:"${trip.tripId}"),
+                    _buildInputCard(icon: Icons.near_me, title: 'Trip ID', value:"${trip.tripId}"),
+                    _buildInputCard(icon: Icons.emergency, title: 'Ambulance No', value:trip.vehicle),
+                    _buildInputCard(icon: Icons.near_me, title: 'No Of Cases', value:"${trip.noOfCases}"),
+                    _buildInputCard(icon: Icons.speed, title: 'Odometer', value:"${trip.startKm}"),
+                    _buildInputCard(icon: Icons.speed, title: 'Seen Arrival Odometer', value:"${trip.reachKm}"),
+                    _buildInputCard(icon: Icons.speed, title: 'Seen Departure Odometer', value:"${trip.reachKm}"),
+                    _buildInputCard(icon: Icons.vaccines, title: 'Service Village', value:trip.location),
+
+
+
+                    // buildTextField("Name","${trip.tripId}", icon: Icons.near_me),
+                    // buildTextField("Ambulance No", trip.vehicle, icon: Icons.emergency),
+                    // buildTextField("No Of Cases", controller.noOfCases.value, icon: Icons.library_books_sharp),
+                    // buildTextField("Start Odometer", "${trip.startKm}", icon: Icons.speed),
+                    // buildTextField("Seen Arrival Odometer",
+                    //     "${trip.reachKm}", icon: Icons.view_sidebar),
+                    // buildTextField("Seen Departure Odometer",
+                    //     "${trip.departKm}", icon: Icons.foggy),
+                    // buildTextField(
+                    //     "Service Village ", trip.location, icon: Icons.vaccines),
 
                     // buildTextField("Location Type",trip.address),
 
@@ -78,11 +100,11 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12.0, horizontal: 32.0),
-                    // textStyle: const TextStyle(
-                    //     fontSize: 18, fontWeight: FontWeight.bold),
+                    backgroundColor:  AppThemes.dark.primaryColor,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                   child: const Text("Continue"),
                 ),
@@ -102,35 +124,122 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
       keyboardType: TextInputType.number,
     );
   }
-  Widget buildTextField(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Expanded(child: Text("$label:")),
-          Expanded(
-            flex: 3,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+
+  Widget _buildInputCard({
+    required IconData icon,
+    required String title,
+    TextInputType keyboardType = TextInputType.text, required String value,
+  }) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey), // Grey border
-                borderRadius: BorderRadius.circular(8), // Rounded corners
+                color:  AppThemes.dark.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Icon(icon, color: AppThemes.dark.primaryColor),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      value,
-                      style: const TextStyle(fontSize: 14),
+                  Text(
+                    title,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      color: Colors.grey,
                     ),
                   ),
-                  // const Icon(Icons.arrow_drop_down), // Dropdown icon
+                  const SizedBox(height: 4,),
+                  Text(
+                    value,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  // TextField(
+                  //   enabled: false,
+                  //   // controller: controller,
+                  //   keyboardType: keyboardType,
+                  //   decoration:  InputDecoration(
+                  //     border: InputBorder.none,
+                  //     isDense: true,
+                  //     hintText: value,
+                  //     contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                  //   ),
+                  //
+                  //   style: GoogleFonts.montserrat(
+                  //     fontSize: 15,
+                  //     fontWeight: FontWeight.w500,
+                  //   ),
+                  // ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget buildTextField(String label, String value,{    required IconData icon,
+  }) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color:  AppThemes.dark.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: AppThemes.dark.primaryColor),
+            ),
+            // Expanded(child: Text("$label:")),
+            Expanded(
+              flex: 3,
+              child: Container(
+                // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  // border: Border.all(color: Colors.grey), // Grey border
+                  borderRadius: BorderRadius.circular(8), // Rounded corners
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        value,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                    // const Icon(Icons.arrow_drop_down), // Dropdown icon
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

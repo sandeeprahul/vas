@@ -91,20 +91,119 @@ class FormController extends GetxController {
 
   /// Submits form data to the backend
   Future<void> submitForm() async {
-    isLoading.value = true;
+
+
     // showLoadingDialog();
+    UserController userController = Get.put(UserController());
+    LocationSubTypeController locationSubTypeController =
+    Get.put(LocationSubTypeController());
+    LocationTypeController locationTypeController =
+    Get.put(LocationTypeController());
+    AmbulanceController ambulanceController = Get.put(AmbulanceController());
+    BlocksController blocksController = Get.put(BlocksController());
+    DistrictsController districtsController = Get.put(DistrictsController());
+    if (districtsController.selectedDistrictId.value.isEmpty) {
+      showErrorDialog('Alert' ,'Please select a district',);
+      return;
+
+    }
+
+    // Block Validation
+    if (blocksController.selectedBlockId.value.isEmpty) {
+      showErrorDialog('Alert', 'Please select a block');
+      return;
+
+    }
+
+    // Location Type Validation
+    if (locationTypeController.selectedLocationTypeId.value.isEmpty) {
+      showErrorDialog('Alert','Please select a location type');
+      return;
+
+    }
+
+
+    // Location Validation
+    if (locationSubTypeController.selectedLocationId.value.isEmpty) {
+      showErrorDialog('Alert', 'Please select a location');
+      return;
+
+    }
+
+    // Ambulance Validation
+    if (ambulanceController.selectedAmbulanceId.value.isEmpty) {
+      showErrorDialog('Alert' ,'Please select an ambulance');
+      return;
+
+    }
+
+    // Base Odometer Validation
+    if (baseOdometerController.value.text.isEmpty) {
+      showErrorDialog('Alert', 'Please enter base odometer reading');
+      return;
+
+    }
+
+    // Validate odometer is a valid number
     try {
+      double baseKm = double.parse(baseOdometerController.value.text);
+      if(baseKm==0.0||baseKm==0){
+        showErrorDialog('Alert','Base odometer reading cannot be 0');
+        return;
+      }
+      if (baseKm < 0) {
+        showErrorDialog('Alert','Base odometer reading cannot be negative');
+        return;
+      }
+    } catch (e) {
+      showErrorDialog('Alert' ,'Please enter a valid odometer reading');
+      return;
+
+    }
+
+    // Doctor Validation
+    if (selectedDoctorId.value.isEmpty) {
+      showErrorDialog('Alert' ,'Please select a doctor');
+      return;
+
+    }
+
+    // Driver Validation
+    if (selectedDriverId.value.isEmpty) {
+      showErrorDialog('Alert','Please select a driver');
+      return;
+
+    }
+
+    // User Validation
+    if (userController.userId.value.isEmpty ||
+        userController.deptId.value.isEmpty) {
+      showErrorDialog('Alert', 'User information is missing');
+      return;
+    }
+    try {
+      isLoading.value = true;
+
+      LocationPermission  permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          // Permissions are denied, next time you could try
+          // requesting permissions again (this is also where
+          // Android's shouldShowRequestPermissionRationale
+          // returned true. According to Android guidelines
+          // your App should show an explanatory UI now.
+          return Future.error('Location permissions are denied');
+        }
+      }
+
+
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
 
-      UserController userController = Get.put(UserController());
-      LocationSubTypeController locationSubTypeController =
-          Get.put(LocationSubTypeController());
-      LocationTypeController locationTypeController =
-          Get.put(LocationTypeController());
-      AmbulanceController ambulanceController = Get.put(AmbulanceController());
-      BlocksController blocksController = Get.put(BlocksController());
-      DistrictsController districtsController = Get.put(DistrictsController());
+
+
+
       final Map<String, dynamic> formData = {
         "depT_ID": userController.deptId.value,
         "user_ID": userController.userId.value,
@@ -154,8 +253,8 @@ class FormController extends GetxController {
           TripDetailsModel tripDetails = TripDetailsModel.fromJson(formData);
           final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-          await saveTripDetails("StartTrip", tripId, tripDetails,
-              "${response['start_Time']}");
+          // await saveTripDetails("StartTrip", tripId, tripDetails,
+          //     "${response['start_Time']}");
 
           clearAllFields();
           showErrorDialog('Alert', "${response["message"]}");
@@ -387,8 +486,8 @@ class FormController extends GetxController {
     }
   }
   Future<void> submitFormDeparture(String value) async {
-    UserController userController = Get.find<UserController>();
-    TripController tripController = Get.find<TripController>();
+    UserController userController = Get.put(UserController());
+    TripController tripController = Get.put(TripController());
 
     // String? odometerValue = await showOdometerDialog(Get.context!);
     // if (odometerValue == null) return;
@@ -397,7 +496,7 @@ class FormController extends GetxController {
     Map<String, dynamic> requestData = {
       "deptId": int.tryParse(userController.deptId.value)??0,
       "userId": int.tryParse(userController.userId.value),
-      "tripId": 25021900001,
+      "tripId": tripController.tripDetails.value!.tripId,
       // "tripId": tripController.tripDetails.value?.tripId ?? 0,
       "odometer":double.tryParse(value) ?? 0.0, // Convert to integer
       "lat":16.470866 ,
@@ -423,6 +522,7 @@ class FormController extends GetxController {
           Future.delayed(const Duration(milliseconds: 300), () {
             showErrorDialog("Alert!", "${response['message']}");
           });
+          tripController.fetchTripDetails();
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setInt("tripStatus",3);
           // await prefs.setString("tripSeenArrivalTime",response['depart_Time']);
@@ -464,7 +564,7 @@ class FormController extends GetxController {
     Map<String, dynamic> requestData = {
       "deptId": int.tryParse(userController.deptId.value)??0,
       "userId": int.tryParse(userController.userId.value),
-      "tripId": 25021900001,
+      "tripId": tripController.tripDetails.value!.tripId,
       // "tripId": tripController.tripDetails.value?.tripId ?? 0,
       "odometer":double.tryParse(value) ?? 0.0, // Convert to integer
       "lat":16.470866 ,
@@ -490,6 +590,8 @@ class FormController extends GetxController {
           Future.delayed(const Duration(milliseconds: 300), () {
             showErrorDialog("Alert!", "${response['message']}");
           });
+          tripController.fetchTripDetails();
+
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setInt("tripStatus",3);
           // await prefs.setString("tripSeenArrivalTime",response['depart_Time']);
@@ -521,3 +623,8 @@ class FormController extends GetxController {
     }
   }
 }
+class FormValidationError implements Exception {
+  final String message;
+  FormValidationError(this.message);
+}
+

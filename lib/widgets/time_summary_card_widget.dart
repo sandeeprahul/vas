@@ -168,7 +168,7 @@ class _TimeSummaryCardWidgetState extends State<TimeSummaryCardWidget> {
               const Spacer(),
               CircularPercentIndicator(
                 radius: 50.0,
-                lineWidth: 8.0,
+                lineWidth: 4.0,
                 percent:  _calculateProgress(_timeDifference),
                 // percent: 0.75,
                 center: Text("$_timeDifference\nhrs",

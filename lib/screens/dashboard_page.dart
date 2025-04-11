@@ -6,11 +6,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/controllers/user_controller.dart';
+import 'package:vas/theme.dart';
 import 'package:vas/widgets/rounded_corner_card_widget.dart';
 import 'package:vas/widgets/trip_details_new_widget.dart';
 
 import '../controllers/dash_boardcontroller.dart';
 import '../controllers/trip_from_controller.dart';
+import '../widgets/profile_card.dart';
+import '../widgets/summary_card.dart';
 import '../widgets/time_summary_card_widget.dart';
 import '../widgets/trip_details_widget.dart';
 import 'dashboard_custom_menu_widget.dart';
@@ -89,7 +92,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       // width: MediaQuery.of(context).size.width / 1.2,
                       height: MediaQuery.of(context).size.height / 4,
                       decoration: BoxDecoration(
-                        color: const Color(0xffe5e8eb), //#dcdee7
+                        color: Colors.blue.shade50, //#dcdee7
 
                         borderRadius: BorderRadius.circular(28),
                         boxShadow: [

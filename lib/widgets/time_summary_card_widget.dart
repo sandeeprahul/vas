@@ -31,7 +31,7 @@ class _TimeSummaryCardWidgetState extends State<TimeSummaryCardWidget> {
   }
   void _startTimer() {
     // Timer that runs every 1 minute
-    _timer = Timer.periodic(Duration(minutes: 1), (timer) async {
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) async {
       await _calculateTimeDifference();
     });
   }

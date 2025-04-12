@@ -38,11 +38,11 @@ Future<String?> showOdometerDialog(BuildContext context) async {
               // odometerController.updateOdometer();
 
               if (tripController.tripStatus.value == 1) {
-                formController.submitFormSeen(enteredValue);
+                formController.submitFormSeen();
               } else if (tripController.tripStatus.value == 2) {
-                formController.submitFormDeparture(enteredValue);
+                formController.submitFormDeparture();
               } else if (tripController.tripStatus.value == 3) {
-                formController.submitFormClose(enteredValue);
+                formController.submitFormClose();
               }
               print(enteredValue);
             }

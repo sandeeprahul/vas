@@ -12,7 +12,6 @@ import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/utils/showDialogNoContext.dart';
 import 'package:vas/widgets/trip_details_widget.dart';
 import '../data/TripDetails.dart';
-import '../screens/manage_trip_arrival_departure_close_screen.dart';
 import '../services/api_service.dart';
 import '../shared_pref_helper.dart';
 import '../utils/showLoadingDialog.dart';
@@ -41,6 +40,9 @@ class FormController extends GetxController {
   // Input controllers
   final TextEditingController ambulanceController = TextEditingController();
   TextEditingController baseOdometerController = TextEditingController();
+  TextEditingController seenArrivalOdometerController = TextEditingController();///seen arrival
+  TextEditingController departureOdometerController = TextEditingController();///departure
+  TextEditingController backToBaseOdometerController = TextEditingController();///back to base
 
   // Data lists
   final RxList<dynamic> districts = <dynamic>[].obs;
@@ -52,7 +54,7 @@ class FormController extends GetxController {
   void onInit() {
     super.onInit();
     loadLastSyncedData();
-    loadTripDetails("StartTrip"); // Load previously saved trip details
+    // loadTripDetails("StartTrip"); // Load previously saved trip details
   }
 
   /// Loads last synced API data from SharedPreferences
@@ -256,14 +258,14 @@ class FormController extends GetxController {
           // await saveTripDetails("StartTrip", tripId, tripDetails,
           //     "${response['start_Time']}");
 
+          TripController tripController = Get.put(TripController());
+          tripController.fetchTripDetails();
           clearAllFields();
           showErrorDialog('Alert', "${response["message"]}");
-          Get.to(const ManageTripArrivalDepartureCloseScreen()); // Closes the current page
+
 
         } else {
-          // saveTempDetails();
           showErrorDialog('Alert', "${response["message"]}");
-          // Get.to(const ManageTripArrivalDepartureCloseScreen()); // Closes the current page
 
           // clearAllFields();
         }
@@ -283,74 +285,9 @@ class FormController extends GetxController {
     }
   }
 
-  Future<void> saveTripDetails(
-      String tripType, int tripId, TripDetailsModel tripDetails,String startTime) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    UserController userController = Get.put(UserController());
-    LocationSubTypeController locationSubTypeController =
-        Get.put(LocationSubTypeController());
-    LocationTypeController locationTypeController =
-        Get.put(LocationTypeController());
-    AmbulanceController ambulanceController = Get.put(AmbulanceController());
-    BlocksController blocksController = Get.put(BlocksController());
-    DistrictsController districtsController = Get.put(DistrictsController());
-
-    // Combine tripId and tripDetails into a single object
-    Map<String, dynamic> tripData = {
-      "trip_ID": tripId,
-      "payload": {
-        ...tripDetails.toJson(),
-        "vehicle_Name": ambulanceController.selectedAmbulanceName.value,
-        "location_Name": locationSubTypeController.selectedLocationName.value,
-        "block_Name": blocksController.selectedBlock.value,
-        "zone_Name": districtsController.selectedDistrict.value,
-        "doctor_Name": "Dr. John Doe", // Replace with actual doctor selection
-        "driver_Name": selectedDriver.value,
-      },
-    };
-    print("saved");
-    print(tripData);
-
-    await prefs.setString(tripType, jsonEncode(tripData));
-    await prefs.setInt("tripStatus",1);
-    await prefs.setString("tripStartTime",startTime);
-    await prefs.setString("tripSeenArrivalTime",'');
-    await prefs.setString("tripSeenDepartureTime",'');
-
-    TripController tripController = Get.put(TripController());
-    tripController.tripStatus.value=1;
-
-    // loadTripDetails("StartTrip");
-  }
 
   Rxn<TripDetailsModel> tripDetails = Rxn<TripDetailsModel>();
 
-  Future<TripDetailsModel?> loadTripDetails(String tripType) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? jsonData = prefs.getString(tripType);
-
-    if (jsonData != null) {
-      try {
-        Map<String, dynamic> tripData = jsonDecode(jsonData);
-        Map<String, dynamic> tripDetailsJson = tripData["payload"];
-
-        tripDetails.value =
-            TripDetailsModel.fromJson(tripDetailsJson);
-        print("loadTripDetails");
-        print(tripDetails.value?.tripId);
-        return tripDetails.value;
-      } catch (e) {
-        print("Error loading trip details: $e");
-        return null;
-      }
-    }
-    else {
-      print("No trip data found in SharedPreferences.");
-      return null;
-    }
-
-  }
 
 
 
@@ -417,9 +354,9 @@ class FormController extends GetxController {
   // }
 
 
-  Future<void> submitFormSeen(String value) async {
-    UserController userController = Get.find<UserController>();
-    TripController tripController = Get.find<TripController>();
+  Future<void> submitFormSeen() async {
+    UserController userController = Get.put(UserController());
+    TripController tripController = Get.put(TripController());
 
     // String? odometerValue = await showOdometerDialog(Get.context!);
     // if (odometerValue == null) return;
@@ -428,9 +365,9 @@ class FormController extends GetxController {
     Map<String, dynamic> requestData = {
       "deptId": int.tryParse(userController.deptId.value)??0,
       "userId": int.tryParse(userController.userId.value),
-      "tripId": 25021900002,
+      "tripId": tripController.tripDetails.value!.tripId,
       // "tripId": tripController.tripDetails.value?.tripId ?? 0,
-      "odometer":double.tryParse(value) ?? 0.0, // Convert to integer
+      "odometer":double.tryParse(seenArrivalOdometerController.text) ?? 0.0, // Convert to integer
       "lat":16.470866 ,
       "lng": 80.6065381
     };
@@ -485,7 +422,7 @@ class FormController extends GetxController {
 
     }
   }
-  Future<void> submitFormDeparture(String value) async {
+  Future<void> submitFormDeparture() async {
     UserController userController = Get.put(UserController());
     TripController tripController = Get.put(TripController());
 
@@ -498,7 +435,7 @@ class FormController extends GetxController {
       "userId": int.tryParse(userController.userId.value),
       "tripId": tripController.tripDetails.value!.tripId,
       // "tripId": tripController.tripDetails.value?.tripId ?? 0,
-      "odometer":double.tryParse(value) ?? 0.0, // Convert to integer
+      "odometer":double.tryParse(departureOdometerController.text) ?? 0.0, // Convert to integer
       "lat":16.470866 ,
       "lng": 80.6065381
     };
@@ -553,9 +490,9 @@ class FormController extends GetxController {
 
     }
   }
-  Future<void> submitFormClose(String value) async {
-    UserController userController = Get.find<UserController>();
-    TripController tripController = Get.find<TripController>();
+  Future<void> submitFormClose() async {
+    UserController userController = Get.put(UserController());
+    TripController tripController = Get.put(TripController());
 
     // String? odometerValue = await showOdometerDialog(Get.context!);
     // if (odometerValue == null) return;
@@ -566,7 +503,7 @@ class FormController extends GetxController {
       "userId": int.tryParse(userController.userId.value),
       "tripId": tripController.tripDetails.value!.tripId,
       // "tripId": tripController.tripDetails.value?.tripId ?? 0,
-      "odometer":double.tryParse(value) ?? 0.0, // Convert to integer
+      "odometer":double.tryParse(backToBaseOdometerController.text) ?? 0.0, // Convert to integer
       "lat":16.470866 ,
       "lng": 80.6065381
     };

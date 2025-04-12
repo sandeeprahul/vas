@@ -77,13 +77,13 @@ class TripDetailsModel {
       locationLong: (json['location_Long'] ?? 0.0).toDouble(),
       noOfCases: json['no_Of_Cases'] ?? 0,
       startTime: json['start_Time'] ?? '',
-      startKm: (json['start_KM'] ?? 0.0).toDouble(),
+      startKm: (json['start_KM']).toDouble(),
       reachTime: json['reach_Time'] ?? '',
-      reachKm: (json['reach_KM'] ?? 0.0).toDouble(),
+      reachKm: (json['reach_KM']).toDouble(),
       departureTime: json['departure_Time'] ?? '',
-      departKm: (json['depart_KM'] ?? 0.0).toDouble(),
+      departKm: (json['depart_KM']).toDouble(),
       closeTime: json['close_Time'] ?? '',
-      closeKm: (json['close_KM'] ?? 0.0).toDouble(),
+      closeKm: (json['close_KM'] ).toDouble(),
     );
   }
 

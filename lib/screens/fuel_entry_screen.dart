@@ -70,6 +70,8 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
         latitude = position.latitude;
         longitude = position.longitude;
       });
+      print(latitude);
+      print(longitude);
     } catch (e) {
       Get.snackbar('Error', 'Could not get location: $e');
     }
@@ -130,30 +132,42 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
           modeOfPayment: modeOfPayment,
           paymentRefNo: paymentRefNoController.text,
           billNo: billNoController.text,
-          docOdometer: odometerImageBase64!,
           docOdometerName: odometerImageName!,
-          docBill: billImageBase64!,
-          docBillName: billImageName!,
+          docBillName: "",
+          // docBillName: billImageName!,
           latitude: latitude!,
           longitude: longitude!,
+          docOdometer: "",
+          // docOdometer: odometerImageBase64!,
+          docBill: billImageBase64!,
+
         );
         print("fuelEntry");
-        print(DateTime.now().toIso8601String());
-        print(fuelEntry);
+        print(latitude);
+        print(longitude);
+        var tpvh = jsonEncode(fuelEntry);
+        print(tpvh);
+            print(fuelEntry.toJson());
 
         final response = await apiService.postRequest("/SetFuelRecord", fuelEntry.toJson());
 
+        print(response);
         if (response != null) {
-          if (response["result"] == 0) {
-            final ticketNumber = response["ticket_Number"] ?? 0;
+
+          if (response["result"] == 1) {
+            // final ticketNumber = response["ticket_Number"] ?? 0;
+            Get.back();
             Get.snackbar(
               "Success",
-              "Fuel record saved successfully. Ticket Number: $ticketNumber",
+              "${response["message"]}",//
               backgroundColor: Colors.green,
               colorText: Colors.white,
-              duration: const Duration(seconds: 5),
+              duration: const Duration(seconds: 7),
+              overlayBlur: 2
             );
-            Get.back(); // Navigate back after success
+          clearAll();
+
+            // Navigate back after success
           } else {
             Get.snackbar(
               "Error",
@@ -191,6 +205,28 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
       );
     }
   }
+  void clearAll(){
+    // Controllers
+    odometerController.text = "";
+    odometerAtFuelStationController.text = "";
+    odometerBackAtBaseController.text = "";
+    fuelStationNameController.text = "";
+    odometerController.text = "";
+    unitPriceController.text = "";
+    quantityController.text = "";
+    paymentRefNoController.text = "";
+    billNoController.text = "";
+
+
+    // Variables
+     modeOfPayment = 0; // 0 for cash, 1 for petrol card
+     odometerImageBase64 = '';
+     odometerImageName = '';
+     billImageBase64 = '';
+     billImageName = '';
+     latitude = 0.0;
+     longitude = 0.0;
+}
 
 
   @override

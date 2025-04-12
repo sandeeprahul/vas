@@ -10,6 +10,7 @@ import '../controllers/location_sub_type_controller.dart';
 import '../controllers/location_type_controller.dart';
 import '../controllers/trip_from_controller.dart';
 import '../services/api_service.dart';
+import '../theme.dart';
 
 class GenerateFuelEntryTicket extends StatefulWidget {
   const GenerateFuelEntryTicket({super.key});
@@ -45,10 +46,21 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Generate Fuel Entry Ticket"),
-        backgroundColor: Colors.blue,
+        title: const Text("Generate Fuel Entry Ticket",),
+        backgroundColor: AppThemes.light.primaryColor,
+
       ),
-      body: Padding(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppThemes.light.primaryColor.withOpacity(0.05),
+              Colors.white,
+            ],
+          ),
+        ),
         padding: const EdgeInsets.all(12.0),
         child: ListView(
           children: [
@@ -203,6 +215,13 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
 
             const SizedBox(height: 40),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppThemes.light.primaryColor,
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
               onPressed: () {},
               child: const Text(
                 "CONTINUE",

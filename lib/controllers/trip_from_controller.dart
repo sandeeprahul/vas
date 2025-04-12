@@ -293,8 +293,8 @@ class FormController extends GetxController {
 
 
   void clearAllFields() {
-    final locationTypeController = Get.find<LocationTypeController>();
-    final locationSubTypeController = Get.find<LocationSubTypeController>();
+    final locationTypeController = Get.put(LocationTypeController());
+    final locationSubTypeController = Get.put(LocationSubTypeController());
 
     final ambulanceController = Get.find<AmbulanceController>();
     final blocksController = Get.find<BlocksController>();
@@ -316,6 +316,8 @@ class FormController extends GetxController {
     blocksController.selectedBlock.value = "Select Block";
     districtsController.selectedDistrictId.value = "";
     districtsController.selectedDistrict.value = "Select District";
+
+    tripDetails.value = null;
 
     print("All fields have been cleared.");
   }
@@ -527,8 +529,9 @@ class FormController extends GetxController {
           Future.delayed(const Duration(milliseconds: 300), () {
             showErrorDialog("Alert!", "${response['message']}");
           });
-          tripController.fetchTripDetails();
-
+          // tripController.fetchTripDetails();
+          //
+          clearAllFields();
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setInt("tripStatus",3);
           // await prefs.setString("tripSeenArrivalTime",response['depart_Time']);

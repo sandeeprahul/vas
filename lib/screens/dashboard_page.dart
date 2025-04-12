@@ -40,7 +40,7 @@ class _DashboardPageState extends State<DashboardPage> {
     // TODO: implement initState
     super.initState();
     _loadUserDetails();
-    tripController.loadTripDetails("StartTrip");
+    tripController.fetchTripDetails();
   }
 
   Future<void> _loadUserDetails() async {
@@ -186,7 +186,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                       style: DefaultTextStyle.of(context).style,
                                       children: const <TextSpan>[
                                         TextSpan(
-                                            text: 'BlockName\n',
+                                            text: 'Gudivada\n',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
                                         TextSpan(text: 'Block'),
@@ -199,7 +199,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                       style: DefaultTextStyle.of(context).style,
                                       children: const <TextSpan>[
                                         TextSpan(
-                                            text: 'DistrictName\n',
+                                            text: 'Krishna\n',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
                                         TextSpan(text: 'District'),
@@ -212,7 +212,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                       style: DefaultTextStyle.of(context).style,
                                       children: const <TextSpan>[
                                         TextSpan(
-                                            text: 'GOI/GOB\n',
+                                            text: 'GOAP\n',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black)),
@@ -276,7 +276,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 //menu
                 const SizedBox(
                   height: 400,
-                    child: DashboardScreen()),
+                    child: DashboardCustomMenuWidget()),
                 Visibility(
                   visible: false,
                   child: Padding(

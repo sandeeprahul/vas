@@ -29,65 +29,18 @@ class TripController extends GetxController {
   var tripSeenDepartureTime = ''.obs;
   final ApiService _apiService = ApiService();
 
-  Future<void> loadTripDetailsssss(String tripType) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? jsonString = prefs.getString(tripType);
-    int? tripStatusInt = prefs.getInt('tripStatus') ?? 9;
-    String? tripTime = prefs.getString('tripStartTime') ?? '';
-    String? tripSeenArrivalTimeString =
-        prefs.getString('tripSeenArrivalTime') ?? '';
-    String? tripSeenDepartureTimeString =
-        prefs.getString('tripSeenDepartureTime') ?? '';
-
-    if (jsonString != null) {
-      Map<String, dynamic> jsonData = jsonDecode(jsonString);
-      tripDetails.value = TripDetailsModel.fromJson(jsonData["payload"]);
-    }
-    // Set values for observables
-    tripStatus.value = tripStatusInt;
-    tripStartTime.value = tripTime;
-    tripSeenArrivalTime.value = tripSeenArrivalTimeString;
-    tripSeenDepartureTime.value = tripSeenDepartureTimeString;
-    print("  tripDetails.value ");
-    print("  ${tripDetails.value!.tripId} ");
-  }
-
-  Future<TripDetailsModel?> loadTripDetails(String tripType) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? jsonData = prefs.getString(tripType);
-
-    if (jsonData != null) {
-      try {
-        Map<String, dynamic> tripData = jsonDecode(jsonData);
-        Map<String, dynamic> tripDetailsJson = tripData["payload"];
-
-        TripDetailsModel tripDetails =
-            TripDetailsModel.fromJson(tripDetailsJson);
-
-        fetchTripDetails(); // Or call with a trigger/ID if needed
-        // fetchTripDetails(tripDetails.deptId,tripDetails.vehicleId); // Or call with a trigger/ID if needed
-
-        return tripDetails;
-      } catch (e) {
-        print("Error loading trip details: $e");
-        return null;
-      }
-    } else {
-      print("No trip data found in SharedPreferences.");
-      return null;
-    }
-  }
-
   void fetchTripDetails() async {
     final UserController userController = Get.put(UserController());
     isLoading.value = true;
 
-    final response = await _apiService.getRequestForMaster(
-        "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/2/1/1");
-    print(response);
     // final response = await _apiService.getRequestForMaster(
-    //     "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/${userController.vehicleId.value}/1/1");
+    //     "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/2/1/1");
     // print(response);
+    final response = await _apiService.getRequestForMaster(
+        "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/${userController.vehicleId.value}/1/1");
+    print(response);
+    print("http://49.207.44.107/mvas/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/${userController.vehicleId.value}/1/1");
+    // tripDetails.value = null;
 
     if (response != null &&
         response is Map<String, dynamic> &&
@@ -95,25 +48,25 @@ class TripController extends GetxController {
         response['records'] is List &&
         response['records'].isNotEmpty) {
       try {
-        tripDetails.value = TripDetailsModel.fromJson(response['records'][0]);
-        print(tripDetails.value!.vehicle);
-        print("${tripDetails.value!.vehicleId}");
-        print(tripDetails.value!.doctor);
+        if(response['total_Records']!=0){
+          tripDetails.value = TripDetailsModel.fromJson(response['records'][0]);
+        }
+
+
+
       } catch (e) {
-        print("Parsing error: $e");
         tripDetails.value = null;
       }
     } else {
       print("No records found or invalid format");
       tripDetails.value = null;
+      isLoading.value = false;
     }
 
     isLoading.value = false;
   }
 
-  void updateDeparture(int km) {
-
-  }
+  void updateDeparture(int km) {}
 
   void closeTrip(int km) {}
 

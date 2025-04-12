@@ -27,16 +27,16 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
   final FormController controller = Get.put(FormController());
 
   final LocationTypeController locationTypeController =
-  Get.put(LocationTypeController());
+      Get.put(LocationTypeController());
   final DistrictsController districtsController =
-  Get.put(DistrictsController());
+      Get.put(DistrictsController());
   final BlocksController blocksController = Get.put(BlocksController());
 
   final UserController userController = Get.put(UserController());
   final LocationSubTypeController locationSubTypeController =
-  Get.put(LocationSubTypeController());
+      Get.put(LocationSubTypeController());
   final AmbulanceController ambulanceController =
-  Get.put(AmbulanceController());
+      Get.put(AmbulanceController());
 
   TripController tripController = Get.put(TripController());
 
@@ -60,13 +60,13 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
       districtsController.selectedDistrict.value =
           tripController.tripDetails.value!.district;
       districtsController.selectedDistrictId.value =
-      "${tripController.tripDetails.value!.districtId}";
+          "${tripController.tripDetails.value!.districtId}";
 
       ///block
       blocksController.selectedBlock.value =
           tripController.tripDetails.value!.block;
       blocksController.selectedBlockId.value =
-      "${tripController.tripDetails.value!.blockId}";
+          "${tripController.tripDetails.value!.blockId}";
 
       ///locationtype
       // locationTypeController.selectedLocationType.value =
@@ -79,28 +79,25 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
       locationSubTypeController.selectedLocationName.value =
           tripController.tripDetails.value!.location;
       locationSubTypeController.selectedLocationId.value =
-      "${tripController.tripDetails.value!.locationId}";
+          "${tripController.tripDetails.value!.locationId}";
 
       ///ambulance
       ambulanceController.selectedAmbulanceName.value =
           tripController.tripDetails.value!.vehicle;
       ambulanceController.selectedAmbulanceId.value =
-      "${tripController.tripDetails.value!.vehicleId}";
+          "${tripController.tripDetails.value!.vehicleId}";
 
       ///baseodometer
       controller.baseOdometerController.text =
-      "${tripController.tripDetails.value!.startKm} ${tripController.tripDetails
-          .value!.startTime}";
+          "${tripController.tripDetails.value!.startKm} ${tripController.tripDetails.value!.startTime}";
 
       ///seenArrival
       controller.seenArrivalOdometerController.text =
-      "${tripController.tripDetails.value!.reachKm} ${tripController.tripDetails
-          .value!.reachTime}";
+          "${tripController.tripDetails.value!.reachKm} ${tripController.tripDetails.value!.reachTime}";
 
       ///departure
       controller.departureOdometerController.text =
-      "${tripController.tripDetails.value!.departKm} ${tripController
-          .tripDetails.value!.departureTime}";
+          "${tripController.tripDetails.value!.departKm} ${tripController.tripDetails.value!.departureTime}";
       // districtsController.selectedDistrictId.value =
       //     "${tripController.tripDetails.value!.districtId}";
 
@@ -108,13 +105,13 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
       controller.selectedDoctor.value =
           tripController.tripDetails.value!.doctor;
       controller.selectedDoctorId.value =
-      "${tripController.tripDetails.value!.doctorId}";
+          "${tripController.tripDetails.value!.doctorId}";
 
       ///driver
       controller.selectedDriver.value =
           tripController.tripDetails.value!.driver;
       controller.selectedDriverId.value =
-      "${tripController.tripDetails.value!.driverId}";
+          "${tripController.tripDetails.value!.driverId}";
     }
   }
 
@@ -152,14 +149,13 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                     icon: Icons.location_on,
                     title: "District",
                     value: districtsController.selectedDistrict.value,
-                    onTap: () =>
-                        _showSelectionDialog(
-                            "District",
-                            districtsController.selectedDistrict,
-                            districtsController.selectedDistrictId,
-                            districtsController.districtsList,
-                            "id",
-                            "name"),
+                    onTap: () => _showSelectionDialog(
+                        "District",
+                        districtsController.selectedDistrict,
+                        districtsController.selectedDistrictId,
+                        districtsController.districtsList,
+                        "id",
+                        "name"),
                   );
                 }),
                 const SizedBox(height: 12),
@@ -168,14 +164,13 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                     icon: Icons.map,
                     title: "Block",
                     value: blocksController.selectedBlock.value,
-                    onTap: () =>
-                        _showSelectionDialog(
-                            "Block",
-                            blocksController.selectedBlock,
-                            blocksController.selectedBlockId,
-                            blocksController.blocksList,
-                            "blockId",
-                            "name"),
+                    onTap: () => _showSelectionDialog(
+                        "Block",
+                        blocksController.selectedBlock,
+                        blocksController.selectedBlockId,
+                        blocksController.blocksList,
+                        "blockId",
+                        "name"),
                   );
                 }),
                 const SizedBox(height: 12),
@@ -184,14 +179,13 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                     icon: Icons.place,
                     title: "Location Type",
                     value: locationTypeController.selectedLocationType.value,
-                    onTap: () =>
-                        _showSelectionDialog(
-                            "LocationType",
-                            locationTypeController.selectedLocationType,
-                            locationTypeController.selectedLocationTypeId,
-                            locationTypeController.locationTypes,
-                            "stopType_ID",
-                            "stopType_Name"),
+                    onTap: () => _showSelectionDialog(
+                        "LocationType",
+                        locationTypeController.selectedLocationType,
+                        locationTypeController.selectedLocationTypeId,
+                        locationTypeController.locationTypes,
+                        "stopType_ID",
+                        "stopType_Name"),
                   );
                 }),
                 const SizedBox(height: 12),
@@ -200,14 +194,13 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                     icon: Icons.pin_drop,
                     title: "Location",
                     value: locationSubTypeController.selectedLocationName.value,
-                    onTap: () =>
-                        _showSelectionDialog(
-                            "Location",
-                            locationSubTypeController.selectedLocationName,
-                            locationSubTypeController.selectedLocationId,
-                            locationSubTypeController.location,
-                            "stop_ID",
-                            "stop_Name"),
+                    onTap: () => _showSelectionDialog(
+                        "Location",
+                        locationSubTypeController.selectedLocationName,
+                        locationSubTypeController.selectedLocationId,
+                        locationSubTypeController.location,
+                        "stop_ID",
+                        "stop_Name"),
                   );
                 }),
                 _buildSectionTitle("Vehicle Details"),
@@ -216,59 +209,87 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                     icon: Icons.local_hospital,
                     title: "Ambulance",
                     value: ambulanceController.selectedAmbulanceName.value,
-                    onTap: () =>
-                        _showSelectionDialog(
-                            "Ambulance",
-                            ambulanceController.selectedAmbulanceName,
-                            ambulanceController.selectedAmbulanceId,
-                            ambulanceController.ambulanceList,
-                            "id",
-                            "asseT_NO"),
+                    onTap: () => _showSelectionDialog(
+                        "Ambulance",
+                        ambulanceController.selectedAmbulanceName,
+                        ambulanceController.selectedAmbulanceId,
+                        ambulanceController.ambulanceList,
+                        "id",
+                        "asseT_NO"),
                   );
                 }),
                 const SizedBox(height: 12),
-                _buildInputCard(
-                  icon: Icons.speed,
-                  title: "Base Odometer",
-                  controller: controller.baseOdometerController,
-                  keyboardType: TextInputType.number,
-                  edit: false,
+                Obx(
+                   () {
+                    return _buildInputCard(
+                      icon: Icons.speed,
+                      title:  controller.  baseOdometerText.value ,
+                      controller: controller.baseOdometerController,
+                      keyboardType: TextInputType.number,
+                      edit: false,
+                    );
+                  }
                 ),
 
-                ///seen arrival
-                if (tripController.tripDetails.value?.startTime != "" ||
-                    tripController.tripDetails.value?.startKm != 0)
-                  _buildInputCard(
-                      icon: Icons.speed,
-                      title: "Seen Arrival Odometer",
-                      controller: controller.seenArrivalOdometerController,
-                      keyboardType: TextInputType.number,
-                      edit: tripController.tripDetails.value?.startTime != ""
-                          ? false
-                          : true),
+                Obx(() {
+                  ///seen arrival
+                  if (tripController.tripDetails.value != null &&
+                      tripController.tripDetails.value?.startTime != "") {
+                    //||
+                    // tripController.tripDetails.value?.startKm != 0
+                    return _buildInputCard(
+                        icon: Icons.speed,
+                        title: "Seen Arrival Odometer",
+                        controller: controller.seenArrivalOdometerController,
+                        keyboardType: TextInputType.number,
+                        edit: tripController.tripDetails.value?.reachTime != ""
+                            ? false
+                            : true);
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }),
 
                 ///departure
-                if (tripController.tripDetails.value?.reachTime != "" ||
-                    tripController.tripDetails.value?.reachKm != 0)
-                  _buildInputCard(
-                      icon: Icons.speed,
-                      title: "Departure Odometer",
-                      controller: controller.departureOdometerController,
-                      keyboardType: TextInputType.number,
-                      edit: tripController.tripDetails.value?.reachTime != ""
-                          ? true
-                          : false),
+
+                Obx(() {
+                  if (tripController.tripDetails.value != null &&
+                          tripController.tripDetails.value?.reachTime !=
+                              "" /* ||
+                    tripController.tripDetails.value?.reachKm != 0*/
+                      ) {
+                    return _buildInputCard(
+                        icon: Icons.speed,
+                        title: "Departure Odometer",
+                        controller: controller.departureOdometerController,
+                        keyboardType: TextInputType.number,
+                        edit: tripController.tripDetails.value?.departureTime !=
+                                ""
+                            ? false
+                            : true);
+                  } else {
+                    return const SizedBox
+                        .shrink(); // Return an invisible widget instead of null
+                  }
+                }),
 
                 ///back to base odometer
-                if (tripController.tripDetails.value?.departureTime != "" ||
-                    tripController.tripDetails.value?.departKm != 0)
-                  _buildInputCard(
-                      icon: Icons.speed,
-                      title: "Back to Base Odometer",
-                      controller: controller.backToBaseOdometerController,
-                      keyboardType: TextInputType.number,
-                      edit: tripController.tripDetails.value?.departureTime !=
-                          "" ? true : false),
+                Obx(() {
+                  if (tripController.tripDetails.value != null &&
+                          tripController.tripDetails.value?.departureTime !=
+                              "" /*||
+                      tripController.tripDetails.value?.departKm != 0*/
+                      ) {
+                    return _buildInputCard(
+                        icon: Icons.speed,
+                        title: "Back to Base Odometer",
+                        controller: controller.backToBaseOdometerController,
+                        keyboardType: TextInputType.number,
+                        edit: true);
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                }),
 
                 _buildSectionTitle("Staff Details"),
                 Obx(() {
@@ -276,14 +297,13 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                     icon: Icons.medical_services,
                     title: "Doctor",
                     value: controller.selectedDoctor.value,
-                    onTap: () =>
-                        _showSelectionDialog(
-                            "Doctor",
-                            controller.selectedDoctor,
-                            controller.selectedDoctorId,
-                            controller.doctors,
-                            "doctor_ID",
-                            "doctor_Name"),
+                    onTap: () => _showSelectionDialog(
+                        "Doctor",
+                        controller.selectedDoctor,
+                        controller.selectedDoctorId,
+                        controller.doctors,
+                        "doctor_ID",
+                        "doctor_Name"),
                   );
                 }),
                 const SizedBox(height: 12),
@@ -292,30 +312,40 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                     icon: Icons.drive_eta,
                     title: "Driver",
                     value: controller.selectedDriver.value,
-                    onTap: () =>
-                        _showSelectionDialog(
-                            "Driver",
-                            controller.selectedDriver,
-                            controller.selectedDriverId,
-                            controller.drivers,
-                            "driver_ID",
-                            "driver_Name"),
+                    onTap: () => _showSelectionDialog(
+                        "Driver",
+                        controller.selectedDriver,
+                        controller.selectedDriverId,
+                        controller.drivers,
+                        "driver_ID",
+                        "driver_Name"),
                   );
                 }),
                 const SizedBox(height: 32),
-                Obx(() =>
-                    Container(
+                Obx(() => Container(
                       width: double.infinity,
                       height: 54,
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       child: ElevatedButton(
-                        onPressed: controller.isLoading.value
-                            ? null
-                            : tripController.tripDetails.value!.startTime == ""
+                        onPressed: tripController.tripDetails.value == null
                             ? controller.submitForm
-                            : tripController.tripDetails.value!.reachTime == ""
-                            ? controller.submitFormSeen: tripController.tripDetails.value!.departureTime ==
-                            "" ? controller.submitFormDeparture:controller.submitFormClose,
+                            : tripController.tripDetails.value != null &&
+                                    tripController
+                                            .tripDetails.value!.startTime ==
+                                        ""
+                                ? controller.submitForm
+                                : tripController.tripDetails.value != null &&
+                                        tripController
+                                                .tripDetails.value!.reachTime ==
+                                            ""
+                                    ? controller.submitFormSeen
+                                    : tripController.tripDetails.value !=
+                                                null &&
+                                            tripController.tripDetails.value!
+                                                    .departureTime ==
+                                                ""
+                                        ? controller.submitFormDeparture
+                                        : controller.submitFormClose,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppThemes.light.primaryColor,
                           elevation: 2,
@@ -325,48 +355,72 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                         ),
                         child: controller.isLoading.value
                             ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white),
-                          ),
-                        )
-                            : tripController.tripDetails.value!.startTime == ""
-                            ? Text(
-                          "Submit Trip Details",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        )
-                            : tripController.tripDetails.value!.reachTime == ""
-                            ? Text(
-                          "Submit Seen Arrival",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        )
-                            : tripController.tripDetails.value!.departureTime ==
-                            "" ? Text(
-                          "Submit Departure",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ) : Text(
-                          "Close Trip",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
+                            : tripController.tripDetails.value != null &&
+                                    tripController
+                                            .tripDetails.value!.startTime ==
+                                        ""
+                                ? Text(
+                                    "Submit Trip Details",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : tripController.tripDetails.value != null &&
+                                        tripController
+                                                .tripDetails.value!.reachTime ==
+                                            ""
+                                    ? Text(
+                                        "Submit Seen Arrival",
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : tripController.tripDetails.value !=
+                                                null &&
+                                            tripController.tripDetails.value!
+                                                    .departureTime ==
+                                                ""
+                                        ? Text(
+                                            "Submit Departure",
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : tripController.tripDetails.value !=
+                                                    null &&
+                                                tripController.tripDetails
+                                                        .value!.departureTime !=
+                                                    ""
+                                            ? Text(
+                                                "Close Trip",
+                                                style: GoogleFonts.montserrat(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            : Text(
+                                                "Submit Trip Details",
+                                                style: GoogleFonts.montserrat(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
                       ),
                     )),
                 const SizedBox(height: 24),
@@ -532,8 +586,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                 "id",
                 "name"),*/
 
-            Obx(() =>
-                GestureDetector(
+            Obx(() => GestureDetector(
                   onTap: () {
                     _showSelectionDialog(
                         "District",
@@ -557,10 +610,10 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                           districtsController.selectedDistrict.value,
                           style: TextStyle(
                               color:
-                              districtsController.selectedDistrict.value ==
-                                  "District"
-                                  ? Colors.grey
-                                  : Colors.black),
+                                  districtsController.selectedDistrict.value ==
+                                          "District"
+                                      ? Colors.grey
+                                      : Colors.black),
                         ),
                         const Icon(Icons.arrow_drop_down),
                       ],
@@ -587,8 +640,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
               height: 8,
             ),
 
-            Obx(() =>
-                GestureDetector(
+            Obx(() => GestureDetector(
                   onTap: () {
                     _showSelectionDialog(
                         "LocationType",
@@ -612,8 +664,8 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                           locationTypeController.selectedLocationType.value,
                           style: TextStyle(
                               color: locationTypeController
-                                  .selectedLocationType.value ==
-                                  "Location"
+                                          .selectedLocationType.value ==
+                                      "Location"
                                   ? Colors.grey
                                   : Colors.black),
                         ),
@@ -644,8 +696,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
             const SizedBox(
               height: 8,
             ),*/
-            Obx(() =>
-                GestureDetector(
+            Obx(() => GestureDetector(
                   onTap: () {
                     _showSelectionDialog(
                         "Ambulance",
@@ -669,8 +720,8 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                           ambulanceController.selectedAmbulanceName.value,
                           style: TextStyle(
                               color: ambulanceController
-                                  .selectedAmbulanceName.value ==
-                                  "Ambulance"
+                                          .selectedAmbulanceName.value ==
+                                      "Ambulance"
                                   ? Colors.grey
                                   : Colors.black),
                         ),
@@ -711,8 +762,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
             _buildTextField("Base Odometer", controller.baseOdometerController),
             const SizedBox(height: 20),
             const Spacer(),
-            Obx(() =>
-                SizedBox(
+            Obx(() => SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: controller.isLoading.value
@@ -739,14 +789,14 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
     );
   }
 
-  Widget _buildDropdownField(String title,
+  Widget _buildDropdownField(
+      String title,
       RxString selectedValue, // Stores valueField (UI)
       RxString selectedKey, // Stores keyField (Submission)
       List<dynamic> dataList,
       String keyField,
       String valueField) {
-    return Obx(() =>
-        GestureDetector(
+    return Obx(() => GestureDetector(
           onTap: () {
             _showSelectionDialog(title, selectedValue, selectedKey, dataList,
                 keyField, valueField);
@@ -774,7 +824,8 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
         ));
   }
 
-  void _showSelectionDialog(String title,
+  void _showSelectionDialog(
+      String title,
       RxString selectedValue,
       RxString selectedKey, // ✅ Stores keyField (Submission)
       List<dynamic> dataList,
@@ -785,64 +836,64 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
         title: Text("Select $title"),
         content: dataList.isNotEmpty
             ? SizedBox(
-          height:
-          300, // ✅ Define height to avoid intrinsic dimensions issue
-          width: double.maxFinite, // ✅ Ensures it takes full width
-          child: SingleChildScrollView(
-            // ✅ Wrap with SingleChildScrollView
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: dataList.map((item) {
-                return ListTile(
-                  title: Text(item[valueField] ?? "Unknown"),
-                  onTap: () {
-                    if (title == "District") {
-                      districtsController.selectedDistrictId.value =
-                          item[keyField]?.toString() ?? "";
-                      districtsController.selectedDistrict.value =
-                          item[valueField]?.toString() ?? "";
-                      blocksController.blocksList.clear();
-                      blocksController.selectedBlock.value =
-                      "Select Block";
-                      blocksController.getBlocks(
-                          userController.userId.value,
-                          "${item[keyField]}");
-                    } else if (title == "LocationType") {
-                      locationTypeController.selectedLocationTypeId
-                          .value = item[keyField]?.toString() ?? "";
-                      locationTypeController.selectedLocationType.value =
-                          item[valueField]?.toString() ?? "";
-                      locationSubTypeController.location.clear();
-                      locationSubTypeController
-                          .selectedLocationName.value = "Select Block";
+                height:
+                    300, // ✅ Define height to avoid intrinsic dimensions issue
+                width: double.maxFinite, // ✅ Ensures it takes full width
+                child: SingleChildScrollView(
+                  // ✅ Wrap with SingleChildScrollView
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: dataList.map((item) {
+                      return ListTile(
+                        title: Text(item[valueField] ?? "Unknown"),
+                        onTap: () {
+                          if (title == "District") {
+                            districtsController.selectedDistrictId.value =
+                                item[keyField]?.toString() ?? "";
+                            districtsController.selectedDistrict.value =
+                                item[valueField]?.toString() ?? "";
+                            blocksController.blocksList.clear();
+                            blocksController.selectedBlock.value =
+                                "Select Block";
+                            blocksController.getBlocks(
+                                userController.userId.value,
+                                "${item[keyField]}");
+                          } else if (title == "LocationType") {
+                            locationTypeController.selectedLocationTypeId
+                                .value = item[keyField]?.toString() ?? "";
+                            locationTypeController.selectedLocationType.value =
+                                item[valueField]?.toString() ?? "";
+                            locationSubTypeController.location.clear();
+                            locationSubTypeController
+                                .selectedLocationName.value = "Select Block";
 
-                      locationSubTypeController.getLocations(
-                          userController.zoneId.value,
-                          userController.blockId.value,
-                          userController.userId.value,
-                          "${item[keyField]}");
-                    } else if (title == "Ambulance") {
-                      ambulanceController.selectedAmbulanceId.value =
-                          item[keyField]?.toString() ?? "";
-                      ambulanceController.selectedAmbulanceName.value =
-                          item[valueField]?.toString() ?? "";
+                            locationSubTypeController.getLocations(
+                                userController.zoneId.value,
+                                userController.blockId.value,
+                                userController.userId.value,
+                                "${item[keyField]}");
+                          } else if (title == "Ambulance") {
+                            ambulanceController.selectedAmbulanceId.value =
+                                item[keyField]?.toString() ?? "";
+                            ambulanceController.selectedAmbulanceName.value =
+                                item[valueField]?.toString() ?? "";
 
-                      getOdometer("${item[keyField]}");
-                    } else {
-                      selectedValue.value =
-                          item[valueField]?.toString() ??
-                              ""; // ✅ Display valueField
-                      selectedKey.value = item[keyField]?.toString() ??
-                          ""; // ✅ Store keyField
-                    }
+                            getOdometer("${item[keyField]}");
+                          } else {
+                            selectedValue.value =
+                                item[valueField]?.toString() ??
+                                    ""; // ✅ Display valueField
+                            selectedKey.value = item[keyField]?.toString() ??
+                                ""; // ✅ Store keyField
+                          }
 
-                    Get.back();
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-        )
+                          Get.back();
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+              )
             : const Center(child: Text("No data available")),
       ),
     );
@@ -852,7 +903,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
     return TextField(
       controller: controller,
       decoration:
-      InputDecoration(labelText: label, border: const OutlineInputBorder()),
+          InputDecoration(labelText: label, border: const OutlineInputBorder()),
       keyboardType: TextInputType.number,
     );
   }
@@ -876,11 +927,10 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
         String errorMessage = response['error_Message'] ?? "";
         var lastBaseKM = response['last_Base_KM'] ?? 0.00;
 
-        controller.baseOdometerController.text = "$lastBaseKM";
+        // controller.baseOdometerController.text = "$lastBaseKM";
+        controller.baseOdometerText.value = "$lastBaseKM";
         // 4. Use the parsed values (example):
-        print("Error Code: $errorCode");
-        print("Error Message: $errorMessage");
-        print("Last Base KM: $lastBaseKM");
+
       } else {
         print("Error: API returned null!");
       }

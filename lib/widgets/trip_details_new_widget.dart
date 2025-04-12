@@ -20,12 +20,13 @@ class _TripDetailsNewWidgetState extends State<TripDetailsNewWidget> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (tripController.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
       final trip = tripController.tripDetails.value;
       if (trip == null || trip.startTime.isEmpty) {
         return const SizedBox.shrink(); // Don't show widget if no start time
+      }
+
+      if (tripController.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
       }
 
       return Container(
@@ -240,28 +241,29 @@ class _TripDetailsNewWidgetState extends State<TripDetailsNewWidget> {
   }
 
   String _getActionButtonText(TripDetailsModel trip) {
-    if (trip.closeTime.isNotEmpty) return 'Completed';
-    if (trip.departureTime.isNotEmpty) return 'Close Trip';
-    if (trip.reachTime.isNotEmpty) return 'Departure';
-    return 'Seen Arrival';
+    // if (trip.closeTime.isNotEmpty) return 'Completed';
+    // if (trip.departureTime.isNotEmpty) return 'Close Trip';
+    // if (trip.reachTime.isNotEmpty) return 'Departure';
+    return 'Manage Trip';
   }
 
   void _handleAction(TripDetailsModel trip) async {
-    String? odometerValue = await showOdometerDialog(Get.context!);
-    if (odometerValue != null) {
-      int km = int.tryParse(odometerValue) ?? 0;
-      if (km > 0) {
-        if (trip.departureTime.isEmpty) {
-          // Handle departure
-          tripController.updateDeparture(km);
-        } else if (trip.closeTime.isEmpty) {
-          // Handle close
-          tripController.closeTrip(km);
-        } else if (trip.reachTime.isEmpty) {
-          // Handle reach
-          tripController.updateReach(km);
-        }
-      }
-    }
+    Get.toNamed('/manage_trip');
+    // String? odometerValue = await showOdometerDialog(Get.context!);
+    // if (odometerValue != null) {
+    //   int km = int.tryParse(odometerValue) ?? 0;
+    //   if (km > 0) {
+    //     if (trip.departureTime.isEmpty) {
+    //       // Handle departure
+    //       tripController.updateDeparture(km);
+    //     } else if (trip.closeTime.isEmpty) {
+    //       // Handle close
+    //       tripController.closeTrip(km);
+    //     } else if (trip.reachTime.isEmpty) {
+    //       // Handle reach
+    //       tripController.updateReach(km);
+    //     }
+    //   }
+    // }
   }
 }

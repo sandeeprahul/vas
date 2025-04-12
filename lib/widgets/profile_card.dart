@@ -117,7 +117,7 @@ class ProfileCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _buildDetailRow(
-                  label: 'GOI/GOB',
+                  label: 'GOAP\n',
                   value: vehicleClass,
                   icon: Icons.directions_car,
                 ),

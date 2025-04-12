@@ -27,6 +27,8 @@ class FormController extends GetxController {
   // final RxString selectedDistrict = 'Select District'.obs;
   // final RxString selectedDistrictId = ''.obs; // ✅ Stores districtId for submission
 
+  var baseOdometerText = 'Base Odometer'.obs;
+
   final RxString selectedBlock = 'Select Block'.obs;
   final RxString selectedBlockId = ''.obs; // ✅ Stores districtId for submission
 
@@ -53,6 +55,7 @@ class FormController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    baseOdometerController.text = "";
     loadLastSyncedData();
     // loadTripDetails("StartTrip"); // Load previously saved trip details
   }
@@ -296,9 +299,9 @@ class FormController extends GetxController {
     final locationTypeController = Get.put(LocationTypeController());
     final locationSubTypeController = Get.put(LocationSubTypeController());
 
-    final ambulanceController = Get.find<AmbulanceController>();
-    final blocksController = Get.find<BlocksController>();
-    final districtsController = Get.find<DistrictsController>();
+    final ambulanceController = Get.put(AmbulanceController());
+    final blocksController = Get.put(BlocksController());
+    final districtsController = Get.put(DistrictsController());
     selectedDriverId.value = "";
     selectedDriver.value = "Select Driver";
     selectedDoctorId.value = "";
@@ -316,6 +319,13 @@ class FormController extends GetxController {
     blocksController.selectedBlock.value = "Select Block";
     districtsController.selectedDistrictId.value = "";
     districtsController.selectedDistrict.value = "Select District";
+     seenArrivalOdometerController.text="";
+    departureOdometerController.text="";
+    backToBaseOdometerController.text="";
+    baseOdometerController.text = "";
+    ambulanceController.selectedAmbulanceId.value="";
+    ambulanceController.selectedAmbulanceName.value="Select Ambulance";
+
 
     tripDetails.value = null;
 
@@ -393,8 +403,12 @@ class FormController extends GetxController {
           Future.delayed(const Duration(milliseconds: 300), () {
             showErrorDialog("Alert!", "${response['message']}");
           });
+          tripController.fetchTripDetails();
+          Get.back();
+
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setInt("tripStatus",2);
+
           // await prefs.setString("tripTime",response['reach_Time']);
           await prefs.setString("tripSeenArrivalTime",response['reach_Time']);
           await prefs.setString("tripSeenDepartureTime",'');
@@ -462,6 +476,8 @@ class FormController extends GetxController {
             showErrorDialog("Alert!", "${response['message']}");
           });
           tripController.fetchTripDetails();
+          Get.back();
+
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setInt("tripStatus",3);
           // await prefs.setString("tripSeenArrivalTime",response['depart_Time']);
@@ -532,6 +548,7 @@ class FormController extends GetxController {
           // tripController.fetchTripDetails();
           //
           clearAllFields();
+          Get.back();
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setInt("tripStatus",3);
           // await prefs.setString("tripSeenArrivalTime",response['depart_Time']);

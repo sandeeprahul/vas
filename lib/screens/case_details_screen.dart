@@ -61,7 +61,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    tripController.loadTripDetails('StartTrip');
+    tripController.fetchTripDetails();
   }
 
   @override

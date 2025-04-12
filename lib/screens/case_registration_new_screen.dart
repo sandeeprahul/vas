@@ -24,8 +24,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    tripController.loadTripDetails('StartTrip');
+    tripController.fetchTripDetails();
   }
 
   @override

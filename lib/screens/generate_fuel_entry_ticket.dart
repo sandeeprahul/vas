@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vas/controllers/user_controller.dart';
+import 'package:vas/screens/fuel_entry_screen.dart';
+import 'package:vas/screens/vehicle_details_screen.dart';
 
 import '../controllers/ambulance_controller.dart';
 import '../controllers/blocks_controller.dart';
@@ -9,6 +11,7 @@ import '../controllers/fuel_entry_controller.dart';
 import '../controllers/location_sub_type_controller.dart';
 import '../controllers/location_type_controller.dart';
 import '../controllers/trip_from_controller.dart';
+import '../models/vehicle_details_model.dart';
 import '../services/api_service.dart';
 import '../theme.dart';
 
@@ -34,6 +37,7 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
       Get.put(LocationSubTypeController());
   final AmbulanceController ambulanceController =
       Get.put(AmbulanceController());
+  VehicleDetailsModel? vehicleData;
 
   @override
   void initState() {
@@ -46,9 +50,10 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Generate Fuel Entry Ticket",),
+        title: const Text(
+          "Generate Fuel Entry Ticket",
+        ),
         backgroundColor: AppThemes.light.primaryColor,
-
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -99,9 +104,16 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
                   ),
                 )),
 
+            if (vehicleData == null)
+              const SizedBox.shrink()
+            else
+              VehicleDetailsScreen(
+                vehicleData: vehicleData!,
+              ),
             const SizedBox(
-              height: 8,
+              height: 28,
             ),
+         /*
 
             _buildTextField(
                 "Petro Card No:", fuelEntryController.petroCardController),
@@ -165,7 +177,6 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
               height: 8,
             ),
 
-
             Obx(() => GestureDetector(
                   onTap: () {
                     _showSelectionDialog(
@@ -213,7 +224,7 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
             _buildTextField("Last Duty Close KM",
                 fuelEntryController.lastDutyCloseKmController),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 40),*/
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppThemes.light.primaryColor,
@@ -222,16 +233,25 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              onPressed: () {},
-              child: const Text(
-                "CONTINUE",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.2,
-                ),
-              ),
+              onPressed: () {
+                print(ambulanceController.selectedAmbulanceId.value);
+                print(vehicleData!.emgCaseDetails.caseNo);
+                print(vehicleData!.odometerBase);
+
+                Get.to(FuelEntryScreen(vehicleData: vehicleData!,));
+                // Get.to(FuelEntryScreen(vehicleId: int.parse(ambulanceController.selectedAmbulanceId.value), tripId: int.parse(vehicleData!.schTripDetails.tripId), caseId: int.parse(vehicleData!.emgCaseDetails.caseNo), odometerBase: "${vehicleData!.odometerBase}"));
+              },
+              child: isLoading
+                  ? const Center(child: Text('Loading...'))
+                  : const Text(
+                      "CONTINUE",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
             )
           ],
         ),
@@ -359,8 +379,12 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
                                 item[keyField]?.toString() ?? "";
                             fuelEntryController.selectedAmbulanceName.value =
                                 item[valueField]?.toString() ?? "";
-
                             getOdometer("${item[keyField]}");
+
+                            getFuelRecords(
+                                ambulanceController.selectedAmbulanceId.value,
+                                ambulanceController
+                                    .selectedAmbulanceName.value);
                           } else if (title == "Block") {
                             fuelEntryController.selectedBlockId.value =
                                 item[keyField]?.toString() ?? "";
@@ -425,6 +449,45 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
       print("Error: $e");
     } finally {
       controller.isLoading.value = false;
+      isLoading = false;
+    }
+  }
+
+  Future<void> getFuelRecords(String ambulanceId, String vehicleNo) async {
+    isLoading = true;
+    UserController userController = Get.put(UserController());
+
+    String userId = userController.userId.value;
+    try {
+      String formattedEndpoint = '/GetFuelRecord';
+      var jsonData = {
+        "user_ID": userId,
+        "vehiclE_ID": 2,
+        // "vehiclE_ID": ambulanceId,
+        "vehiclE_NO": vehicleNo,
+        "mobilE_NO": ""
+      };
+
+      var response = await apiService.postRequest(formattedEndpoint, jsonData);
+
+      print(response);
+      print(jsonData);
+      if (response != null) {
+        // var decodedResponse = json.decode(response);
+        setState(() {
+          vehicleData = VehicleDetailsModel.fromJson(response);
+        });
+
+// Navigate to the screen
+//         Get.to(VehicleDetailsScreen(vehicleData: vehicleData));
+      } else {
+        print("Error: API returned null!");
+      }
+    } catch (e) {
+      print("Error: $e");
+    } finally {
+      controller.isLoading.value = false;
+      isLoading = false;
     }
   }
 

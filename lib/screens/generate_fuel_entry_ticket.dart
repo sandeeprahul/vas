@@ -67,7 +67,7 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: ListView(
+        child: isLoading?const Center(child: CircularProgressIndicator(),):ListView(
           children: [
             Obx(() => GestureDetector(
                   onTap: () {
@@ -113,118 +113,6 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
             const SizedBox(
               height: 28,
             ),
-         /*
-
-            _buildTextField(
-                "Petro Card No:", fuelEntryController.petroCardController),
-            const SizedBox(
-              height: 8,
-            ),
-
-            _buildTextField(
-                "Service Type:", fuelEntryController.serviceTypeController),
-            const SizedBox(
-              height: 8,
-            ),
-
-            Obx(() => GestureDetector(
-                  onTap: () {
-                    _showSelectionDialog(
-                        "District",
-                        fuelEntryController.selectedDistrict,
-                        fuelEntryController.selectedDistrictId,
-                        districtsController.districtsList,
-                        "id",
-                        "name");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "District: ${districtsController.selectedDistrict.value}",
-                          style: TextStyle(
-                              color:
-                                  districtsController.selectedDistrict.value ==
-                                          "District"
-                                      ? Colors.grey
-                                      : Colors.black),
-                        ),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
-                    ),
-                  ),
-                )),
-
-            const SizedBox(
-              height: 8,
-            ),
-            _buildDropdownField(
-                "Block",
-                fuelEntryController.selectedBlock,
-                fuelEntryController.selectedBlockId,
-                blocksController.blocksList,
-                "blockId",
-                "name"),
-            //    blocksController.getBlocks(districtsController.selectedDistrictId.value,userController.userId.value);
-            const SizedBox(
-              height: 8,
-            ),
-
-            Obx(() => GestureDetector(
-                  onTap: () {
-                    _showSelectionDialog(
-                        "LocationType",
-                        fuelEntryController.selectedLocationType,
-                        fuelEntryController.selectedLocationTypeId,
-                        locationTypeController.locationTypes,
-                        "stopType_ID",
-                        "stopType_Name");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "LocationType: ${locationTypeController.selectedLocationType.value}",
-                          style: TextStyle(
-                              color: locationTypeController
-                                          .selectedLocationType.value ==
-                                      "Location"
-                                  ? Colors.grey
-                                  : Colors.black),
-                        ),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
-                    ),
-                  ),
-                )),
-
-            const SizedBox(
-              height: 8,
-            ),
-
-            _buildTextField("On Duty Staff Name",
-                fuelEntryController.onDutyStaffController),
-            const SizedBox(
-              height: 8,
-            ),
-            _buildTextField("Last Duty Close KM",
-                fuelEntryController.lastDutyCloseKmController),
-
-            const SizedBox(height: 40),*/
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppThemes.light.primaryColor,
@@ -234,9 +122,6 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
                 ),
               ),
               onPressed: () {
-                print(ambulanceController.selectedAmbulanceId.value);
-                print(vehicleData!.emgCaseDetails.caseNo);
-                print(vehicleData!.odometerBase);
 
                 Get.to(FuelEntryScreen(vehicleData: vehicleData!,));
                 // Get.to(FuelEntryScreen(vehicleId: int.parse(ambulanceController.selectedAmbulanceId.value), tripId: int.parse(vehicleData!.schTripDetails.tripId), caseId: int.parse(vehicleData!.emgCaseDetails.caseNo), odometerBase: "${vehicleData!.odometerBase}"));
@@ -263,49 +148,7 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
 
   bool isLoading = false;
 
-  Widget _buildDropdownField(
-      String title,
-      RxString selectedValue, // Stores valueField (UI)
-      RxString selectedKey, // Stores keyField (Submission)
-      List<dynamic> dataList,
-      String keyField,
-      String valueField) {
-    return Obx(() => GestureDetector(
-          onTap: () {
-            _showSelectionDialog(title, selectedValue, selectedKey, dataList,
-                keyField, valueField);
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "$title: ${selectedValue.value}",
-                  style: TextStyle(
-                      color: selectedValue.value == title
-                          ? Colors.grey
-                          : Colors.black),
-                ),
-                const Icon(Icons.arrow_drop_down),
-              ],
-            ),
-          ),
-        ));
-  }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
-    return TextField(
-      controller: controller,
-      decoration:
-          InputDecoration(labelText: label, border: const OutlineInputBorder()),
-      // keyboardType:label==?: TextInputType.number,
-    );
-  }
 
   final fuelEntryController = Get.put(FuelEntryController());
 
@@ -454,7 +297,10 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
   }
 
   Future<void> getFuelRecords(String ambulanceId, String vehicleNo) async {
-    isLoading = true;
+    setState(() {
+      isLoading = true;
+
+    });
     UserController userController = Get.put(UserController());
 
     String userId = userController.userId.value;
@@ -487,7 +333,10 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
       print("Error: $e");
     } finally {
       controller.isLoading.value = false;
-      isLoading = false;
+      setState(() {
+        isLoading = false;
+
+      });
     }
   }
 

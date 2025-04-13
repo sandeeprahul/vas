@@ -61,49 +61,102 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   }
 
   Widget _buildEventTypeDropdown() {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(labelText: 'Event Type'),
-      value: _selectedEventType,
-      items: _incidentTypes.map((e) {
-        return DropdownMenuItem<String>(
-          value: e.incidentName,
-          child: Text(e.incidentName!),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _selectedEventType = value;
-
-          final selectedId = _incidentTypes
-              .firstWhere((e) => e.incidentName == value)
-              .incidentId;
-
-          _filteredSubTypes = _incidentSubTypes
-              .where((s) => s.incidentID == selectedId)
-              .map((s) => s.subType)
-              .toList();
-
-          _selectedCaseType = null;
-        });
-      },
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppThemes.light.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.event, color: AppThemes.light.primaryColor),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Event Type',
+                  border: InputBorder.none,
+                ),
+                value: _selectedEventType,
+                items: _incidentTypes.map((e) {
+                  return DropdownMenuItem<String>(
+                    value: e.incidentName,
+                    child: Text(e.incidentName!),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedEventType = value;
+                    final selectedId = _incidentTypes
+                        .firstWhere((e) => e.incidentName == value)
+                        .incidentId;
+                    _filteredSubTypes = _incidentSubTypes
+                        .where((s) => s.incidentID == selectedId)
+                        .map((s) => s.subType)
+                        .toList();
+                    _selectedCaseType = null;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildCaseTypeDropdown() {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(labelText: 'Case Type'),
-      value: _selectedCaseType,
-      items: _filteredSubTypes.map((caseType) {
-        return DropdownMenuItem<String>(
-          value: caseType,
-          child: Text(caseType),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _selectedCaseType = value;
-        });
-      },
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppThemes.light.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.category, color: AppThemes.light.primaryColor),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Case Type',
+                  border: InputBorder.none,
+                ),
+                value: _selectedCaseType,
+                items: _filteredSubTypes.map((caseType) {
+                  return DropdownMenuItem<String>(
+                    value: caseType,
+                    child: Text(caseType),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCaseType = value;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -137,7 +190,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           _buildCaseTypeDropdown(),
           const SizedBox(height: 10),
           buildDiseaseDropdown(),
-          const SizedBox(height: 66),
+          const SizedBox(height: 44),
           const Text(
             'Items',
             textAlign: TextAlign.center,
@@ -306,44 +359,99 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   }
 
   Widget _buildTypeDropdown() {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(labelText: 'Cattle\'s Type'),
-      value: _selectedType,
-      items: _types.map((type) {
-        return DropdownMenuItem(
-          value: type.pT_TEXT,
-          child: Text(type.pT_TEXT),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _selectedType = value;
-          _breedOptions = _allSubtypes
-              .where((s) =>
-                  s.pT_ID == _types.firstWhere((t) => t.pT_TEXT == value).pT_ID)
-              .map((s) => s.ptS_TEXT)
-              .toList();
-          _selectedBreed = null; // reset breed on type change
-        });
-      },
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppThemes.light.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.pets, color: AppThemes.light.primaryColor),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Cattle\'s Type',
+                  border: InputBorder.none,
+                ),
+                value: _selectedType,
+                items: _types.map((type) {
+                  return DropdownMenuItem(
+                    value: type.pT_TEXT,
+                    child: Text(type.pT_TEXT),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedType = value;
+                    _breedOptions = _allSubtypes
+                        .where((s) =>
+                            s.pT_ID == _types.firstWhere((t) => t.pT_TEXT == value).pT_ID)
+                        .map((s) => s.ptS_TEXT)
+                        .toList();
+                    _selectedBreed = null;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildBreedDropdown() {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(labelText: 'Cattle\'s Breed'),
-      value: _selectedBreed,
-      items: _breedOptions.map((breed) {
-        return DropdownMenuItem(
-          value: breed,
-          child: Text(breed),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _selectedBreed = value;
-        });
-      },
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppThemes.light.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.pets, color: AppThemes.light.primaryColor),
+            ),
+            SizedBox(width: 16,),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                decoration: const InputDecoration(labelText: 'Cattle\'s Breed',    border: InputBorder.none, // 🔥 Removes underline
+                ),
+                value: _selectedBreed,
+                items: _breedOptions.map((breed) {
+                  return DropdownMenuItem(
+                    value: breed,
+                    child: Text(breed),
+                  );
+                }).toList(),
+
+                onChanged: (value) {
+                  setState(() {
+                    _selectedBreed = value;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -378,109 +486,200 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   Widget buildMedicineSelector() {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: DropdownButtonFormField<MedicineItem>(
-                value: selectedMedicine,
-                items: medicineList.map((medicine) {
-                  return DropdownMenuItem(
-                    value: medicine,
-                    child: Text('${medicine.itemName} (${medicine.itemUnit})'),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedMedicine = value;
-                  });
-                },
-                decoration: const InputDecoration(labelText: 'Select Medicine'),
-              ),
+        Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: Colors.grey.shade200),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppThemes.light.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(Icons.medication, color: AppThemes.light.primaryColor),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: DropdownButtonFormField<MedicineItem>(
+                    value: selectedMedicine,
+                    items: medicineList.map((medicine) {
+                      return DropdownMenuItem(
+                        value: medicine,
+                        child: Text('${medicine.itemName} (${medicine.itemUnit})'),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedMedicine = value;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Select Medicine',
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                controller: quantityController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Quantity'),
-              ),
-            )
-          ],
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              if (selectedMedicine != null &&
-                  quantityController.text.isNotEmpty) {
-                setState(() {
-                  selectedMedicines.add(MedicineItem(
-                    quantity: quantityController.text,
-                    itemName: selectedMedicine!.itemName,
-                    itemUnit: selectedMedicine!.itemUnit,
-                    itemNumber: selectedMedicine!.itemNumber,
-                  ));
-                  quantityController.clear();
-                });
-              }
-            },
-            child: const Text('Add Medicine'),
           ),
         ),
-        const SizedBox(
-          height: 8,
-        ),
+        const SizedBox(height: 10),
         Card(
-          color: Colors.blue,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: Colors.grey.shade200),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppThemes.light.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(Icons.numbers, color: AppThemes.light.primaryColor),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    controller: quantityController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Quantity',
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: Colors.grey.shade200),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: ElevatedButton(
+              onPressed: () {
+                if (selectedMedicine != null && quantityController.text.isNotEmpty) {
+                  setState(() {
+                    selectedMedicines.add(MedicineItem(
+                      quantity: quantityController.text,
+                      itemName: selectedMedicine!.itemName,
+                      itemUnit: selectedMedicine!.itemUnit,
+                      itemNumber: selectedMedicine!.itemNumber,
+                    ));
+                    quantityController.clear();
+                  });
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppThemes.light.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                minimumSize: const Size(double.infinity, 50),
+              ),
+              child: const Text('Add Medicine'),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: Colors.grey.shade200),
+          ),
           child: Column(
             children: [
-              Card(
-                // margin: const EdgeInsets.only(top: 6),
-                color: Colors.blue.shade100,
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppThemes.light.primaryColor.withOpacity(0.1),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                ),
                 child: const Row(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     Expanded(
-                        child: Text(
-                      'Item No',
-                      textAlign: TextAlign.center,
-                    )),
-                    Expanded(child: Text('Name', textAlign: TextAlign.center)),
+                      child: Text(
+                        'Item No',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     Expanded(
-                        child: Text('Quantity', textAlign: TextAlign.center)),
-                    Expanded(child: Text('Units', textAlign: TextAlign.center)),
+                      child: Text(
+                        'Name',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Quantity',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Units',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
-              ...selectedMedicines.map((entry) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
+              ...selectedMedicines.map((entry) => Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
                           child: Text(
-                        '${entry.itemNumber} ',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.white),
-                      )),
-                      Expanded(
-                          child: Text('${entry.itemName} ',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white))),
-                      Expanded(
-                          child: Text(entry.quantity,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white))),
-                      Expanded(
-                          child: Text(entry.itemUnit,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white))),
-                    ],
+                            '${entry.itemNumber}',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            entry.itemName,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            entry.quantity,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            entry.itemUnit,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
                   )),
-              const SizedBox(
-                height: 6,
-              ),
             ],
           ),
         ),
@@ -489,31 +688,87 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   }
 
   Widget _buildDropdown(String label, List<String> options, String key) {
-    return DropdownButtonFormField<String>(
-      decoration: InputDecoration(labelText: label),
-      value: _formData[key],
-      items: options.map((option) {
-        return DropdownMenuItem(
-          value: option,
-          child: Text(option),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _formData[key] = value;
-        });
-      },
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppThemes.light.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.list, color: AppThemes.light.primaryColor),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: label,
+                  border: InputBorder.none,
+                ),
+                value: _formData[key],
+                items: options.map((option) {
+                  return DropdownMenuItem(
+                    value: option,
+                    child: Text(option),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _formData[key] = value;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildTextField(String label, String key) {
-    return TextFormField(
-      decoration: InputDecoration(labelText: label),
-      onChanged: (value) {
-        setState(() {
-          _formData[key] = value;
-        });
-      },
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppThemes.light.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.edit, color: AppThemes.light.primaryColor),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  labelText: label,
+                  border: InputBorder.none,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _formData[key] = value;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -537,24 +792,49 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   // String? selectedDisease;
 
   Widget buildDiseaseDropdown() {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(
-        labelText: 'Disease Type',
-        // border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
       ),
-      value: selectedDisease,
-      items: _diseaseTypes
-          .map((disease) => DropdownMenuItem<String>(
-                value: disease.diseaseName,
-                child: Text(disease.diseaseName),
-              ))
-          .toList(),
-      onChanged: (value) {
-        setState(() {
-          selectedDisease = value;
-        });
-      },
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppThemes.light.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.medical_services, color: AppThemes.light.primaryColor),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Disease Type',
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+                ),
+                value: selectedDisease,
+                items: _diseaseTypes
+                    .map((disease) => DropdownMenuItem<String>(
+                          value: disease.diseaseName,
+                          child: Text(disease.diseaseName),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedDisease = value;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -654,7 +934,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
       "PatientNumber": "",
       "RegnRemark": "test",
       "UserId": 1888,
-      "VehicleId":ambulanceController.selectedAmbulanceId ,
+      "VehicleId":ambulanceController.selectedAmbulanceId.value ,
       "villageId": -1,
       "YearAge": 2
     };
@@ -666,41 +946,90 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cattle Registration'),
+        elevation: 0,
+        backgroundColor: AppThemes.light.primaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              DropdownButtonFormField<String>(
-                decoration:
-                    const InputDecoration(labelText: 'Registration Type'),
-                value: _registrationType,
-                items: [
-                  'Individual Registration',
-                  // 'Lab Sample',
-                  'Mass Registration',
-                ].map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(type),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _registrationType = value!;
-                    _formData.clear(); // Clear form data when type changes
-                  });
-                },
-              ),
-              ..._buildFormFields(),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: showApprovalDialog,
-                child: const Text('Register Case'),
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppThemes.light.primaryColor.withOpacity(0.05),
+              Colors.white,
             ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: Colors.grey.shade200),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppThemes.light.primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(Icons.app_registration, color: AppThemes.light.primaryColor),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              labelText: 'Registration Type',
+                              border: InputBorder.none,
+                            ),
+                            value: _registrationType,
+                            items: [
+                              'Individual Registration',
+                              // 'Lab Sample',
+                              'Mass Registration',
+                            ].map((type) {
+                              return DropdownMenuItem(
+                                value: type,
+                                child: Text(type),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _registrationType = value!;
+                                _formData.clear(); // Clear form data when type changes
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ..._buildFormFields(),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppThemes.light.primaryColor,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  onPressed: showApprovalDialog,
+                  child: const Text('Register Case'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -819,10 +1148,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
         liveCaseController.setApprovalRemark(approvalController.text);
         liveCaseController.setRegistrationRemark(registrationController.text);
 
-        // Build JSON
-        final Map<String, dynamic> payload = buildLivestockJson();
-        var json = jsonEncode(payload);
-        print(json);
+
 
         // Optional: show loading
         Get.back(); // close the dialog
@@ -832,18 +1158,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           formFields: buildLivestockJson(),
           // documentFile: liveCaseController.selectedFile.value,
         );
-        /*try {
-          final response = await ApiService().postRequest('/CreateCase', payload);
 
-
-
-          // Optional: handle response
-          Get.back(); // close loading
-          Get.snackbar('Success', 'Data submitted successfully');
-        } catch (e) {
-          Get.back(); // close loading
-          Get.snackbar('Error', 'Submission failed: $e');
-        }*/
       },
     );
   }
@@ -859,32 +1174,44 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
 
       ApiService apiService = ApiService();
       print(requestData);
-      final response = await apiService.postRequest("/CreateCase", requestData);
+      // final response = await apiService.postRequest("/CreateCase", requestData);
 
-      if (response != null) {
-        if (response["result"] == 0) {
-          Get.back(); // Close loading
-          Get.defaultDialog(
-            title: 'Success',
-            middleText: 'Do you want to continue with the same owner?',
-            textConfirm: 'Yes',
-            textCancel: 'No',
-            onConfirm: () {
-              // Navigate to another screen
-              Get.off(() => const CaseDetailsScreen());
-            },
-            onCancel: () {
-              Get.put(LivestockController()).clearAll();
-              Get.offAll(() => DashboardPage());
-            },
-          );
-        } else {
-          Get.back();
-          Get.snackbar('Error', response["message"] ?? 'Unknown error',backgroundColor: Colors.red,overlayBlur: 2);
-        }
-      } else {
+      final response = await http.post(
+        Uri.parse("http://49.207.44.107/mvas/CreateCase"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(requestData),
+      );
+      if(response.statusCode == 200){
+        var responseBody =  jsonDecode(response.body);
+        if (responseBody != null) {
+          if (responseBody["result"] == 0) {
+            Get.back(); // Close loading
+            Get.defaultDialog(
+              title: 'Success',
+              middleText: 'Do you want to continue with the same owner?',
+              textConfirm: 'Yes',
+              textCancel: 'No',
+              onConfirm: () {
+                // Navigate to another screen
+                Get.off(() => const CaseDetailsScreen());
+              },
+              onCancel: () {
+                Get.put(LivestockController()).clearAll();
+                Get.offAll(() => DashboardPage());
+              },
+            );
+          } else {
+            Get.back();
+            Get.snackbar('Error', responseBody["message"] ?? 'Unknown error',backgroundColor: Colors.red,overlayBlur: 2);
+          }
+      }
+
+
+      }
+      else {
+        var responseBody =  jsonDecode(response.body);
         Get.back();
-        Get.snackbar('Error', 'Failed to connect to server',backgroundColor: Colors.red,overlayBlur: 2);
+        Get.snackbar('Error', '${response.statusCode} ${responseBody['reasonPhrase']}',backgroundColor: Colors.red,overlayBlur: 2);
       }
     } catch (e) {
       Get.back();

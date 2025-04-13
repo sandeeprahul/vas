@@ -32,14 +32,14 @@ class DashboardCustomMenuWidget extends StatelessWidget {
                       colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
                     ),
                   ),
-                  _buildDashboardCard(
+                /*  _buildDashboardCard(
                     title: 'Live Case',
                     icon: Icons.live_help,
                     onTap: () => Get.to(() => const ()),
                     gradient: const LinearGradient(
                       colors: [Color(0xFF4CAF50), Color(0xFF388E3C)],
                     ),
-                  ),
+                  ),*/
                   _buildDashboardCard(
                     title: 'Case Register',
                     icon: Icons.book,
@@ -48,7 +48,7 @@ class DashboardCustomMenuWidget extends StatelessWidget {
                       colors: [Color(0xFFF44336), Color(0xFFD32F2F)],
                     ),
                   ),
-                  _buildDashboardCard(
+                 /* _buildDashboardCard(
                     title: 'Cattle Case',
                     icon: Icons.pets,
                     onTap: () {}
@@ -56,7 +56,7 @@ class DashboardCustomMenuWidget extends StatelessWidget {
                     gradient: const LinearGradient(
                       colors: [Color(0xFF9C27B0), Color(0xFF7B1FA2)],
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),

@@ -19,7 +19,6 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
       Get.put(CaseRegistrationController());
   final TripController tripController = Get.put(TripController());
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -30,11 +29,9 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         title: const Text('Case Registration New'),
-        backgroundColor:  AppThemes.dark.primaryColor,
-
+        backgroundColor: AppThemes.dark.primaryColor,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -49,31 +46,48 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
         ),
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {
-
-
           final trip = tripController.tripDetails.value;
           if (trip == null) {
             return const Center(child: Text("No trip details available"));
-          }
-          if(tripController.isLoading.value){
+          }/*
+          if (tripController.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
-          }
+          }*/
 
           return Column(
             children: [
               Expanded(
                 child: ListView(
                   children: [
-                    _buildInputCard(icon: Icons.near_me, title: 'Name', value:"${trip.tripId}"),
-                    _buildInputCard(icon: Icons.near_me, title: 'Trip ID', value:"${trip.tripId}"),
-                    _buildInputCard(icon: Icons.emergency, title: 'Ambulance No', value:trip.vehicle),
-                    _buildInputCard(icon: Icons.near_me, title: 'No Of Cases', value:"${trip.noOfCases}"),
-                    _buildInputCard(icon: Icons.speed, title: 'Odometer', value:"${trip.startKm}"),
-                    _buildInputCard(icon: Icons.speed, title: 'Seen Arrival Odometer', value:"${trip.reachKm}"),
-                    _buildInputCard(icon: Icons.speed, title: 'Seen Departure Odometer', value:"${trip.reachKm}"),
-                    _buildInputCard(icon: Icons.vaccines, title: 'Service Village', value:trip.location),
-
-
+                    // _buildInputCard(icon: Icons.near_me, title: 'Name', value:"${trip.tripId}"),
+                    _buildInputCard(
+                        icon: Icons.near_me,
+                        title: 'Trip ID',
+                        value: "${trip.tripId}"),
+                    _buildInputCard(
+                        icon: Icons.emergency,
+                        title: 'Ambulance No',
+                        value: trip.vehicle),
+                    _buildInputCard(
+                        icon: Icons.near_me,
+                        title: 'No Of Cases',
+                        value: "${trip.noOfCases}"),
+                    _buildInputCard(
+                        icon: Icons.speed,
+                        title: 'Odometer',
+                        value: "${trip.startKm}"),
+                    _buildInputCard(
+                        icon: Icons.speed,
+                        title: 'Seen Arrival Odometer',
+                        value: "${trip.reachKm}"),
+                    _buildInputCard(
+                        icon: Icons.speed,
+                        title: 'Seen Departure Odometer',
+                        value: "${trip.reachKm}"),
+                    _buildInputCard(
+                        icon: Icons.vaccines,
+                        title: 'Service Village',
+                        value: trip.location),
 
                     // buildTextField("Name","${trip.tripId}", icon: Icons.near_me),
                     // buildTextField("Ambulance No", trip.vehicle, icon: Icons.emergency),
@@ -87,7 +101,6 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                     //     "Service Village ", trip.location, icon: Icons.vaccines),
 
                     // buildTextField("Location Type",trip.address),
-
                   ],
                 ),
               ),
@@ -100,11 +113,12 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                       Get.to(() => const CaseDetailsScreen());
                     } else {
                       Get.snackbar(
-                          "Error", "Please fill all fields before continuing.",backgroundColor: Colors.red,overlayBlur: 2);
+                          "Error", "Please fill all fields before continuing.",
+                          backgroundColor: Colors.red, overlayBlur: 2);
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:  AppThemes.dark.primaryColor,
+                    backgroundColor: AppThemes.dark.primaryColor,
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -120,11 +134,12 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
     );
   }
 
-  Widget _buildTextFieldWithController(String label, TextEditingController controller) {
+  Widget _buildTextFieldWithController(
+      String label, TextEditingController controller) {
     return TextField(
       controller: controller,
       decoration:
-      InputDecoration(labelText: label, border: const OutlineInputBorder()),
+          InputDecoration(labelText: label, border: const OutlineInputBorder()),
       keyboardType: TextInputType.number,
     );
   }
@@ -132,7 +147,8 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
   Widget _buildInputCard({
     required IconData icon,
     required String title,
-    TextInputType keyboardType = TextInputType.text, required String value,
+    TextInputType keyboardType = TextInputType.text,
+    required String value,
   }) {
     return Card(
       elevation: 0,
@@ -147,7 +163,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color:  AppThemes.dark.primaryColor.withOpacity(0.1),
+                color: AppThemes.dark.primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: AppThemes.dark.primaryColor),
@@ -164,14 +180,15 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                       color: Colors.grey,
                     ),
                   ),
-                  const SizedBox(height: 4,),
+                  const SizedBox(
+                    height: 4,
+                  ),
                   Text(
                     value,
                     style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
-                    ),
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
                   ),
                   // TextField(
                   //   enabled: false,
@@ -198,8 +215,10 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
     );
   }
 
-
-  Widget buildTextField(String label, String value,{    required IconData icon,
+  Widget buildTextField(
+    String label,
+    String value, {
+    required IconData icon,
   }) {
     return Card(
       elevation: 0,
@@ -214,7 +233,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color:  AppThemes.dark.primaryColor.withOpacity(0.1),
+                color: AppThemes.dark.primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: AppThemes.dark.primaryColor),
@@ -254,7 +273,6 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
         controller.district.isNotEmpty &&
         controller.ambulanceNo.isNotEmpty &&
         controller.noOfCases.isNotEmpty &&
-
         controller.startOdometer.isNotEmpty;
   }
 }

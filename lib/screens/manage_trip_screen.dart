@@ -182,7 +182,8 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                       return _buildSelectionCard(
                         icon: Icons.place,
                         title: "Location Type",
-                        value: locationTypeController.selectedLocationType.value,
+                        value:
+                            locationTypeController.selectedLocationType.value,
                         onTap: () => _showSelectionDialog(
                             "LocationType",
                             locationTypeController.selectedLocationType,
@@ -197,7 +198,8 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                       return _buildSelectionCard(
                         icon: Icons.pin_drop,
                         title: "Location",
-                        value: locationSubTypeController.selectedLocationName.value,
+                        value: locationSubTypeController
+                            .selectedLocationName.value,
                         onTap: () => _showSelectionDialog(
                             "Location",
                             locationSubTypeController.selectedLocationName,
@@ -223,17 +225,15 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                       );
                     }),
                     const SizedBox(height: 12),
-                    Obx(
-                       () {
-                        return _buildInputCard(
-                          icon: Icons.speed,
-                          title:  controller.  baseOdometerText.value ,
-                          controller: controller.baseOdometerController,
-                          keyboardType: TextInputType.number,
-                          edit: false,
-                        );
-                      }
-                    ),
+                    Obx(() {
+                      return _buildInputCard(
+                        icon: Icons.speed,
+                        title: controller.baseOdometerText.value,
+                        controller: controller.baseOdometerController,
+                        keyboardType: TextInputType.number,
+                        edit: false,
+                      );
+                    }),
 
                     Obx(() {
                       ///seen arrival
@@ -244,9 +244,11 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                         return _buildInputCard(
                             icon: Icons.speed,
                             title: "Seen Arrival Odometer",
-                            controller: controller.seenArrivalOdometerController,
+                            controller:
+                                controller.seenArrivalOdometerController,
                             keyboardType: TextInputType.number,
-                            edit: tripController.tripDetails.value?.reachTime != ""
+                            edit: tripController.tripDetails.value?.reachTime !=
+                                    ""
                                 ? false
                                 : true);
                       } else {
@@ -267,7 +269,8 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                             title: "Departure Odometer",
                             controller: controller.departureOdometerController,
                             keyboardType: TextInputType.number,
-                            edit: tripController.tripDetails.value?.departureTime !=
+                            edit: tripController
+                                        .tripDetails.value?.departureTime !=
                                     ""
                                 ? false
                                 : true);
@@ -338,15 +341,16 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                                 .tripDetails.value!.startTime ==
                                             ""
                                     ? controller.submitForm
-                                    : tripController.tripDetails.value != null &&
-                                            tripController
-                                                    .tripDetails.value!.reachTime ==
+                                    : tripController.tripDetails.value !=
+                                                null &&
+                                            tripController.tripDetails.value!
+                                                    .reachTime ==
                                                 ""
                                         ? controller.submitFormSeen
                                         : tripController.tripDetails.value !=
                                                     null &&
-                                                tripController.tripDetails.value!
-                                                        .departureTime ==
+                                                tripController.tripDetails
+                                                        .value!.departureTime ==
                                                     ""
                                             ? controller.submitFormDeparture
                                             : controller.submitFormClose,
@@ -379,9 +383,10 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                           color: Colors.white,
                                         ),
                                       )
-                                    : tripController.tripDetails.value != null &&
-                                            tripController
-                                                    .tripDetails.value!.reachTime ==
+                                    : tripController.tripDetails.value !=
+                                                null &&
+                                            tripController.tripDetails.value!
+                                                    .reachTime ==
                                                 ""
                                         ? Text(
                                             "Submit Seen Arrival",
@@ -393,8 +398,8 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                           )
                                         : tripController.tripDetails.value !=
                                                     null &&
-                                                tripController.tripDetails.value!
-                                                        .departureTime ==
+                                                tripController.tripDetails
+                                                        .value!.departureTime ==
                                                     ""
                                             ? Text(
                                                 "Submit Departure",
@@ -404,24 +409,31 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                                   color: Colors.white,
                                                 ),
                                               )
-                                            : tripController.tripDetails.value !=
+                                            : tripController.tripDetails
+                                                            .value !=
                                                         null &&
-                                                    tripController.tripDetails
-                                                            .value!.departureTime !=
+                                                    tripController
+                                                            .tripDetails
+                                                            .value!
+                                                            .departureTime !=
                                                         ""
                                                 ? Text(
                                                     "Close Trip",
-                                                    style: GoogleFonts.montserrat(
+                                                    style:
+                                                        GoogleFonts.montserrat(
                                                       fontSize: 16,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       color: Colors.white,
                                                     ),
                                                   )
                                                 : Text(
                                                     "Submit Trip Details",
-                                                    style: GoogleFonts.montserrat(
+                                                    style:
+                                                        GoogleFonts.montserrat(
                                                       fontSize: 16,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       color: Colors.white,
                                                     ),
                                                   ),
@@ -432,12 +444,11 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                 ),
               ),
             ),
-            Obx(
-                    () {
-                  return tripController.isLoading.value?const Center(child: CircularProgressIndicator()):const SizedBox.shrink();
-                }
-            ),
-
+            Obx(() {
+              return tripController.isLoading.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : const SizedBox.shrink();
+            }),
           ],
         ),
       ),
@@ -868,13 +879,10 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                             blocksController.selectedBlock.value =
                                 "Select Block";
 
-
                             blocksController.getBlocks(
                                 userController.userId.value,
                                 "${item[keyField]}");
-
                           } else if (title == "LocationType") {
-
                             locationTypeController.selectedLocationTypeId
                                 .value = item[keyField]?.toString() ?? "";
                             locationTypeController.selectedLocationType.value =
@@ -888,19 +896,16 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                 userController.blockId.value,
                                 userController.userId.value,
                                 "${item[keyField]}");
-
                           } else if (title == "Ambulance") {
-
                             ambulanceController.selectedAmbulanceId.value =
                                 item[keyField]?.toString() ?? "";
                             ambulanceController.selectedAmbulanceName.value =
                                 item[valueField]?.toString() ?? "";
 
                             print(item[keyField]?.toString());
-                            print( item[valueField]?.toString());
+                            print(item[valueField]?.toString());
 
                             getOdometer("${item[keyField]}");
-
                           } else {
                             selectedValue.value =
                                 item[valueField]?.toString() ??
@@ -952,7 +957,6 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
         // controller.baseOdometerController.text = "$lastBaseKM";
         controller.baseOdometerText.value = "$lastBaseKM";
         // 4. Use the parsed values (example):
-
       } else {
         print("Error: API returned null!");
       }

@@ -70,7 +70,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Case Registration New'),
+        title: const Text('Details'),
         elevation: 0,
         backgroundColor: AppThemes.light.primaryColor,
       ),
@@ -93,6 +93,9 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
               children: [
                 Obx(() {
                   final trip = tripController.tripDetails.value;
+                  if(tripController.isLoading.value){
+                    return const Center(child: CircularProgressIndicator(),);
+                  }
                   if (trip == null) {
                     return const Center(child: Text("No trip details available"));
                   }
@@ -109,6 +112,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                 _buildInputCard(
                   icon: Icons.phone,
                   title: 'Owner\'s Contact No',
+
                   controller: _ownerContactNoController,
                   keyboardType: TextInputType.phone,
                   edit: false,

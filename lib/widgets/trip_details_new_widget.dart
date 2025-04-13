@@ -25,9 +25,9 @@ class _TripDetailsNewWidgetState extends State<TripDetailsNewWidget> {
         return const SizedBox.shrink(); // Don't show widget if no start time
       }
 
-      if (tripController.isLoading.value) {
+      /*if (tripController.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
-      }
+      }*/
 
       return Container(
         width: double.infinity,

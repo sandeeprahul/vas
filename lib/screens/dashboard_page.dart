@@ -275,7 +275,7 @@ class _DashboardPageState extends State<DashboardPage> {
             }),*/
                 //menu
                 const SizedBox(
-                  height: 400,
+                  height: 200,
                     child: DashboardCustomMenuWidget()),
                 Visibility(
                   visible: false,

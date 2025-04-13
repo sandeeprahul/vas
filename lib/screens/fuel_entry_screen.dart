@@ -138,8 +138,9 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
           latitude: latitude!,
           longitude: longitude!,
           docOdometer: "",
+          docBill: '',
           // docOdometer: odometerImageBase64!,
-          docBill: billImageBase64!,
+          // docBill: billImageBase64!,
 
         );
         print("fuelEntry");
@@ -149,7 +150,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
         print(tpvh);
             print(fuelEntry.toJson());
 
-        final response = await apiService.postRequest("/SetFuelRecord", fuelEntry.toJson());
+        final response = await apiService.postRequest("/SetFuelRecord", fuelEntry.toJson()).timeout(Duration(seconds: 20));
 
         print(response);
         if (response != null) {
@@ -439,9 +440,16 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
             ),
             if (isLoading)
               Container(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.white,
                 child: const Center(
-                  child: CircularProgressIndicator(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      Text('Please wait...'),
+
+                    ],
+                  ),
                 ),
               ),
           ],

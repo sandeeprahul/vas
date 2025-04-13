@@ -45,26 +45,23 @@ class VehicleDetailsScreen extends StatelessWidget {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       color: Colors.red[50],
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Error Information',
-              style: GoogleFonts.montserrat(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Error Information',
+            style: GoogleFonts.montserrat(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
             ),
-            const SizedBox(height: 8),
-            if (vehicleData.errorCode != null)
-              _buildInfoRow('Error Code', vehicleData.errorCode!),
-            if (vehicleData.errorMessage != null)
-              _buildInfoRow('Error Message', vehicleData.errorMessage!),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          if (vehicleData.errorCode != null)
+            _buildInfoRow('Error Code', vehicleData.errorCode!),
+          if (vehicleData.errorMessage != null)
+            _buildInfoRow('Error Message', vehicleData.errorMessage!),
+        ],
       ),
     );
   }

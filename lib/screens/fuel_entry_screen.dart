@@ -43,7 +43,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
   final billNoController = TextEditingController();
 
   // Variables
-  int modeOfPayment = 0; // 0 for cash, 1 for petrol card
+  int modeOfPayment = 1; // 1 for cash, 2 for petrol card
   String? odometerImageBase64;
   String? odometerImageName;
   String? billImageBase64;
@@ -133,9 +133,9 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
           'odometer': odometerAtFuelStationController.text,
           'odometer_Back_At_Base': odometerBackAtBaseController.text,
           'fuel_Station_Name': fuelStationNameController.text,
+          "mode_Of_Payment": modeOfPayment, // ✅ INT, not string like "Cash"
           "quantity": int.parse(quantityController.text), // ✅ INT
           "unit_Price": int.parse(unitPriceController.text), // ✅ INT
-          "mode_Of_Payment": modeOfPayment, // ✅ INT, not string like "Cash"
 
           'payment_Ref_No': paymentRefNoController.text,
           'bill_No': billNoController.text,
@@ -181,15 +181,13 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
         if (response.statusCode == 200) {
           final responseBody = jsonDecode(response.body);
           if (responseBody['result'] == 0) {
-            final ticketNumber = responseBody['ticket_Number'];
-            Get.back();
-            Get.snackbar(
-              'Success',
-              'Fuel record saved successfully. Ticket Number: $ticketNumber',
-              duration: const Duration(seconds: 5),
-            );
 
-            showAlert("Success", 'Fuel record saved successfully. Ticket Number: $ticketNumber');
+
+            // final ticketNumber = responseBody['ticket_Number'];
+            Get.back();
+
+
+            showAlert("Alert!", '${responseBody['message']}');
 
           } else {
             showAlert("Error",responseBody['message'] ?? 'Unknown error');
@@ -246,7 +244,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
 
     // Variables
-     modeOfPayment = 0; // 0 for cash, 1 for petrol card
+     modeOfPayment = 1; // 1 for cash, 2 for petrol card
      odometerImageBase64 = '';
      odometerImageName = '';
      billImageBase64 = '';
@@ -651,7 +649,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
             Expanded(
               child: RadioListTile<int>(
                 title: const Text('Cash'),
-                value: 0,
+                value: 1,
                 groupValue: modeOfPayment,
                 onChanged: (value) {
                   setState(() {
@@ -663,7 +661,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
             Expanded(
               child: RadioListTile<int>(
                 title: const Text('Petrol Card'),
-                value: 1,
+                value: 2,
                 groupValue: modeOfPayment,
                 onChanged: (value) {
                   setState(() {

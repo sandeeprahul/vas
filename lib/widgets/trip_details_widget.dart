@@ -40,8 +40,7 @@ class TripController extends GetxController {
 
       final response = await _apiService
           .getRequestForMaster(
-              "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/3/1/1")
-          .timeout(const Duration(seconds: 5));
+              "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/3/1/1");
       print(response);
       // final response = await _apiService.getRequestForMaster(
       //     "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/${ ambulanceController.selectedAmbulanceId.value}/1/1");

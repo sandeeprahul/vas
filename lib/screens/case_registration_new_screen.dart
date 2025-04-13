@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../controllers/case_registration_new_controller.dart';
 import '../theme.dart';
 import '../widgets/trip_details_widget.dart';
 import 'case_details_screen.dart';
@@ -15,8 +16,7 @@ class CaseRegistrationNewScreen extends StatefulWidget {
 }
 
 class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
-  final CaseRegistrationController controller =
-      Get.put(CaseRegistrationController());
+
   final TripController tripController = Get.put(TripController());
 
   @override
@@ -109,13 +109,8 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (_validateFields()) {
-                      Get.to(() => const CaseDetailsScreen());
-                    } else {
-                      Get.snackbar(
-                          "Error", "Please fill all fields before continuing.",
-                          backgroundColor: Colors.red, overlayBlur: 2);
-                    }
+                    Get.to(() => const CaseDetailsScreen());
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppThemes.dark.primaryColor,
@@ -267,29 +262,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
     );
   }
 
-  bool _validateFields() {
-    return controller.name.isNotEmpty &&
-        controller.tripId.isNotEmpty &&
-        controller.district.isNotEmpty &&
-        controller.ambulanceNo.isNotEmpty &&
-        controller.noOfCases.isNotEmpty &&
-        controller.startOdometer.isNotEmpty;
-  }
+
 }
 
-class CaseRegistrationController extends GetxController {
-  var name = "Paravet Two".obs;
-  var tripId = "2016".obs;
-  var district = "RAIPUR".obs;
-  var block = "".obs;
-  var ambulanceNo = "AARANG - CG02 AU1682".obs;
-  var noOfCases = "0".obs;
-  var startOdometer = "10.00 - 16/06/2024 10:15".obs;
-  var seenArrivalOdometer = "11.00 - 16/06/2024 10:16".obs;
-  var seenDepartureOdometer = "".obs;
-  var locationType = "CHC".obs;
-  var serviceVillage = "AKOLDIH ALIAS".obs;
-  var ownerContact = "9893076001".obs;
-  var ownerName = "Vivek".obs;
-  var category = "OBC".obs;
-}
+

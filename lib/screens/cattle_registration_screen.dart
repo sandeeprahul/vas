@@ -7,12 +7,17 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vas/controllers/ambulance_controller.dart';
+import 'package:vas/controllers/blocks_controller.dart';
+import 'package:vas/controllers/districts_controller.dart';
+import 'package:vas/controllers/location_sub_type_controller.dart';
+import 'package:vas/controllers/location_type_controller.dart';
 import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/screens/case_details_screen.dart';
 import 'package:vas/screens/dashboard_page.dart';
 import 'package:vas/services/api_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../controllers/case_registration_new_controller.dart';
 import '../controllers/live_stock_controller.dart';
 import '../data/DiseaseType.dart';
 import '../data/IncidentType.dart';
@@ -37,30 +42,88 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   List<String> _filteredSubTypes = [];
 
   String? _selectedEventType;
+  int? _selectedEventTypeId;
   String? _selectedCaseType;
+  int? _selectedCaseTypeId;
 
-  // Dynamic form fields based on registration type
+  bool _isLoadingIncidentData = false;
 
   Future<void> loadIncidentData() async {
-    ApiService apiService = ApiService();
-    final incidentResponse =
-        await apiService.getRequestList("/GetIncidentTypes");
-    print(incidentResponse);
-    final subIncidentResponse =
-        await apiService.getRequestList("/GetIncidentSubTypes");
-
     setState(() {
-      _incidentTypes = (incidentResponse as List)
-          .map((e) => IncidentType.fromJson(e))
-          .toList();
-
-      _incidentSubTypes = (subIncidentResponse as List)
-          .map((e) => IncidentSubType.fromJson(e))
-          .toList();
+      _isLoadingIncidentData = true;
     });
+
+    try {
+      ApiService apiService = ApiService();
+      final incidentResponse = await apiService.getRequestList("/GetIncidentTypes");//EventType
+      final subIncidentResponse = await apiService.getRequestList("/GetIncidentSubTypes");//CaseType
+
+      print("loadIncidentDataloadIncidentDataloadIncidentDataloadIncidentData");
+      print(subIncidentResponse);
+      print(incidentResponse);
+
+      if (incidentResponse != null && subIncidentResponse != null) {
+        setState(() {
+          _incidentTypes = (incidentResponse as List)
+              .map((e) => IncidentType.fromJson(e))
+              .toList();
+
+          _incidentSubTypes = (subIncidentResponse as List)
+              .map((e) => IncidentSubType.fromJson(e))
+              .toList();
+        });
+      } else {
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Failed to load incident data'),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error loading incident data: $e");
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Error'),
+          content: Text('Error loading incident data: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoadingIncidentData = false;
+      });
+    }
   }
 
   Widget _buildEventTypeDropdown() {
+    if (_isLoadingIncidentData) {
+      return Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: Colors.grey.shade200),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.all(16),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    }
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -99,6 +162,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                     final selectedId = _incidentTypes
                         .firstWhere((e) => e.incidentName == value)
                         .incidentId;
+                    _selectedEventTypeId = selectedId;
                     _filteredSubTypes = _incidentSubTypes
                         .where((s) => s.incidentID == selectedId)
                         .map((s) => s.subType)
@@ -148,9 +212,16 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   );
                 }).toList(),
                 onChanged: (value) {
-                  setState(() {
-                    _selectedCaseType = value;
-                  });
+                  if (value != null) {
+                    final selectedSubType = _incidentSubTypes.firstWhere(
+                      (s) => s.subType == value,
+                      orElse: () => IncidentSubType(incidentID: 0, subType: '', subID: 0),
+                    );
+                    setState(() {
+                      _selectedCaseType = value;
+                      _selectedCaseTypeId = selectedSubType.subID;
+                    });
+                  }
                 },
               ),
             ),
@@ -170,10 +241,12 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           _buildDropdown('Gender', ['M', 'F'], 'Gender'),
           const SizedBox(height: 10),
+          _buildSectionTitle('Cattle details'),
+
           Row(
             children: [
               Expanded(
-                  child: _buildTextField('Cattle\'s Age (Years)', 'Years')),
+                  child: _buildTextField('Years', 'Years')),
               const SizedBox(
                 width: 12,
               ),
@@ -191,12 +264,9 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           buildDiseaseDropdown(),
           const SizedBox(height: 44),
-          const Text(
-            'Items',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.black, fontSize: 26, fontWeight: FontWeight.bold),
-          ),
+          _buildSectionTitle('Items'),
+
+
           buildMedicineSelector(),
           const SizedBox(height: 10),
           // _buildTextField('Remark', 'Remark'),
@@ -209,10 +279,12 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           _buildDropdown('Gender', ['M', 'F'], 'Gender'),
           const SizedBox(height: 10),
+         _buildSectionTitle('Cattle details'),
+
           Row(
             children: [
               Expanded(
-                  child: _buildTextField('Cattle\'s Age (Years)', 'Years')),
+                  child: _buildTextField('Years', 'Years')),
               const SizedBox(
                 width: 12,
               ),
@@ -236,13 +308,9 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           _buildTextField('Unit', 'Unit'),
           buildDiseaseDropdown(),
-          const SizedBox(height: 66),
-          const Text(
-            'Items',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.black, fontSize: 26, fontWeight: FontWeight.bold),
-          ),
+          const SizedBox(height: 44),
+          _buildSectionTitle('Items'),
+
           buildMedicineSelector(),
           const SizedBox(height: 10),
           // _buildTextField('Remark', 'Remark'),
@@ -255,10 +323,12 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           _buildTextField('No of Species', 'NoOfSpecies'),
           const SizedBox(height: 10),
+          _buildSectionTitle('Cattle details'),
+
           Row(
             children: [
               Expanded(
-                  child: _buildTextField('Cattle\'s Age (Years)', 'Years')),
+                  child: _buildTextField('Years', 'Years')),
               const SizedBox(
                 width: 12,
               ),
@@ -283,18 +353,27 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           _buildTextField('Unit', 'Unit'),
           const SizedBox(height: 66),
-          const Text(
-            'Items',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.black, fontSize: 26, fontWeight: FontWeight.bold),
-          ),
+          _buildSectionTitle('Items'),
+
           buildMedicineSelector(),
           const SizedBox(height: 10),
         ];
       default:
         return [];
     }
+  }
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 24, 4, 12),
+      child: Text(
+        title,
+        style: GoogleFonts.montserrat(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: AppThemes.light.primaryColor,
+        ),
+      ),
+    );
   }
 
   List<DiseaseType> diseaseList = [];
@@ -333,32 +412,94 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
 
   List<PatientType> _types = [];
   List<PatientSubType> _allSubtypes = [];
-  List<String> _breedOptions = [];
+  List<PatientSubType> _breedOptions = [];
 
   String? _selectedType;
-  String? _selectedBreed;
+  PatientSubType? _selectedBreed;
+
+  bool _isLoadingPatientTypes = false;
 
   Future<void> loadPatientTypes() async {
-    ApiService apiService = ApiService();
-    final response = await apiService.getRequest(
-      "/GetPatientTypes",
-    );
-    print("loadPatientTypes");
-    print("${response}");
-    if (response != null) {
-      setState(() {
-        _types = (response['p_Type_Data'] as List)
-            .map((e) => PatientType.fromJson(e))
-            .toList();
+    setState(() {
+      _isLoadingPatientTypes = true;
+    });
 
-        _allSubtypes = (response['p_SubType_Data'] as List)
-            .map((e) => PatientSubType.fromJson(e))
-            .toList();
+    try {
+      ApiService apiService = ApiService();
+      final response = await apiService.getRequest("/GetPatientTypes");
+
+      if (response != null) {
+        setState(() {
+          // Handle p_Type_Data
+          _types = (response['p_Type_Data'] as List)
+              .map((e) => PatientType.fromJson(e))
+              .toList();
+
+          // Handle p_SubType_Data
+          _allSubtypes = (response['p_SubType_Data'] as List)
+              .map((e) => PatientSubType.fromJson(e))
+              .toList();
+
+          // Initialize breed options based on first type if available
+          if (_types.isNotEmpty) {
+            _selectedType = _types.first.pT_TEXT;
+            _breedOptions = _allSubtypes
+                .where((s) => s.pT_ID == _types.first.pT_ID)
+                .toList();
+          }
+        });
+      } else {
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Failed to load patient types'),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error loading patient types: $e");
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Error'),
+          content: Text('Error loading patient types: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoadingPatientTypes = false;
       });
     }
   }
 
   Widget _buildTypeDropdown() {
+    if (_isLoadingPatientTypes) {
+      return Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: Colors.grey.shade200),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.all(16),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    }
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -392,15 +533,18 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   );
                 }).toList(),
                 onChanged: (value) {
-                  setState(() {
-                    _selectedType = value;
-                    _breedOptions = _allSubtypes
-                        .where((s) =>
-                            s.pT_ID == _types.firstWhere((t) => t.pT_TEXT == value).pT_ID)
-                        .map((s) => s.ptS_TEXT)
-                        .toList();
-                    _selectedBreed = null;
-                  });
+                  if (value != null) {
+                    final selectedTypeObj = _types.firstWhere((t) => t.pT_TEXT == value);
+                    caseRegistrationController.cattleType.value = "${selectedTypeObj.pT_ID}";
+
+                    setState(() {
+                      _selectedType = value;
+                      _breedOptions = _allSubtypes
+                          .where((s) => s.pT_ID == selectedTypeObj.pT_ID)
+                          .toList();
+                      _selectedBreed = null;
+                    });
+                  }
                 },
               ),
             ),
@@ -429,22 +573,26 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
               ),
               child: Icon(Icons.pets, color: AppThemes.light.primaryColor),
             ),
-            SizedBox(width: 16,),
+            const SizedBox(width: 16),
             Expanded(
-              child: DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Cattle\'s Breed',    border: InputBorder.none, // 🔥 Removes underline
+              child: DropdownButtonFormField<PatientSubType>(
+                decoration: const InputDecoration(
+                  labelText: 'Cattle\'s Breed',
+                  border: InputBorder.none,
                 ),
                 value: _selectedBreed,
                 items: _breedOptions.map((breed) {
-                  return DropdownMenuItem(
+                  return DropdownMenuItem<PatientSubType>(
                     value: breed,
-                    child: Text(breed),
+                    child: Text(breed.ptS_TEXT),
                   );
                 }).toList(),
-
                 onChanged: (value) {
                   setState(() {
                     _selectedBreed = value;
+                    if (value != null) {
+                      caseRegistrationController.cattleBreedType.value = value.ptS_ID.toString();
+                    }
                   });
                 },
               ),
@@ -760,9 +908,17 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
+
                   setState(() {
                     _formData[key] = value;
                   });
+                  if(label=="Months"){
+                    caseRegistrationController.monthsController.value = value;
+                  }
+                  if(label=="Years"){
+                    caseRegistrationController.yearsController.value = value;
+                  }
+
                 },
               ),
             ),
@@ -773,25 +929,73 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   }
 
   List<DiseaseType> _diseaseTypes = [];
+  bool _isLoadingDiseaseTypes = false;
 
   Future<void> loadDiseaseTypes() async {
-    ApiService apiService = ApiService();
-    final diseaseResponse =
-        await apiService.getRequestList("/GetDiseaseTypes/1888");
+    setState(() {
+      _isLoadingDiseaseTypes = true;
+    });
 
-    if (diseaseResponse != null && diseaseResponse is List) {
+    try {
+      ApiService apiService = ApiService();
+      final diseaseResponse = await apiService.getRequestList("/GetDiseaseTypes/1888");
+
+      if (diseaseResponse != null && diseaseResponse is List) {
+        setState(() {
+          _diseaseTypes = diseaseResponse.map((e) => DiseaseType.fromJson(e)).toList();
+        });
+      } else {
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Failed to load disease types'),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error loading disease types: $e");
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Error'),
+          content: Text('Error loading disease types: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } finally {
       setState(() {
-        _diseaseTypes =
-            diseaseResponse.map((e) => DiseaseType.fromJson(e)).toList();
+        _isLoadingDiseaseTypes = false;
       });
-    } else {
-      print("Failed to load disease types or response was not a list");
     }
   }
 
-  // String? selectedDisease;
-
   Widget buildDiseaseDropdown() {
+    if (_isLoadingDiseaseTypes) {
+      return Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: Colors.grey.shade200),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.all(16),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    }
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -846,6 +1050,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     }
   }
 
+  CaseRegistrationNewController caseRegistrationController = Get.put(CaseRegistrationNewController());
   @override
   void initState() {
     // TODO: implement initState
@@ -914,41 +1119,200 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     };
 
   }
-  Map<String, dynamic> buildLivestockJsondddd() {
+
+  Future<void> submitLivestockForm() async {
+
     final liveCaseController = Get.put(LivestockController());
     final formData = liveCaseController.formData;
-    final ambulanceController = Get.put(AmbulanceController());
-    return {
-      "Address": "-",
-      "ApprovalRemark": "test",
-      "blockId": 1,
-      "CattleCount": 1,
-      "CattleName": "a",
-      "CattleSubType": 16,
-      "CattleType": 11,
-      "DaysAge": 0,
-      "districtId": 1,
-      "doc1": "",
-      "docname1": "test1.jpg",
-      "Gender": 0,
-      "ImeiNumber": "OnePlus_NE2211_347695b2fc87f884",
-      "IncidentSubType": 1730,
-      "IncidentType": 234,
-      "latitude": 43.73155,
-      "LocationID": 29078,
-      "longitude": -79.76242,
-      "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
-      "MonthAge": 0,
-      "OwnerName": "a",
-      "OwnerNo": "8787878787",
-      "PatientNumber": "",
-      "RegnRemark": "test",
-      "UserId": 1888,
-      "VehicleId":ambulanceController.selectedAmbulanceId.value ,
-      "villageId": -1,
-      "YearAge": 2
-    };
+    final userController = Get.put(UserController());
+    final blocksController = Get.put(BlocksController());
+    final districtController = Get.put(DistrictsController());
+    final locationTypeController = Get.put(LocationTypeController());
+    final locationSubTypeController = Get.put(LocationSubTypeController());
 
+    if (_formKey.currentState!.validate()) {
+      // setState(() {
+      //   isLoading = true;
+      // });
+
+      try {
+        // Convert medicine list to proper format
+        List<Map<String, dynamic>> medicineList = [];
+        for (var medicine in selectedMedicines) {
+          medicineList.add({
+            "item_name": medicine.itemName,
+            "item_unit": medicine.itemUnit,
+            "item_number": medicine.itemNumber,
+            "quantity": medicine.quantity.toString(),
+          });
+        }
+
+
+
+        // Create request body with proper types
+        final requestBodydddd = {
+          "locationId": 1,
+          // "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
+          // "CattleCount": 1,
+          // "ImeiNumber": "",
+          // "UserId":int.parse( userController.userId.value),
+          // "VehicleId": int.parse(liveCaseController.formData['AmbulanceNo']),
+          "latitude": double.parse("16.73155"),
+          "longitude": double.parse("80.76242"),
+          "doc2": "",
+          "docName2": "",
+          // "OwnerNo": liveCaseController.formData['OwnersContactNo'],
+          // "OwnerName": liveCaseController.formData['Owners Name'],
+          "districtId": int.parse(districtController.selectedDistrictId.value),
+          "blockId": int.parse(blocksController.selectedBlockId.value),
+          "villageId": int.parse(locationSubTypeController.selectedLocationId.value),//
+          "address": "-",
+          // "CattleName": "a",
+          // "YearAge": int.parse(_formData['Years']),
+          // "MonthAge": int.parse(_formData['Months']),
+          // "DaysAge": "0",
+          // "CattleType": _selectedType,
+          // "CattleSubType": _selectedBreed,
+          // "IncidentType": _selectedEventType,
+          // "IncidentSubType": _selectedCaseType,
+          // "ApprovalRemark": liveCaseController.approvalRemark.value,
+          // "RegnRemark": liveCaseController.registrationRemark.value,
+          // "PatientNumber": "",
+          // 'docname1': liveCaseController.fileName.value,
+          // 'doc1': "",
+        };
+        final requestBody= {
+
+            "locationId": 1,
+            "medicine": [
+              {
+                "item_ID": 0,
+                "item_Number": "string",
+                "quantity": 0,
+                "iD_Name": "string",
+                "iD_Value": "string"
+              }
+            ],
+            "cattleCount": 1,
+            "imeiNumber": "string",
+            "userId": 0,
+            "latitude": 43.73155,
+            "longitude": -79.76242,
+            "ownerNo": "8977771266",
+            "ownerName": "Sandeep",
+          "districtId": int.parse(districtController.selectedDistrictId.value),
+          "blockId": int.parse(blocksController.selectedBlockId.value),
+          "villageId": int.parse(locationSubTypeController.selectedLocationId.value),//
+            "address": "string",
+            "cattleName": "string",
+            "gender": 0,
+            "yearAge": 0,
+            "monthAge": 0,
+            "daysAge": 0,
+            "cattleType": int.parse(caseRegistrationController.cattleType.value),
+            "cattleSubType":int.parse(caseRegistrationController.cattleBreedType.value),
+            "incidentType": _selectedEventTypeId,
+            "incidentSubType": _selectedCaseTypeId,
+            "approvalRemark": "string",
+            "regnRemark": "string",
+            "doc1": "string",
+            "docName1": "string",
+            "doc2": "string",
+            "docName2": "string"
+
+        };
+
+        print("REQUEST BODY:");
+        print(jsonEncode(requestBody));
+
+        // Send the request
+        final response = await http.post(
+          Uri.parse('http://49.207.44.107/mvas/CreateCase'),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(requestBody),
+        );
+
+        print("RESPONSE STATUS: ${response.statusCode}");
+        print("RESPONSE BODY: ${response.body}");
+
+        if (response.statusCode == 200) {
+          setState(() {
+            isLoading = false;
+          });
+          final responseBody = jsonDecode(response.body);
+          if (responseBody['result'] == 0) {
+            Get.back();
+            Get.snackbar(
+              'Success',
+              'Case created successfully',
+              duration: const Duration(seconds: 3),
+            );
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+            Get.dialog(
+              AlertDialog(
+                title: const Text('Error'),
+                content: Text(responseBody['message'] ?? 'Unknown error'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
+          }
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          final responseBody = jsonDecode(response.body);
+          Get.dialog(
+            AlertDialog(
+              title: const Text('Error'),
+              content: Text(responseBody['reasonPhrase'] ?? 'Unknown error'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        print("ERROR: $e");
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Error'),
+            content: Text('Exception: $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -1170,136 +1534,6 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     );
   }
   bool isLoading = false;
-  Future<void> submitLivestockForm() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-      });
-
-      try {
-        // Convert medicine list to proper format
-        List<Map<String, dynamic>> medicineList = [];
-        for (var medicine in selectedMedicines) {
-          medicineList.add({
-            "item_name": medicine.itemName,
-            "item_unit": medicine.itemUnit,
-            "item_number": medicine.itemNumber,
-            "quantity": medicine.quantity.toString(),
-          });
-        }
-
-        // Create request body with proper types
-        final requestBody = {
-          "LocationID": int.tryParse(_formData['LocationID']) ?? 0,
-          "medicine": medicineList,
-          "CattleCount": int.tryParse(_formData['CattleCount']) ?? 1,
-          "ImeiNumber": "OnePlus_NE2211_347695b2fc87f884", // Replace with actual IMEI
-          "UserId": int.tryParse(_formData['UserId']) ?? 0,
-          "VehicleId": int.tryParse(_formData['VehicleId']) ?? 0,
-          "latitude": 43.73155,
-          "longitude": -79.76242,
-          "OwnerNo": _formData['OwnerNo'],
-          "OwnerName": _formData['OwnerName'],
-          "districtId": int.tryParse(_formData['districtId']) ?? 0,
-          "blockId": int.tryParse(_formData['blockId']) ?? 0,
-          "villageId": -1,
-          "Address": _formData['Address'],
-          "CattleName": _formData['CattleName'],
-          "Gender": _formData['Gender'] == 'Male' ? 0 : 1,
-          "YearAge": int.tryParse(_formData['YearAge']) ?? 0,
-          "MonthAge": int.tryParse(_formData['MonthAge']) ?? 0,
-          "DaysAge": int.tryParse(_formData['DaysAge']) ?? 0,
-          "CattleType": int.tryParse(_formData['CattleType']) ?? 0,
-          "CattleSubType": int.tryParse(_formData['CattleSubType']) ?? 0,
-          "IncidentType": int.tryParse(_formData['IncidentType']) ?? 0,
-          "IncidentSubType": int.tryParse(_formData['IncidentSubType']) ?? 0,
-          "ApprovalRemark": _formData['ApprovalRemark'],
-          "RegnRemark": _formData['RegnRemark'],
-          "PatientNumber": "",
-          "doc1": _formData['doc1'],
-          "docname1": _formData['docname1']
-        };
-
-        print("REQUEST BODY:");
-        print(jsonEncode(requestBody));
-
-        // Send the request
-        final response = await http.post(
-          Uri.parse('http://49.207.44.107/mvas/CreateCase'),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(requestBody),
-        );
-
-        print("RESPONSE STATUS: ${response.statusCode}");
-        print("RESPONSE BODY: ${response.body}");
-
-        if (response.statusCode == 200) {
-          final responseBody = jsonDecode(response.body);
-          if (responseBody['result'] == 0) {
-            Get.back();
-            Get.snackbar(
-              'Success',
-              'Case created successfully',
-              duration: const Duration(seconds: 3),
-            );
-          } else {
-            Get.dialog(
-              AlertDialog(
-                title: const Text('Error'),
-                content: Text(responseBody['message'] ?? 'Unknown error'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            );
-          }
-        } else {
-          final responseBody = jsonDecode(response.body);
-          Get.dialog(
-            AlertDialog(
-              title: const Text('Error'),
-              content: Text(responseBody['reasonPhrase'] ?? 'Unknown error'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
-          );
-        }
-      } catch (e) {
-        print("ERROR: $e");
-        Get.dialog(
-          AlertDialog(
-            title: const Text('Error'),
-            content: Text('Exception: $e'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
 
   void showAlert(String title,String msg){
     Get.defaultDialog(title: title,middleText: msg,

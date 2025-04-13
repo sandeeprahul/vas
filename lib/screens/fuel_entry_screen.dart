@@ -106,7 +106,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
   String _formatDateTime() {
     final now = DateTime.now();
-    return "${_twoDigits(now.day)}/${_twoDigits(now.month)}/${now.year} ${_twoDigits(now.hour)}:${_twoDigits(now.minute)}";
+    return "${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)} ${_twoDigits(now.hour)}:${_twoDigits(now.minute)}";
   }
 
   Future<void> _submitFuelEntry() async {
@@ -569,6 +569,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       CircularProgressIndicator(),
+                      SizedBox(height: 6,),
                       Text('Please wait...'),
 
                     ],

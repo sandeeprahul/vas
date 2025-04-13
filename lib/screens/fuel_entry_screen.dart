@@ -43,7 +43,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
   final billNoController = TextEditingController();
 
   // Variables
-  int modeOfPayment = 1; // 1 for cash, 2 for petrol card
+  int modeOfPayment = 0; // 0 for cash, 1 for petrol card
   String? odometerImageBase64;
   String? odometerImageName;
   String? billImageBase64;
@@ -106,7 +106,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
   String _formatDateTime() {
     final now = DateTime.now();
-    return "${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)} ${_twoDigits(now.hour)}:${_twoDigits(now.minute)}";
+    return "${_twoDigits(now.day)}/${_twoDigits(now.month)}/${now.year} ${_twoDigits(now.hour)}:${_twoDigits(now.minute)}";
   }
 
   Future<void> _submitFuelEntry() async {
@@ -133,30 +133,21 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
           'odometer': odometerAtFuelStationController.text,
           'odometer_Back_At_Base': odometerBackAtBaseController.text,
           'fuel_Station_Name': fuelStationNameController.text,
-          "mode_Of_Payment": modeOfPayment, // ✅ INT, not string like "Cash"
-          "quantity": int.parse(quantityController.text), // ✅ INT
-          "unit_Price": int.parse(unitPriceController.text), // ✅ INT
-
+          'quantity': quantityController.text,
+          'unit_Price': unitPriceController.text,
+          'mode_Of_Payment': modeOfPayment.toString(),
           'payment_Ref_No': paymentRefNoController.text,
           'bill_No': billNoController.text,
-          // 'doc_Odometer': "",
           'doc_Odometer': odometerImageBase64!,
           'doc_Odometer_Name': 'odo_${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}.jpg',
-          // 'doc_Bill': "",
           'doc_Bill': billImageBase64!,
           'doc_Bill_Name': 'bill_${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}.jpg',
-          'latitude': latitude,
-          'longitude': longitude,
+          'latitude': latitude.toString(),
+          'longitude': longitude.toString(),
         };
 
         print("REQUEST BODY:");
         print(requestBody);
-      var sss =   json.encode(requestBody);
-        print(sss);
-
-        // Start timing
-        final startTime = DateTime.now();
-        print("API REQUEST STARTED AT: ${startTime.toIso8601String()}");
 
         // Send the request
         final response = await http.post(
@@ -167,68 +158,89 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
           body: jsonEncode(requestBody),
         );
 
-        // End timing
-        final endTime = DateTime.now();
-        final duration = endTime.difference(startTime);
-        print("API REQUEST COMPLETED AT: ${endTime.toIso8601String()}");
-        print("TOTAL REQUEST DURATION: ${duration.inSeconds} seconds and ${duration.inMilliseconds % 1000} milliseconds");
-
         print("RESPONSE STATUS: ${response.statusCode}");
         print("RESPONSE BODY: ${response.body}");
-        var string = _formatDateTime();
-        print("FORMATEED TIME: $string");
 
         if (response.statusCode == 200) {
           final responseBody = jsonDecode(response.body);
           if (responseBody['result'] == 0) {
-
-
-            // final ticketNumber = responseBody['ticket_Number'];
+            final ticketNumber = responseBody['ticket_Number'];
             Get.back();
-
-
-            showAlert("Alert!", '${responseBody['message']}');
-
+            Get.snackbar(
+              'Success',
+              'Fuel record saved successfully. Ticket Number: $ticketNumber',
+              duration: const Duration(seconds: 5),
+            );
           } else {
-            showAlert("Error",responseBody['message'] ?? 'Unknown error');
-
+            Get.dialog(
+              AlertDialog(
+                title: const Text('Error'),
+                content: Text(responseBody['message'] ?? 'Unknown error'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
           }
         } else {
           final responseBody = jsonDecode(response.body);
-          showAlert("Error",responseBody['reasonPhrase'] ?? 'Unknown error');
-
-
+          Get.dialog(
+            AlertDialog(
+              title: const Text('Error'),
+              content: Text(responseBody['reasonPhrase'] ?? 'Unknown error'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
       } catch (e) {
         print("ERROR: $e");
-        showAlert("Error","Exception: $e");
-
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Error'),
+            content: Text('Exception: $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
       } finally {
         setState(() {
           isLoading = false;
         });
       }
     } else {
-      showAlert("Error","Please fill all required fields and capture both images");
-
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Please fill all required fields and capture both images'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
-  }
-
-  void showAlert(String title,String msg){
-    Get.dialog(
-      AlertDialog(
-        title:  Text(title),
-        content:  Text(msg),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
   void clearAll(){
     // Controllers
@@ -244,7 +256,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
 
     // Variables
-     modeOfPayment = 1; // 1 for cash, 2 for petrol card
+     modeOfPayment = 0; // 0 for cash, 1 for petrol card
      odometerImageBase64 = '';
      odometerImageName = '';
      billImageBase64 = '';
@@ -282,7 +294,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.light.primaryColor.withOpacity(0.05),
+              AppThemes.light.primaryColor,
               Colors.white,
             ],
           ),
@@ -649,7 +661,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
             Expanded(
               child: RadioListTile<int>(
                 title: const Text('Cash'),
-                value: 1,
+                value: 0,
                 groupValue: modeOfPayment,
                 onChanged: (value) {
                   setState(() {
@@ -661,7 +673,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
             Expanded(
               child: RadioListTile<int>(
                 title: const Text('Petrol Card'),
-                value: 2,
+                value: 1,
                 groupValue: modeOfPayment,
                 onChanged: (value) {
                   setState(() {

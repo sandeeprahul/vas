@@ -7,10 +7,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vas/controllers/ambulance_controller.dart';
-import 'package:vas/controllers/blocks_controller.dart';
-import 'package:vas/controllers/districts_controller.dart';
-import 'package:vas/controllers/location_sub_type_controller.dart';
-import 'package:vas/controllers/location_type_controller.dart';
 import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/screens/case_details_screen.dart';
 import 'package:vas/screens/dashboard_page.dart';
@@ -40,8 +36,8 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   List<IncidentSubType> _incidentSubTypes = [];
   List<String> _filteredSubTypes = [];
 
-  int? _selectedEventType;
-  int? _selectedCaseType;
+  String? _selectedEventType;
+  String? _selectedCaseType;
 
   // Dynamic form fields based on registration type
 
@@ -85,15 +81,15 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: DropdownButtonFormField<int>(
+              child: DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   labelText: 'Event Type',
                   border: InputBorder.none,
                 ),
                 value: _selectedEventType,
                 items: _incidentTypes.map((e) {
-                  return DropdownMenuItem<int>(
-                    value: e.incidentId,
+                  return DropdownMenuItem<String>(
+                    value: e.incidentName,
                     child: Text(e.incidentName!),
                   );
                 }).toList(),
@@ -139,7 +135,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: DropdownButtonFormField<int>(
+              child: DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   labelText: 'Case Type',
                   border: InputBorder.none,
@@ -174,11 +170,10 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           _buildDropdown('Gender', ['M', 'F'], 'Gender'),
           const SizedBox(height: 10),
-          _buildSectionTitle("Cattle Details"),
-
           Row(
             children: [
-              Expanded(child: _buildTextField('Age(Years)', 'Years')),
+              Expanded(
+                  child: _buildTextField('Cattle\'s Age (Years)', 'Years')),
               const SizedBox(
                 width: 12,
               ),
@@ -196,9 +191,12 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           buildDiseaseDropdown(),
           const SizedBox(height: 44),
-
-          _buildSectionTitle("Items"),
-
+          const Text(
+            'Items',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.black, fontSize: 26, fontWeight: FontWeight.bold),
+          ),
           buildMedicineSelector(),
           const SizedBox(height: 10),
           // _buildTextField('Remark', 'Remark'),
@@ -213,7 +211,8 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: _buildTextField('Age (Years)', 'Years')),
+              Expanded(
+                  child: _buildTextField('Cattle\'s Age (Years)', 'Years')),
               const SizedBox(
                 width: 12,
               ),
@@ -238,9 +237,12 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           _buildTextField('Unit', 'Unit'),
           buildDiseaseDropdown(),
           const SizedBox(height: 66),
-
-          _buildSectionTitle("Items"),
-
+          const Text(
+            'Items',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.black, fontSize: 26, fontWeight: FontWeight.bold),
+          ),
           buildMedicineSelector(),
           const SizedBox(height: 10),
           // _buildTextField('Remark', 'Remark'),
@@ -253,7 +255,6 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           _buildTextField('No of Species', 'NoOfSpecies'),
           const SizedBox(height: 10),
-          _buildSectionTitle("Cattle Details"),
           Row(
             children: [
               Expanded(
@@ -282,28 +283,18 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           const SizedBox(height: 10),
           _buildTextField('Unit', 'Unit'),
           const SizedBox(height: 66),
-          _buildSectionTitle("Items"),
-
+          const Text(
+            'Items',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.black, fontSize: 26, fontWeight: FontWeight.bold),
+          ),
           buildMedicineSelector(),
           const SizedBox(height: 10),
         ];
       default:
         return [];
     }
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 24, 4, 12),
-      child: Text(
-        title,
-        style: GoogleFonts.montserrat(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: AppThemes.light.primaryColor,
-        ),
-      ),
-    );
   }
 
   List<DiseaseType> diseaseList = [];
@@ -344,7 +335,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   List<PatientSubType> _allSubtypes = [];
   List<String> _breedOptions = [];
 
-  int? _selectedType;
+  String? _selectedType;
   String? _selectedBreed;
 
   Future<void> loadPatientTypes() async {
@@ -388,7 +379,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: DropdownButtonFormField<int>(
+              child: DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   labelText: 'Cattle\'s Type',
                   border: InputBorder.none,
@@ -396,7 +387,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                 value: _selectedType,
                 items: _types.map((type) {
                   return DropdownMenuItem(
-                    value: type.pT_ID,
+                    value: type.pT_TEXT,
                     child: Text(type.pT_TEXT),
                   );
                 }).toList(),
@@ -405,8 +396,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                     _selectedType = value;
                     _breedOptions = _allSubtypes
                         .where((s) =>
-                            s.pT_ID ==
-                            _types.firstWhere((t) => t.pT_TEXT == value).pT_ID)
+                            s.pT_ID == _types.firstWhere((t) => t.pT_TEXT == value).pT_ID)
                         .map((s) => s.ptS_TEXT)
                         .toList();
                     _selectedBreed = null;
@@ -439,14 +429,10 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
               ),
               child: Icon(Icons.pets, color: AppThemes.light.primaryColor),
             ),
-            SizedBox(
-              width: 16,
-            ),
+            SizedBox(width: 16,),
             Expanded(
               child: DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Cattle\'s Breed',
-                  border: InputBorder.none, // 🔥 Removes underline
+                decoration: const InputDecoration(labelText: 'Cattle\'s Breed',    border: InputBorder.none, // 🔥 Removes underline
                 ),
                 value: _selectedBreed,
                 items: _breedOptions.map((breed) {
@@ -455,6 +441,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                     child: Text(breed),
                   );
                 }).toList(),
+
                 onChanged: (value) {
                   setState(() {
                     _selectedBreed = value;
@@ -515,8 +502,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                     color: AppThemes.light.primaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(Icons.medication,
-                      color: AppThemes.light.primaryColor),
+                  child: Icon(Icons.medication, color: AppThemes.light.primaryColor),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -525,8 +511,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                     items: medicineList.map((medicine) {
                       return DropdownMenuItem(
                         value: medicine,
-                        child:
-                            Text('${medicine.itemName} (${medicine.itemUnit})'),
+                        child: Text('${medicine.itemName} (${medicine.itemUnit})'),
                       );
                     }).toList(),
                     onChanged: (value) {
@@ -561,8 +546,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                     color: AppThemes.light.primaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child:
-                      Icon(Icons.numbers, color: AppThemes.light.primaryColor),
+                  child: Icon(Icons.numbers, color: AppThemes.light.primaryColor),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -590,8 +574,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             padding: const EdgeInsets.all(16),
             child: ElevatedButton(
               onPressed: () {
-                if (selectedMedicine != null &&
-                    quantityController.text.isNotEmpty) {
+                if (selectedMedicine != null && quantityController.text.isNotEmpty) {
                   setState(() {
                     selectedMedicines.add(MedicineItem(
                       quantity: quantityController.text,
@@ -712,7 +695,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
         side: BorderSide(color: Colors.grey.shade200),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Row(
           children: [
             Container(
@@ -758,7 +741,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
         side: BorderSide(color: Colors.grey.shade200),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(16),
         child: Row(
           children: [
             Container(
@@ -774,7 +757,6 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
               child: TextFormField(
                 decoration: InputDecoration(
                   labelText: label,
-                  labelStyle: const TextStyle(fontSize: 12),
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
@@ -826,8 +808,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                 color: AppThemes.light.primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(Icons.medical_services,
-                  color: AppThemes.light.primaryColor),
+              child: Icon(Icons.medical_services, color: AppThemes.light.primaryColor),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -835,8 +816,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Disease Type',
                   border: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
                 ),
                 value: selectedDisease,
                 items: _diseaseTypes
@@ -885,84 +865,90 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     fetchMedicines();
   }
 
-  // Map<String, dynamic> buildLivestockJsonffff() {
-  //   final liveCaseController = Get.put(LivestockController());
-  //   final formData = liveCaseController.formData;
-  //   return {
-  //     // 'ambulance_no': formData['AmbulanceNo'],
-  //     "LocationID": 29078,
-  //     "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
-  //     "CattleCount": 1,
-  //     "ImeiNumber": "OnePlus_NE2211_347695b2fc87f884",
-  //     "UserId": 800,
-  //     "VehicleId": 330,
-  //     "latitude": 43.73155,
-  //     "longitude": -79.76242,
-  //     "OwnerNo": liveCaseController.formData['OwnersContactNo'],
-  //     "OwnerName": liveCaseController.formData['Owners Name'],
-  //     "districtId": 1,
-  //     "blockId": 1,
-  //     "villageId": -1,
-  //     "Address": "-",
-  //     "CattleName": "a",
-  //     // "Gender": _formData['Gender'],
-  //     "YearAge": _formData['Years'],
-  //     "MonthAge": _formData['Months'],
-  //     "DaysAge": "1",
-  //     "CattleType": _selectedType,
-  //     "CattleSubType": _selectedBreed,
-  //     "IncidentType": _selectedEventType,
-  //     "IncidentSubType": _selectedCaseType,
-  //     "ApprovalRemark": liveCaseController.approvalRemark.value,
-  //     "RegnRemark": liveCaseController.registrationRemark.value,
-  //     "PatientNumber": "",
-  //     'docname1': liveCaseController.fileName.value,
-  //     'doc1': "",
-  //     // 'doc1': liveCaseController.base64File.value,
-  //     // 'selected_medicines': selectedMedicines.map((med) => med.toJson()).toList(),
-  //   };
-  // }
 
   Map<String, dynamic> buildLivestockJson() {
     final liveCaseController = Get.put(LivestockController());
     final formData = liveCaseController.formData;
-    final ambulanceController = Get.put(AmbulanceController());
     final userController = Get.put(UserController());
-    final districtController = Get.put(DistrictsController());
-    final blocksController = Get.put(BlocksController());
-    final locationTypeController = Get.put(LocationTypeController());
-    final locationSubTypeController = Get.put(LocationSubTypeController());
+    //  final formData = {
+    //         'AmbulanceNo': _ambulanceNoController.text,
+    //         'OwnersContactNo': _ownerContactNoController.text,
+    //         'Owners Name': _ownerNameController.text,
+    //         'District': _districtController.text,
+    //         'Block': _blockController.text,
+    //         'Village': _villageController.text,
+    //         'Category': _category,
+    //       };
     return {
-      "Address":
-          "",
-      "blockId": blocksController.selectedBlockId.value,
-      "CattleCount": 1,
-      "CattleName": "a",
-      "districtId": districtController.selectedDistrictId.value,
-      "doc1": "",
-      "docname1": "test1.jpg",
-      "Gender": _formData['Gender'],
-      "ImeiNumber": "",
-      "CattleType": _selectedType,
-      "CattleSubType": 11,
-      "IncidentType": _selectedEventType,
-      "IncidentSubType": _selectedCaseType,
-      "latitude": 43.73155,
-      "LocationID": locationTypeController.selectedLocationType.value,
-      "longitude": -79.76242,
+      // 'ambulance_no': formData['AmbulanceNo'],
+      "LocationID": 0,
       "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
-      "OwnerName": formData['Owners Name'],
-      "OwnerNo": formData['OwnersContactNo'],
-      "PatientNumber": formData['OwnersContactNo'],
-      "ApprovalRemark": liveCaseController.approvalRemark.value,
-      "RegnRemark": liveCaseController.registrationRemark.value,
+      "CattleCount": 1,
+      "ImeiNumber": "",
       "UserId": userController.userId.value,
-      "VehicleId": ambulanceController.selectedAmbulanceId.value,
-      "villageId": locationSubTypeController.selectedLocationId.value,
+      "VehicleId": liveCaseController.formData['AmbulanceNo'],
+      "latitude": 43.73155,
+      "longitude": -79.76242,
+      "OwnerNo": liveCaseController.formData['OwnersContactNo'],
+      "OwnerName": liveCaseController.formData['Owners Name'],
+      "districtId": liveCaseController.formData['District'],
+      "blockId": liveCaseController.formData['Block'],
+      "villageId": liveCaseController.formData['Village'],//
+      "Address": "-",
+      "CattleName": "a",
+      // "Gender": _formData['Gender'],
       "YearAge": _formData['Years'],
       "MonthAge": _formData['Months'],
-      "DaysAge": 1
+      "DaysAge": "0",
+      "CattleType": _selectedType,
+      "CattleSubType": _selectedBreed,
+      "IncidentType": _selectedEventType,
+      "IncidentSubType": _selectedCaseType,
+      "ApprovalRemark": liveCaseController.approvalRemark.value,
+      "RegnRemark": liveCaseController.registrationRemark.value,
+      "PatientNumber": "",
+      'docname1': liveCaseController.fileName.value,
+      'doc1': "",
+      // 'doc1': liveCaseController.base64File.value,
+      // 'selected_medicines': selectedMedicines.map((med) => med.toJson()).toList(),
     };
+
+  }
+  Map<String, dynamic> buildLivestockJsondddd() {
+    final liveCaseController = Get.put(LivestockController());
+    final formData = liveCaseController.formData;
+    final ambulanceController = Get.put(AmbulanceController());
+    return {
+      "Address": "-",
+      "ApprovalRemark": "test",
+      "blockId": 1,
+      "CattleCount": 1,
+      "CattleName": "a",
+      "CattleSubType": 16,
+      "CattleType": 11,
+      "DaysAge": 0,
+      "districtId": 1,
+      "doc1": "",
+      "docname1": "test1.jpg",
+      "Gender": 0,
+      "ImeiNumber": "OnePlus_NE2211_347695b2fc87f884",
+      "IncidentSubType": 1730,
+      "IncidentType": 234,
+      "latitude": 43.73155,
+      "LocationID": 29078,
+      "longitude": -79.76242,
+      "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
+      "MonthAge": 0,
+      "OwnerName": "a",
+      "OwnerNo": "8787878787",
+      "PatientNumber": "",
+      "RegnRemark": "test",
+      "UserId": 1888,
+      "VehicleId":ambulanceController.selectedAmbulanceId.value ,
+      "villageId": -1,
+      "YearAge": 2
+    };
+
   }
 
   @override
@@ -979,7 +965,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.light.primaryColor.withOpacity(0.05),
+              AppThemes.light.primaryColor,
               Colors.white,
             ],
           ),
@@ -1003,12 +989,10 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color:
-                                AppThemes.light.primaryColor.withOpacity(0.1),
+                            color: AppThemes.light.primaryColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(Icons.app_registration,
-                              color: AppThemes.light.primaryColor),
+                          child: Icon(Icons.app_registration, color: AppThemes.light.primaryColor),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
@@ -1031,8 +1015,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                             onChanged: (value) {
                               setState(() {
                                 _registrationType = value!;
-                                _formData
-                                    .clear(); // Clear form data when type changes
+                                _formData.clear(); // Clear form data when type changes
                               });
                             },
                           ),
@@ -1062,12 +1045,10 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
       ),
     );
   }
-
   void showApprovalDialog() {
     final liveCaseController = Get.put(LivestockController());
     final TextEditingController approvalController = TextEditingController();
-    final TextEditingController registrationController =
-        TextEditingController();
+    final TextEditingController registrationController = TextEditingController();
 
     Get.defaultDialog(
       title: 'Submit Remarks',
@@ -1086,12 +1067,10 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: const Icon(
-                  Icons.camera_alt_outlined,
-                  size: 44,
-                ),
+                icon: const Icon(Icons.camera_alt_outlined,size: 44,),
                 // label: const Text("Pick Image"),
                 onPressed: () async {
+
                   var status = await Permission.camera.status;
 
                   if (!status.isGranted) {
@@ -1106,51 +1085,46 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   }
 
                   final picker = ImagePicker();
-                  final XFile? pickedFile =
-                      await picker.pickImage(source: ImageSource.camera);
+                  final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera);
 
                   if (pickedFile != null) {
                     final bytes = await pickedFile.readAsBytes();
                     final base64Str = base64Encode(bytes);
-                    final filename =
-                        pickedFile.name; // 👈 gets the actual filename
-                    Get.put(LivestockController())
-                        .setSelectedFile(File(pickedFile.path));
+                    final filename = pickedFile.name; // 👈 gets the actual filename
+                    Get.put(LivestockController()).setSelectedFile(File(pickedFile.path));
 
-                    liveCaseController.setBase64File(
-                        base64Str, filename); // pass both
+                    liveCaseController.setBase64File(base64Str, filename); // pass both
                     Get.snackbar('Success', 'Image selected successfully');
                   } else {
-                    Get.snackbar('No image selected', '',
-                        snackPosition: SnackPosition.BOTTOM);
+                    Get.snackbar('No image selected', '', snackPosition: SnackPosition.BOTTOM);
                   }
                 },
               ),
               const Text('or'),
               IconButton(
-                icon: const Icon(Icons.upload_file_rounded, size: 44),
+                icon: const Icon(Icons.upload_file_rounded,size: 44),
                 // label: const Text("Pick File"),
                 onPressed: () async {
+
+
+
                   final picker = ImagePicker();
-                  final XFile? pickedFile =
-                      await picker.pickImage(source: ImageSource.gallery);
+                  final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
                   if (pickedFile != null) {
                     final bytes = await pickedFile.readAsBytes();
                     final base64Str = base64Encode(bytes);
-                    final filename =
-                        pickedFile.name; // 👈 gets the actual filename
+                    final filename = pickedFile.name; // 👈 gets the actual filename
 
-                    liveCaseController.setBase64File(
-                        base64Str, filename); // pass both
+                    liveCaseController.setBase64File(base64Str, filename); // pass both
 
                     Get.snackbar('Success', 'File selected successfully');
                   } else {
-                    Get.snackbar('No file selected', '',
-                        snackPosition: SnackPosition.BOTTOM);
+                    Get.snackbar('No file selected', '', snackPosition: SnackPosition.BOTTOM);
                   }
                 },
               ),
+
             ],
           ),
           Obx(() {
@@ -1174,6 +1148,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
               return const Text('No image selected');
             }
           }),
+
         ],
       ),
       textConfirm: 'Submit',
@@ -1183,85 +1158,157 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
         liveCaseController.setApprovalRemark(approvalController.text);
         liveCaseController.setRegistrationRemark(registrationController.text);
 
+
+
         // Optional: show loading
         Get.back(); // close the dialog
-        Get.dialog(const Center(child: CircularProgressIndicator()),
-            barrierDismissible: false);
+        Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
 
-        await submitLivestockForm(
-          formFields: buildLivestockJson(),
-          // documentFile: liveCaseController.selectedFile.value,
-        );
+        await submitLivestockForm();
+
       },
     );
   }
+  bool isLoading = false;
+  Future<void> submitLivestockForm() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
 
-  Future<void> submitLivestockForm({
-    required Map<String, dynamic> formFields,
-    // File? documentFile,
-  }) async {
-    try {
-      // Convert form fields to the required format
-      final requestData = {
-        ...formFields,
-      };
+      try {
+        // Convert medicine list to proper format
+        List<Map<String, dynamic>> medicineList = [];
+        for (var medicine in selectedMedicines) {
+          medicineList.add({
+            "item_name": medicine.itemName,
+            "item_unit": medicine.itemUnit,
+            "item_number": medicine.itemNumber,
+            "quantity": medicine.quantity.toString(),
+          });
+        }
 
-      ApiService apiService = ApiService();
-      print(requestData);
-     var soss=  jsonEncode(requestData);
-     print(soss);
-      // final response = await apiService.postRequest("/CreateCase", requestData);
+        // Create request body with proper types
+        final requestBody = {
+          "LocationID": int.tryParse(_formData['LocationID']) ?? 0,
+          "medicine": medicineList,
+          "CattleCount": int.tryParse(_formData['CattleCount']) ?? 1,
+          "ImeiNumber": "OnePlus_NE2211_347695b2fc87f884", // Replace with actual IMEI
+          "UserId": int.tryParse(_formData['UserId']) ?? 0,
+          "VehicleId": int.tryParse(_formData['VehicleId']) ?? 0,
+          "latitude": 43.73155,
+          "longitude": -79.76242,
+          "OwnerNo": _formData['OwnerNo'],
+          "OwnerName": _formData['OwnerName'],
+          "districtId": int.tryParse(_formData['districtId']) ?? 0,
+          "blockId": int.tryParse(_formData['blockId']) ?? 0,
+          "villageId": -1,
+          "Address": _formData['Address'],
+          "CattleName": _formData['CattleName'],
+          "Gender": _formData['Gender'] == 'Male' ? 0 : 1,
+          "YearAge": int.tryParse(_formData['YearAge']) ?? 0,
+          "MonthAge": int.tryParse(_formData['MonthAge']) ?? 0,
+          "DaysAge": int.tryParse(_formData['DaysAge']) ?? 0,
+          "CattleType": int.tryParse(_formData['CattleType']) ?? 0,
+          "CattleSubType": int.tryParse(_formData['CattleSubType']) ?? 0,
+          "IncidentType": int.tryParse(_formData['IncidentType']) ?? 0,
+          "IncidentSubType": int.tryParse(_formData['IncidentSubType']) ?? 0,
+          "ApprovalRemark": _formData['ApprovalRemark'],
+          "RegnRemark": _formData['RegnRemark'],
+          "PatientNumber": "",
+          "doc1": _formData['doc1'],
+          "docname1": _formData['docname1']
+        };
 
-      final response = await http.post(
-        Uri.parse("http://49.207.44.107/mvas/CreateCase"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(requestData),
-      );
-      if (response.statusCode == 200) {
-        var responseBody = jsonDecode(response.body);
-        if (responseBody != null) {
-          if (responseBody["result"] == 0) {
-            Get.back(); // Close loading
-            Get.defaultDialog(
-              title: 'Success',
-              middleText: 'Do you want to continue with the same owner?',
-              textConfirm: 'Yes',
-              textCancel: 'No',
-              onConfirm: () {
-                // Navigate to another screen
-                Get.off(() => const CaseDetailsScreen());
-              },
-              onCancel: () {
-                Get.put(LivestockController()).clearAll();
-                Get.offAll(() => DashboardPage());
-              },
+        print("REQUEST BODY:");
+        print(jsonEncode(requestBody));
+
+        // Send the request
+        final response = await http.post(
+          Uri.parse('http://49.207.44.107/mvas/CreateCase'),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(requestBody),
+        );
+
+        print("RESPONSE STATUS: ${response.statusCode}");
+        print("RESPONSE BODY: ${response.body}");
+
+        if (response.statusCode == 200) {
+          final responseBody = jsonDecode(response.body);
+          if (responseBody['result'] == 0) {
+            Get.back();
+            Get.snackbar(
+              'Success',
+              'Case created successfully',
+              duration: const Duration(seconds: 3),
             );
           } else {
-            print(responseBody["message"]);
-            Get.back();
-            Get.snackbar('Error', responseBody["message"] ?? 'Unknown error',
-                backgroundColor: Colors.red, overlayBlur: 2);
+            Get.dialog(
+              AlertDialog(
+                title: const Text('Error'),
+                content: Text(responseBody['message'] ?? 'Unknown error'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
           }
+        } else {
+          final responseBody = jsonDecode(response.body);
+          Get.dialog(
+            AlertDialog(
+              title: const Text('Error'),
+              content: Text(responseBody['reasonPhrase'] ?? 'Unknown error'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
-      } else {
-        var responseBody = jsonDecode(response.body);
-        print(response.statusCode);
-        print(responseBody["message"]);
-        print(responseBody);
-
-        Get.back();
-        Get.snackbar(
-            'Error', '${response.statusCode} ${responseBody['reasonPhrase']}',
-            backgroundColor: Colors.red, overlayBlur: 2);
+      } catch (e) {
+        print("ERROR: $e");
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Error'),
+            content: Text('Exception: $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
       }
-    } catch (e) {
-      print(e);
-
-      Get.back();
-      Get.snackbar('Error', 'Exception: $e',
-          backgroundColor: Colors.red, overlayBlur: 2);
     }
   }
+
+  void showAlert(String title,String msg){
+    Get.defaultDialog(title: title,middleText: msg,
+        textConfirm: 'OK',
+        onConfirm: (){
+      Get.back();
+    });
+  }
+
 }
 
 class SelectedMedicine {

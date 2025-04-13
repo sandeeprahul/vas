@@ -61,7 +61,7 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.light.primaryColor.withOpacity(0.05),
+              AppThemes.light.primaryColor,
               Colors.white,
             ],
           ),
@@ -79,27 +79,58 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
                         "id",
                         "asseT_NO");
                   },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
+                  child: Card(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(color:  Colors.grey.shade200),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          ambulanceController.selectedAmbulanceName.value,
-                          style: TextStyle(
-                              color: ambulanceController
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+
+                      child: Row(
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppThemes.light.primaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(Icons.emergency, color: AppThemes.light.primaryColor),
+                          ),
+                          const SizedBox(width: 16),
+
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Select Ambulance',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                      color: ambulanceController
                                           .selectedAmbulanceName.value ==
-                                      "Ambulance"
-                                  ? Colors.grey
-                                  : Colors.black),
-                        ),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
+                                          "Ambulance"
+                                          ? Colors.grey
+                                          : Colors.black),
+                                ),
+                                const SizedBox(height: 4,),
+                                Text(
+                                  ambulanceController.selectedAmbulanceName.value,
+                                  style: TextStyle(
+                                      color: ambulanceController
+                                                  .selectedAmbulanceName.value ==
+                                              "Ambulance"
+                                          ? Colors.grey
+                                          : Colors.black),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
                     ),
                   ),
                 )),
@@ -308,7 +339,7 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
       String formattedEndpoint = '/GetFuelRecord';
       var jsonData = {
         "user_ID": userId,
-        "vehiclE_ID": 2,
+        "vehiclE_ID": ambulanceId,
         // "vehiclE_ID": ambulanceId,
         "vehiclE_NO": vehicleNo,
         "mobilE_NO": ""

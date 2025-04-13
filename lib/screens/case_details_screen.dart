@@ -80,7 +80,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.light.primaryColor.withOpacity(0.05),
+              AppThemes.light.primaryColor,
               Colors.white,
             ],
           ),

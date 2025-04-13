@@ -134,7 +134,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.light.primaryColor.withOpacity(0.05),
+              AppThemes.light.primaryColor,
               Colors.white,
             ],
           ),
@@ -147,7 +147,17 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle("Location Details"),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(4, 24, 4, 12),
+                      child: Text(
+                        'Location Details',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                     Obx(() {
                       return _buildSelectionCard(
                         icon: Icons.location_on,

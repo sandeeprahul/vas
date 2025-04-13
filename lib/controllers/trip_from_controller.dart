@@ -240,6 +240,7 @@ class FormController extends GetxController {
 
       var forLog = jsonEncode(formData);
       print("Submitting Form Data: $forLog");
+      print("Submitting Form Data: $forLog");
 
       // Make API POST request
       final response = await apiService.postRequest("/StartTrip", formData);
@@ -253,13 +254,6 @@ class FormController extends GetxController {
         // Handle success (e.g., show success message, navigate, etc.)
 
         if (response['result'] == 1) {
-          int tripId = response['trip_ID']; // Extract trip ID
-
-          TripDetailsModel tripDetails = TripDetailsModel.fromJson(formData);
-          final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-          // await saveTripDetails("StartTrip", tripId, tripDetails,
-          //     "${response['start_Time']}");
 
           TripController tripController = Get.put(TripController());
           tripController.fetchTripDetails();
@@ -299,7 +293,7 @@ class FormController extends GetxController {
     final locationTypeController = Get.put(LocationTypeController());
     final locationSubTypeController = Get.put(LocationSubTypeController());
 
-    final ambulanceController = Get.put(AmbulanceController());
+    // final ambulanceController = Get.put(AmbulanceController());
     final blocksController = Get.put(BlocksController());
     final districtsController = Get.put(DistrictsController());
     selectedDriverId.value = "";
@@ -313,8 +307,8 @@ class FormController extends GetxController {
     locationSubTypeController.selectedLocationId.value = "";
     locationTypeController.selectedLocationType.value = "Select LocationType";
     locationTypeController.selectedLocationTypeId.value = "";
-    ambulanceController.selectedAmbulanceId.value = "";
-    ambulanceController.selectedAmbulanceName.value = "Select Ambulance";
+    // ambulanceController.selectedAmbulanceId.value = "";
+    // ambulanceController.selectedAmbulanceName.value = "Select Ambulance";
     blocksController.selectedBlockId.value = "";
     blocksController.selectedBlock.value = "Select Block";
     districtsController.selectedDistrictId.value = "";
@@ -323,8 +317,8 @@ class FormController extends GetxController {
     departureOdometerController.text="";
     backToBaseOdometerController.text="";
     baseOdometerController.text = "";
-    ambulanceController.selectedAmbulanceId.value="";
-    ambulanceController.selectedAmbulanceName.value="Select Ambulance";
+    // ambulanceController.selectedAmbulanceId.value="";
+    // ambulanceController.selectedAmbulanceName.value="Select Ambulance";
 
 
     tripDetails.value = null;

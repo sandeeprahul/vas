@@ -74,7 +74,7 @@ class ApiService {
       final response = await http.get(
         Uri.parse("$baseUrl$endpoint"),
         headers: {"Content-Type": "application/json"},
-      );
+      ).timeout(const Duration(seconds: 10));
       print("GETTING request");
       print("$baseUrl$endpoint");
 

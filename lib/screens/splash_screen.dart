@@ -15,8 +15,8 @@ class SplashScreen extends StatelessWidget {
     // Initialize LoginController only here
     final LoginController loginController = Get.put(LoginController());
 
-    // Check login status after 2 seconds
-    Future.delayed(const Duration(seconds: 2), () {
+    /// Check login status after 2 seconds
+     Future.delayed(const Duration(seconds: 2), () {
       loginController.checkLoginStatus();
     });
 
@@ -33,19 +33,30 @@ class SplashScreen extends StatelessWidget {
             ],
           ),
         ),
-        child: const Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('VAS',style: TextStyle(fontSize: 66,fontWeight: FontWeight.w600),),
-              Text('Powered By',style: TextStyle(fontSize: 14),),
-              Text('BHY',style: TextStyle(fontSize: 14),),
-            ],
-          ),
+        child: const Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'VAS',
+                    style: TextStyle(fontSize: 66, fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    'Powered By',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Text(
+                    'BHY',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
-

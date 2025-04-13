@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../controllers/blocks_controller.dart';
 import '../controllers/districts_controller.dart';
 import '../controllers/live_stock_controller.dart';
@@ -9,6 +9,7 @@ import '../controllers/location_type_controller.dart';
 import '../controllers/user_controller.dart';
 import '../widgets/trip_details_widget.dart';
 import 'cattle_registration_screen.dart';
+import '../theme.dart';
 
 class CaseDetailsScreen extends StatefulWidget {
   const CaseDetailsScreen({super.key});
@@ -62,6 +63,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
     // TODO: implement initState
     super.initState();
     tripController.fetchTripDetails();
+
   }
 
   @override
@@ -69,252 +71,337 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Case Registration New'),
+        elevation: 0,
+        backgroundColor: AppThemes.light.primaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              Obx(() {
-                final trip = tripController.tripDetails.value;
-                if (trip == null) {
-                  return const Center(child: Text("No trip details available"));
-                }
-              return   Row(
-                  children: [
-                    const Expanded(child: Text('Ambulance No:')),
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey), // Grey border
-                          borderRadius: BorderRadius.circular(8), // Rounded corners
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                trip.vehicle,
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ),
-                            // const Icon(Icons.arrow_drop_down), // Dropdown icon
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _ownerContactNoController,
-                maxLength: 10,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Owner\'s Contact No',
-                  hintText: 'Enter Owner\'s Contact Number',
-                ),
-                keyboardType: TextInputType.phone,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the contact number';
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppThemes.light.primaryColor.withOpacity(0.05),
+              Colors.white,
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                Obx(() {
+                  final trip = tripController.tripDetails.value;
+                  if (trip == null) {
+                    return const Center(child: Text("No trip details available"));
                   }
-                  if (value.length != 10) {
-                    return 'Contact number must be 10 digits';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _ownerNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Owner\'s Name',
-                  border: OutlineInputBorder(),
+                  return _buildInputCard(
+                    icon: Icons.emergency,
+                    title: 'Ambulance No',
+                    value: trip.vehicle,
+                    edit: false,
+                  );
+                }),
+                const SizedBox(height: 16),
 
-                  hintText: 'Enter Owner\'s Name',
+                // Owner's Contact No
+                _buildInputCard(
+                  icon: Icons.phone,
+                  title: 'Owner\'s Contact No',
+                  controller: _ownerContactNoController,
+                  keyboardType: TextInputType.phone,
+                  edit: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the contact number';
+                    }
+                    if (value.length != 10) {
+                      return 'Contact number must be 10 digits';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the owner\'s name';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 18),
-              Obx(() => GestureDetector(
-                onTap: () {
-                  _showSelectionDialog(
+                const SizedBox(height: 16),
+
+                // Owner's Name
+                _buildInputCard(
+                  icon: Icons.person,
+                  title: 'Owner\'s Name',
+                  controller: _ownerNameController,
+                  edit: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the owner\'s name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // District Dropdown
+                Obx(() => GestureDetector(
+                  onTap: () {
+                    _showSelectionDialog(
                       "District",
                       districtsController.selectedDistrict,
                       districtsController.selectedDistrictId,
                       districtsController.districtsList,
                       "id",
-                      "name");
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 16),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
+                      "name",
+                    );
+                  },
+                  child: _buildInputCard(
+                    icon: Icons.location_city,
+                    title: 'District',
+                    value: districtsController.selectedDistrict.value,
+                    edit: false,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        districtsController.selectedDistrict.value,
-                        style: TextStyle(
-                            color:
-                            districtsController.selectedDistrict.value ==
-                                "District"
-                                ? Colors.grey
-                                : Colors.black),
-                      ),
-                      const Icon(Icons.arrow_drop_down),
-                    ],
-                  ),
-                ),
-              )),
+                )),
+                const SizedBox(height: 16),
 
 
-              const SizedBox(
-                height: 14,
-              ),
-              _buildDropdownField(
+                // Block Dropdown
+                _buildDropdownField(
                   "Block",
                   blocksController.selectedBlock,
                   blocksController.selectedBlockId,
                   blocksController.blocksList,
                   "blockId",
-                  "name"),
-              //    blocksController.getBlocks(districtsController.selectedDistrictId.value,userController.userId.value);
-              const SizedBox(
-                height: 14,
-              ),
+                  "name",Icons.streetview
+                ),
+                const SizedBox(height: 16),
 
-
-
-              Obx(() => GestureDetector(
-                onTap: () {
-                  _showSelectionDialog(
+                // Location Type Dropdown
+                Obx(() => GestureDetector(
+                  onTap: () {
+                    _showSelectionDialog(
                       "LocationType",
                       locationTypeController.selectedLocationType,
                       locationTypeController.selectedLocationTypeId,
                       locationTypeController.locationTypes,
                       "stopType_ID",
-                      "stopType_Name");
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 16),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
+                      "stopType_Name",
+                    );
+                  },
+                  child: _buildInputCard(
+                    icon: Icons.place,
+                    title: 'Location Type',
+                    value: locationTypeController.selectedLocationType.value,
+                    edit: false,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        locationTypeController.selectedLocationType.value,
-                        style: TextStyle(
-                            color: locationTypeController
-                                .selectedLocationType.value ==
-                                "Location"
-                                ? Colors.grey
-                                : Colors.black),
-                      ),
-                      const Icon(Icons.arrow_drop_down),
-                    ],
-                  ),
-                ),
-              )),
+                )),
+                const SizedBox(height: 16),
 
-              const SizedBox(
-                height: 14,
-              ),
-
-              _buildDropdownField(
+                // Location Dropdown
+                _buildDropdownField(
                   "Location",
                   locationSubTypeController.selectedLocationName,
                   locationSubTypeController.selectedLocationId,
                   locationSubTypeController.location,
                   "stop_ID",
-                  "stop_Name"),
+                  "stop_Name",
+                    Icons.add_location_alt_rounded
 
+                ),
+                const SizedBox(height: 16),
 
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Category',border: OutlineInputBorder()),
-                value: _category,
-                items: _categories.map((category) {
-                  return DropdownMenuItem(
-                    value: category,
-                    child: Text(category),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _category = value!;
-                  });
-                },
+                // Category Dropdown
+                _buildInputCard(
+                  icon: Icons.category,
+                  title: 'Category',
+                  value: _category,
+                  edit: false,
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Select Category'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: _categories.map((category) {
+                            return ListTile(
+                              title: Text(category),
+                              onTap: () {
+                                setState(() {
+                                  _category = category;
+                                });
+                                Get.back();
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+
+                // Submit Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _submitForm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppThemes.light.primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Cattle Details',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInputCard({
+    required IconData icon,
+    required String title,
+    TextEditingController? controller,
+    String? value,
+    TextInputType keyboardType = TextInputType.text,
+    required bool edit,
+    String? Function(String?)? validator,
+    VoidCallback? onTap,
+  }) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: edit ? Colors.red : Colors.grey.shade200),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppThemes.light.primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: AppThemes.light.primaryColor),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text('Cattle Details'),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    if (controller != null)
+                      TextFormField(
+                        controller: controller,
+                        keyboardType: keyboardType,
+                        decoration:  InputDecoration(
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 8),
+                          hintText: "$title"
+                        ),
+                        style: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        validator: validator,
+                      )
+                    else
+                      Text(
+                        value ?? '',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
     );
-
   }
-  final UserController userController = Get.put(UserController());
-
-  final DistrictsController districtsController =
-  Get.put(DistrictsController());
-  final BlocksController blocksController = Get.put(BlocksController());
-  final LocationTypeController locationTypeController =
-  Get.put(LocationTypeController());
-  final LocationSubTypeController locationSubTypeController =
-  Get.put(LocationSubTypeController());
-
   Widget _buildDropdownField(
       String title,
       RxString selectedValue, // Stores valueField (UI)
       RxString selectedKey, // Stores keyField (Submission)
       List<dynamic> dataList,
       String keyField,
-      String valueField) {
-    return Obx(() => GestureDetector(
-      onTap: () {
-        _showSelectionDialog(title, selectedValue, selectedKey, dataList,
-            keyField, valueField);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              selectedValue.value,
-              style: TextStyle(
-                  color: selectedValue.value == title
-                      ? Colors.grey
-                      : Colors.black),
-            ),
-            const Icon(Icons.arrow_drop_down),
-          ],
+      String valueField,     IconData icon,
+      ) {
+    return Obx(() => Card(
+      elevation: 0,
+
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+
+        side: BorderSide(color:  Colors.grey.shade200),
+      ),
+      child: InkWell(
+        onTap: () {
+          _showSelectionDialog(title, selectedValue, selectedKey, dataList,
+              keyField, valueField);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppThemes.light.primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: AppThemes.light.primaryColor),
+              ),
+              const SizedBox(width: 16),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Text(
+                      selectedValue.value,
+                      style: TextStyle(
+                          color: selectedValue.value == title
+                              ? Colors.grey
+                              : Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+              // const Icon(Icons.arrow_drop_down),
+            ],
+          ),
         ),
       ),
     ));
@@ -387,6 +474,15 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
       ),
     );
   }
+  final UserController userController = Get.put(UserController());
+
+  final DistrictsController districtsController =
+  Get.put(DistrictsController());
+  final BlocksController blocksController = Get.put(BlocksController());
+  final LocationTypeController locationTypeController =
+  Get.put(LocationTypeController());
+  final LocationSubTypeController locationSubTypeController =
+  Get.put(LocationSubTypeController());
 
 
 }

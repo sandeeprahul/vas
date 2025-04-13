@@ -24,7 +24,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    tripController.fetchTripDetails();
+    // tripController.fetchTripDetails();
   }
 
   @override
@@ -49,9 +49,14 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
         ),
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {
+
+
           final trip = tripController.tripDetails.value;
           if (trip == null) {
             return const Center(child: Text("No trip details available"));
+          }
+          if(tripController.isLoading.value){
+            return const Center(child: CircularProgressIndicator());
           }
 
           return Column(

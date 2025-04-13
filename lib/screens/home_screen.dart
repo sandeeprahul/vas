@@ -46,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         // excludeHeaderSemantics: true,
         iconTheme: const IconThemeData(color: Colors.white),
+        elevation: 0,
         centerTitle: false,
         title: const Text(
           "Vas App",
@@ -62,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
               onPageChanged: _onPageChanged,
               children: [
                 DashboardPage(),
-                const Center(child: Text("Page 2")),
-                const Center(child: Text("Page 3")),
+                // const Center(child: Text("Page 2")),
+                // const Center(child: Text("Page 3")),
               ],
             ),
           ),

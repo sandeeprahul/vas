@@ -71,8 +71,11 @@ flutter:
   assets:
      - assets/bg_login.png
      - assets/vas_logo.png
+     - assets/ambulance.png
      - assets/trip_image_icon.png
      - assets/background_image.jpg
+     - assets/spalsh_image.jpeg
+     - assets/splash_new.jpg
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

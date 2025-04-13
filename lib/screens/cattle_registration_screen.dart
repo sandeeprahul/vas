@@ -6,16 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:vas/controllers/ambulance_controller.dart';
 import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/screens/case_details_screen.dart';
 import 'package:vas/screens/dashboard_page.dart';
 import 'package:vas/services/api_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/live_stock_controller.dart';
 import '../data/DiseaseType.dart';
 import '../data/IncidentType.dart';
 import '../data/MedicineItem.dart';
 import '../data/PatientType.dart';
+import '../theme.dart';
 
 class CattleRegistrationScreen extends StatefulWidget {
   const CattleRegistrationScreen({super.key});
@@ -583,7 +586,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   }
 
 
-  Map<String, dynamic> buildLivestockJson() {
+  Map<String, dynamic> buildLivestockJsonffff() {
     final liveCaseController = Get.put(LivestockController());
     final formData = liveCaseController.formData;
     return {
@@ -602,8 +605,8 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
       "blockId": 1,
       "villageId": -1,
       "Address": "-",
-      "CattleName": liveCaseController.formData['Category'],
-      "Gender": _formData['Gender'],
+      "CattleName": "a",
+      // "Gender": _formData['Gender'],
       "YearAge": _formData['Years'],
       "MonthAge": _formData['Months'],
       "DaysAge": _formData['Days'],
@@ -614,9 +617,46 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
       "ApprovalRemark": liveCaseController.approvalRemark.value,
       "RegnRemark": liveCaseController.registrationRemark.value,
       "PatientNumber": "",
-      'docname1': liveCaseController.fileName,
-      'doc1': liveCaseController.base64File,
+      'docname1': liveCaseController.fileName.value,
+      'doc1': "",
+      // 'doc1': liveCaseController.base64File.value,
       // 'selected_medicines': selectedMedicines.map((med) => med.toJson()).toList(),
+    };
+
+  }
+  Map<String, dynamic> buildLivestockJson() {
+    final liveCaseController = Get.put(LivestockController());
+    final formData = liveCaseController.formData;
+    final ambulanceController = Get.put(AmbulanceController());
+    return {
+      "Address": "-",
+      "ApprovalRemark": "test",
+      "blockId": 1,
+      "CattleCount": 1,
+      "CattleName": "a",
+      "CattleSubType": 16,
+      "CattleType": 11,
+      "DaysAge": 0,
+      "districtId": 1,
+      "doc1": "",
+      "docname1": "test1.jpg",
+      "Gender": 0,
+      "ImeiNumber": "OnePlus_NE2211_347695b2fc87f884",
+      "IncidentSubType": 1730,
+      "IncidentType": 234,
+      "latitude": 43.73155,
+      "LocationID": 29078,
+      "longitude": -79.76242,
+      "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
+      "MonthAge": 0,
+      "OwnerName": "a",
+      "OwnerNo": "8787878787",
+      "PatientNumber": "",
+      "RegnRemark": "test",
+      "UserId": 1888,
+      "VehicleId":ambulanceController.selectedAmbulanceId ,
+      "villageId": -1,
+      "YearAge": 2
     };
 
   }
@@ -781,6 +821,8 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
 
         // Build JSON
         final Map<String, dynamic> payload = buildLivestockJson();
+        var json = jsonEncode(payload);
+        print(json);
 
         // Optional: show loading
         Get.back(); // close the dialog
@@ -788,7 +830,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
 
         await submitLivestockForm(
           formFields: buildLivestockJson(),
-          documentFile: liveCaseController.selectedFile.value,
+          // documentFile: liveCaseController.selectedFile.value,
         );
         /*try {
           final response = await ApiService().postRequest('/CreateCase', payload);
@@ -807,49 +849,46 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   }
   Future<void> submitLivestockForm({
     required Map<String, dynamic> formFields,
-    File? documentFile,
+    // File? documentFile,
   }) async {
-    final uri = Uri.parse('http://49.207.44.107/mvas/CreateCase'); // replace with actual URL
-    final request = http.MultipartRequest('POST', uri);
-
-    formFields.forEach((key, value) {
-      request.fields[key] = value.toString();
-    });
-
-    if (documentFile != null) {
-      request.files.add(
-        await http.MultipartFile.fromPath('doc1', documentFile.path),
-      );
-    }
-
     try {
-      final response = await request.send();
-      final result = await http.Response.fromStream(response);
+      // Convert form fields to the required format
+      final requestData = {
+        ...formFields,
+      };
 
-      if (result.statusCode == 200) {
-        Get.back(); // Close loading
-        Get.defaultDialog(
-          title: 'Success',
-          middleText: 'Do you want to continue with the same owner?',
-          textConfirm: 'Yes',
-          textCancel: 'No',
-          onConfirm: () {
-            // Navigate to another screen
-            Get.off(() => const CaseDetailsScreen());
-          },
-          onCancel: () {
-            Get.put(LivestockController()).clearAll();
-            Get.offAll(() => DashboardPage());
-          },
-        );
+      ApiService apiService = ApiService();
+      print(requestData);
+      final response = await apiService.postRequest("/CreateCase", requestData);
+
+      if (response != null) {
+        if (response["result"] == 0) {
+          Get.back(); // Close loading
+          Get.defaultDialog(
+            title: 'Success',
+            middleText: 'Do you want to continue with the same owner?',
+            textConfirm: 'Yes',
+            textCancel: 'No',
+            onConfirm: () {
+              // Navigate to another screen
+              Get.off(() => const CaseDetailsScreen());
+            },
+            onCancel: () {
+              Get.put(LivestockController()).clearAll();
+              Get.offAll(() => DashboardPage());
+            },
+          );
+        } else {
+          Get.back();
+          Get.snackbar('Error', response["message"] ?? 'Unknown error',backgroundColor: Colors.red,overlayBlur: 2);
+        }
       } else {
-        final body = jsonDecode(result.body);
         Get.back();
-        Get.snackbar('Error', body['reasonPhrase'] ?? 'Unknown error');
+        Get.snackbar('Error', 'Failed to connect to server',backgroundColor: Colors.red,overlayBlur: 2);
       }
     } catch (e) {
       Get.back();
-      Get.snackbar('Error', 'Exception: $e');
+      Get.snackbar('Error', 'Exception: $e',backgroundColor: Colors.red,overlayBlur: 2);
     }
   }
 

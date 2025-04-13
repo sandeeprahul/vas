@@ -106,7 +106,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
   String _formatDateTime() {
     final now = DateTime.now();
-    return "${_twoDigits(now.day)}/${_twoDigits(now.month)}/${now.year} ${_twoDigits(now.hour)}:${_twoDigits(now.minute)}";
+    return "${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)} ${_twoDigits(now.hour)}:${_twoDigits(now.minute)}";
   }
 
   Future<void> _submitFuelEntry() async {
@@ -133,21 +133,26 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
           'odometer': odometerAtFuelStationController.text,
           'odometer_Back_At_Base': odometerBackAtBaseController.text,
           'fuel_Station_Name': fuelStationNameController.text,
-          'quantity': quantityController.text,
-          'unit_Price': unitPriceController.text,
-          'mode_Of_Payment': modeOfPayment.toString(),
+          "quantity": int.parse(quantityController.text), // ✅ INT
+          "unit_Price": int.parse(unitPriceController.text), // ✅ INT
+          "mode_Of_Payment": modeOfPayment, // ✅ INT, not string like "Cash"
+
           'payment_Ref_No': paymentRefNoController.text,
           'bill_No': billNoController.text,
-          'doc_Odometer': odometerImageBase64!,
+          'doc_Odometer': "",
+          // 'doc_Odometer': odometerImageBase64!,
           'doc_Odometer_Name': 'odo_${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}.jpg',
-          'doc_Bill': billImageBase64!,
+          'doc_Bill': "",
+          // 'doc_Bill': billImageBase64!,
           'doc_Bill_Name': 'bill_${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}.jpg',
-          'latitude': latitude.toString(),
-          'longitude': longitude.toString(),
+          'latitude': latitude,
+          'longitude': longitude,
         };
 
         print("REQUEST BODY:");
         print(requestBody);
+      var sss =   json.encode(requestBody);
+        print(sss);
 
         // Start timing
         final startTime = DateTime.now();
@@ -170,6 +175,8 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
         print("RESPONSE STATUS: ${response.statusCode}");
         print("RESPONSE BODY: ${response.body}");
+        var string = _formatDateTime();
+        print("FORMATEED TIME: $string");
 
         if (response.statusCode == 200) {
           final responseBody = jsonDecode(response.body);

@@ -10,6 +10,7 @@ import '../models/fuel_entry_model.dart';
 import '../models/vehicle_details_model.dart';
 import '../services/api_service.dart';
 import '../theme.dart';
+import 'package:http/http.dart' as http;
 
 class FuelEntryScreen extends StatefulWidget {
   final VehicleDetailsModel vehicleData;
@@ -87,10 +88,13 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
         setState(() {
           if (isOdometer) {
             odometerImageBase64 = base64String;
-            odometerImageName = image.name;
+            odometerImageName = image.path;
+            print(odometerImageName);
           } else {
             billImageBase64 = base64String;
-            billImageName = image.name;
+            billImageName = image.path;
+            print(billImageName);
+
           }
         });
       }
@@ -99,6 +103,11 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
     }
   }
   String _twoDigits(int n) => n.toString().padLeft(2, '0');
+
+  String _formatDateTime() {
+    final now = DateTime.now();
+    return "${_twoDigits(now.day)}/${_twoDigits(now.month)}/${now.year} ${_twoDigits(now.hour)}:${_twoDigits(now.minute)}";
+  }
 
   Future<void> _submitFuelEntry() async {
     if (_formKey.currentState!.validate() &&
@@ -112,99 +121,109 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
       });
 
       try {
-        final now = DateTime.now();
-        final formatted = "${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)} "
-            "${_twoDigits(now.hour)}:${_twoDigits(now.minute)}";
+        // Create request body
+        final requestBody = {
+          'user_ID': userController.userId.value,
+          'entry_DateTime': _formatDateTime(),
+          'vehicle_ID': widget.vehicleData.vehicleId.toString(),
+          'trip_ID': widget.vehicleData.schTripDetails.tripId.isEmpty?"0":int.parse(widget.vehicleData.schTripDetails.tripId).toString(),
+          'case_ID': widget.vehicleData.emgCaseDetails.caseNo.isEmpty?"0":int.parse(widget.vehicleData.emgCaseDetails.caseNo).toString(),
+          'odometer_Last': odometerController.text,
+          'odometer_Base': "${widget.vehicleData.odometerBase}",
+          'odometer': odometerAtFuelStationController.text,
+          'odometer_Back_At_Base': odometerBackAtBaseController.text,
+          'fuel_Station_Name': fuelStationNameController.text,
+          'quantity': quantityController.text,
+          'unit_Price': unitPriceController.text,
+          'mode_Of_Payment': modeOfPayment.toString(),
+          'payment_Ref_No': paymentRefNoController.text,
+          'bill_No': billNoController.text,
+          'doc_Odometer': odometerImageBase64!,
+          'doc_Odometer_Name': 'odo_${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}.jpg',
+          'doc_Bill': billImageBase64!,
+          'doc_Bill_Name': 'bill_${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}.jpg',
+          'latitude': latitude.toString(),
+          'longitude': longitude.toString(),
+        };
 
-        final fuelEntry = FuelEntryModel(
-          userId: int.parse(userController.userId.value),
-          entryDateTime: formatted,
-          vehicleId: widget.vehicleData.vehicleId,
-          tripId: widget.vehicleData.schTripDetails.tripId.isEmpty?0:int.parse(widget.vehicleData.schTripDetails.tripId),
-          caseId: widget.vehicleData.emgCaseDetails.caseNo.isEmpty?0:int.parse(widget.vehicleData.emgCaseDetails.caseNo),
-          odometerLast: odometerController.text,
-          odometerBase: "${widget.vehicleData.odometerBase}",
-          odometer: odometerAtFuelStationController.text,
-          odometerBackAtBase: odometerBackAtBaseController.text,
-          fuelStationName: fuelStationNameController.text,
-          quantity: double.parse(quantityController.text),
-          unitPrice: double.parse(unitPriceController.text),
-          modeOfPayment: modeOfPayment,
-          paymentRefNo: paymentRefNoController.text,
-          billNo: billNoController.text,
-          docOdometerName: odometerImageName!,
-          docBillName: "",
-          // docBillName: billImageName!,
-          latitude: latitude!,
-          longitude: longitude!,
-          docOdometer: "",
-          docBill: '',
-          // docOdometer: odometerImageBase64!,
-          // docBill: billImageBase64!,
+        print("REQUEST BODY:");
+        print(requestBody);
 
+        // Start timing
+        final startTime = DateTime.now();
+        print("API REQUEST STARTED AT: ${startTime.toIso8601String()}");
+
+        // Send the request
+        final response = await http.post(
+          Uri.parse('http://49.207.44.107/mvas/SetFuelRecord'),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(requestBody),
         );
-        print("fuelEntry");
-        print(latitude);
-        print(longitude);
-        var tpvh = jsonEncode(fuelEntry);
-        print(tpvh);
-            print(fuelEntry.toJson());
 
-        final response = await apiService.postRequest("/SetFuelRecord", fuelEntry.toJson()).timeout(Duration(seconds: 20));
+        // End timing
+        final endTime = DateTime.now();
+        final duration = endTime.difference(startTime);
+        print("API REQUEST COMPLETED AT: ${endTime.toIso8601String()}");
+        print("TOTAL REQUEST DURATION: ${duration.inSeconds} seconds and ${duration.inMilliseconds % 1000} milliseconds");
 
-        print(response);
-        if (response != null) {
+        print("RESPONSE STATUS: ${response.statusCode}");
+        print("RESPONSE BODY: ${response.body}");
 
-          if (response["result"] == 1) {
-            // final ticketNumber = response["ticket_Number"] ?? 0;
+        if (response.statusCode == 200) {
+          final responseBody = jsonDecode(response.body);
+          if (responseBody['result'] == 0) {
+            final ticketNumber = responseBody['ticket_Number'];
             Get.back();
             Get.snackbar(
-              "Success",
-              "${response["message"]}",//
-              backgroundColor: Colors.green,
-              colorText: Colors.white,
-              duration: const Duration(seconds: 7),
-              overlayBlur: 2
+              'Success',
+              'Fuel record saved successfully. Ticket Number: $ticketNumber',
+              duration: const Duration(seconds: 5),
             );
-          clearAll();
 
-            // Navigate back after success
+            showAlert("Success", 'Fuel record saved successfully. Ticket Number: $ticketNumber');
+
           } else {
-            Get.snackbar(
-              "Error",
-              response["message"] ?? "Failed to save fuel record",
-              backgroundColor: Colors.red,
-              colorText: Colors.white,
-            );
+            showAlert("Error",responseBody['message'] ?? 'Unknown error');
+
           }
         } else {
-          Get.snackbar(
-            "Error",
-            "Failed to connect to server",
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
+          final responseBody = jsonDecode(response.body);
+          showAlert("Error",responseBody['reasonPhrase'] ?? 'Unknown error');
+
+
         }
       } catch (e) {
-        Get.snackbar(
-          "Error",
-          "An error occurred: $e",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        print("ERROR: $e");
+        showAlert("Error","Exception: $e");
+
       } finally {
         setState(() {
           isLoading = false;
         });
       }
     } else {
-      Get.snackbar(
-        "Error",
-        "Please fill all required fields and take both photos",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      showAlert("Error","Please fill all required fields and capture both images");
+
     }
+  }
+
+  void showAlert(String title,String msg){
+    Get.dialog(
+      AlertDialog(
+        title:  Text(title),
+        content:  Text(msg),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
   void clearAll(){
     // Controllers
@@ -229,6 +248,20 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
      longitude = 0.0;
 }
 
+  // Add this method to calculate total
+  String _calculateTotal() {
+    if (quantityController.text.isNotEmpty && unitPriceController.text.isNotEmpty) {
+      try {
+        final quantity = double.parse(quantityController.text);
+        final unitPrice = double.parse(unitPriceController.text);
+        final total = quantity * unitPrice;
+        return '₹${total.toStringAsFixed(2)}';
+      } catch (e) {
+        return '₹0.00';
+      }
+    }
+    return '₹0.00';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -334,22 +367,95 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                         }
                         return null;
                       },
+
                     ),
                     const SizedBox(height: 16),
 
                     // Unit Price
-                    _buildInputCard(
-                      icon: Icons.attach_money,
-                      title: 'Unit Price',
-                      controller: unitPriceController,
-                      keyboardType: TextInputType.number,
-                      edit: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter unit price';
-                        }
-                        return null;
-                      },
+                    Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: BorderSide(color: Colors.grey.shade200),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: AppThemes.light.primaryColor.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Icon(Icons.attach_money, color: AppThemes.light.primaryColor),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Unit Price',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      TextFormField(
+                                        controller: unitPriceController,
+                                        keyboardType: TextInputType.number,
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.symmetric(vertical: 8),
+                                        ),
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please enter unit price';
+                                          }
+                                          return null;
+                                        },
+                                        onChanged: (value) {
+                                          setState(() {}); // Trigger rebuild to update total
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  'Total Amount: ',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  _calculateTotal(),
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppThemes.light.primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 16),
 
@@ -465,6 +571,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
     TextInputType keyboardType = TextInputType.text,
     required bool edit,
     String? Function(String?)? validator,
+    VoidCallback? onChanged,
   }) {
     return Card(
       elevation: 0,
@@ -509,6 +616,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                     validator: validator,
+                    // onChanged: onChanged,
                   ),
                 ],
               ),

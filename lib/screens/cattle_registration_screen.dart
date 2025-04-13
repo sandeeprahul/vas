@@ -1131,54 +1131,6 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   }
 
 
-  Map<String, dynamic> buildLivestockJson() {
-    final liveCaseController = Get.put(LivestockController());
-    final formData = liveCaseController.formData;
-    final userController = Get.put(UserController());
-    //  final formData = {
-    //         'AmbulanceNo': _ambulanceNoController.text,
-    //         'OwnersContactNo': _ownerContactNoController.text,
-    //         'Owners Name': _ownerNameController.text,
-    //         'District': _districtController.text,
-    //         'Block': _blockController.text,
-    //         'Village': _villageController.text,
-    //         'Category': _category,
-    //       };
-    return {
-      // 'ambulance_no': formData['AmbulanceNo'],
-      "LocationID": 0,
-      "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
-      "CattleCount": 1,
-      "ImeiNumber": "",
-      "UserId": userController.userId.value,
-      "VehicleId": liveCaseController.formData['AmbulanceNo'],
-      "latitude": 43.73155,
-      "longitude": -79.76242,
-      "OwnerNo": liveCaseController.formData['OwnersContactNo'],
-      "OwnerName": liveCaseController.formData['Owners Name'],
-      "districtId": liveCaseController.formData['District'],
-      "blockId": liveCaseController.formData['Block'],
-      "villageId": liveCaseController.formData['Village'],//
-      "Address": "-",
-      "CattleName": "a",
-      // "Gender": _formData['Gender'],
-      "YearAge": _formData['Years'],
-      "MonthAge": _formData['Months'],
-      "DaysAge": "0",
-      "CattleType": _selectedType,
-      "CattleSubType": _selectedBreed,
-      "IncidentType": _selectedEventType,
-      "IncidentSubType": _selectedCaseType,
-      "ApprovalRemark": liveCaseController.approvalRemark.value,
-      "RegnRemark": liveCaseController.registrationRemark.value,
-      "PatientNumber": "",
-      'docname1': liveCaseController.fileName.value,
-      'doc1': "",
-      // 'doc1': liveCaseController.base64File.value,
-      // 'selected_medicines': selectedMedicines.map((med) => med.toJson()).toList(),
-    };
-
-  }
 
   Future<void> submitLivestockForm() async {
 
@@ -1195,7 +1147,8 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
         isLoading = true;
       });
 
-      try {
+      try
+      {
         // Convert medicine list to proper format
         List<Map<String, dynamic>> medicineList = [];
         for (var medicine in selectedMedicines) {
@@ -1210,64 +1163,39 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
 
 
 
-        // Create request body with proper types
-        final requestBodydddd = {
-          "locationId": 1,
-          // "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
-          // "CattleCount": 1,
-          // "ImeiNumber": "",
-          // "UserId":int.parse( userController.userId.value),
-          // "VehicleId": int.parse(liveCaseController.formData['AmbulanceNo']),
-          "latitude": caseRegistrationController.latitude.value,
-          "longitude": caseRegistrationController.longitude.value,
-          "doc2": "",
-          "docName2": "",
-          // "OwnerNo": liveCaseController.formData['OwnersContactNo'],
-          // "OwnerName": liveCaseController.formData['Owners Name'],
-          "districtId": int.parse(districtController.selectedDistrictId.value),
-          "blockId": int.parse(blocksController.selectedBlockId.value),
-          "villageId": int.parse(locationSubTypeController.selectedLocationId.value),//
-          "address": "-",
-          // "CattleName": "a",
-          // "YearAge": int.parse(_formData['Years']),
-          // "MonthAge": int.parse(_formData['Months']),
-          // "DaysAge": "0",
-          // "CattleType": _selectedType,
-          // "CattleSubType": _selectedBreed,
-          // "IncidentType": _selectedEventType,
-          // "IncidentSubType": _selectedCaseType,
-          // "ApprovalRemark": liveCaseController.approvalRemark.value,
-          // "RegnRemark": liveCaseController.registrationRemark.value,
-          // "PatientNumber": "",
-          // 'docname1': liveCaseController.fileName.value,
-          // 'doc1': "",
-        };
+
         print(caseRegistrationController.genderController.value);
         print(caseRegistrationController.yearsController.value);
         print(caseRegistrationController.monthsController.value);
 
+        print("Creating json:");
+
         final requestBody= {
 
-            "locationId": 1,
+          "userId": int.tryParse(userController.userId.value) ?? 0,
+          "districtId": int.tryParse(districtController.selectedDistrictId.value) ?? 0,
+          "blockId": int.tryParse(blocksController.selectedBlockId.value) ?? 0,
+          "villageId": int.tryParse(locationSubTypeController.selectedLocationId.value) ?? 0,
+          "gender": int.tryParse(caseRegistrationController.genderController.value) ?? 0,
+          "yearAge": int.tryParse(caseRegistrationController.yearsController.value) ?? 0,
+          "monthAge": int.tryParse(caseRegistrationController.monthsController.value) ?? 0,
+          "cattleType": int.tryParse(caseRegistrationController.cattleType.value) ?? 0,
+          "cattleSubType": int.tryParse(caseRegistrationController.cattleBreedType.value) ?? 0,
+
+          "locationId": 1,
             "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
             "cattleCount": 1,
             "imeiNumber": "",
-            "userId": 0,
-            "latitude": 43.73155,
-            "longitude": -79.76242,
-          "OwnerNo": liveCaseController.formData['OwnersContactNo'],
-          "OwnerName": liveCaseController.formData['Owners Name'],
-          "districtId": int.parse(districtController.selectedDistrictId.value),
-          "blockId": int.parse(blocksController.selectedBlockId.value),
-          "villageId": int.parse(locationSubTypeController.selectedLocationId.value),//
+          "latitude": caseRegistrationController.latitude.value,
+          "longitude": caseRegistrationController.longitude.value,
+          "ownerNo": liveCaseController.formData['OwnersContactNo'],
+          "ownerName": liveCaseController.formData['Owners Name'],
+
             "address": "string",
             "cattleName": "string",
-            "gender": int.parse(caseRegistrationController.genderController.value),
-            "yearAge": int.parse(caseRegistrationController.yearsController.value),
-            "monthAge":int.parse(caseRegistrationController.monthsController.value),
+
             "daysAge": 0,
-            "cattleType": int.parse(caseRegistrationController.cattleType.value),
-            "cattleSubType":int.parse(caseRegistrationController.cattleBreedType.value),
+
             "incidentType": _selectedEventTypeId,
             "incidentSubType": _selectedCaseTypeId,
             "approvalRemark": liveCaseController.approvalRemark.value,
@@ -1346,7 +1274,8 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             ),
           );
         }
-      } catch (e) {
+      }
+      catch (e) {
         setState(() {
           isLoading = false;
         });
@@ -1394,6 +1323,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
         ),
         child: isLoading?const Center(child: Column(mainAxisSize: MainAxisSize.min,children: [
           Text('Please wait..'),
+          SizedBox(height: 6,),
           CircularProgressIndicator()
         ],),):Padding(
           padding: const EdgeInsets.all(16.0),

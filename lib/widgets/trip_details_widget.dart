@@ -38,15 +38,15 @@ class TripController extends GetxController {
 
     try {
 
-      final response = await _apiService
-          .getRequestForMaster(
-              "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/3/1/1");
-      print(response);
-      // final response = await _apiService.getRequestForMaster(
-      //     "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/${ ambulanceController.selectedAmbulanceId.value}/1/1");
+      // final response = await _apiService
+      //     .getRequestForMaster(
+      //         "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/3/1/1");
+      // print(response);
+      final response = await _apiService.getRequestForMaster(
+          "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/${ ambulanceController.selectedAmbulanceId.value}/1/1");
       print(response);
       print(
-          "http://49.207.44.107/mvas/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/${userController.vehicleId.value}/1/1");
+          "http://49.207.44.107/mvas/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/${ambulanceController.selectedAmbulanceId.value}/1/1");
       // tripDetails.value = null;
 
       if (response != null &&

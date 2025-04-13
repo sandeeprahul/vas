@@ -164,13 +164,24 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
         if (response.statusCode == 200) {
           final responseBody = jsonDecode(response.body);
           if (responseBody['result'] == 0) {
-            final ticketNumber = responseBody['ticket_Number'];
+            // final ticketNumber = responseBody['ticket_Number'];
             Get.back();
-            Get.snackbar(
-              'Success',
-              'Fuel record saved successfully. Ticket Number: $ticketNumber',
-              duration: const Duration(seconds: 5),
+
+            Get.dialog(
+              AlertDialog(
+                title: const Text('Alert!'),
+                content: Text("${responseBody['message']}\n${responseBody['ticket_Number']}" ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
             );
+
           } else {
             Get.dialog(
               AlertDialog(

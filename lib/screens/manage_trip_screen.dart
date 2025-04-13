@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +13,6 @@ import '../controllers/location_type_controller.dart';
 import '../controllers/trip_from_controller.dart';
 import '../services/api_service.dart';
 import '../theme.dart';
-import '../utils/DotPatternPainter.dart';
 
 class ManageTripScreen extends StatefulWidget {
   const ManageTripScreen({super.key});
@@ -601,261 +599,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
     );
   }
 
-  Widget builddd(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Manage trip"),
-        backgroundColor: Colors.blue,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            /*    _buildDropdownField(
-                "District",
-                districtsController.selectedDistrict,
-                districtsController.selectedDistrictId,
-                districtsController.districtsList,
-                "id",
-                "name"),*/
 
-            Obx(() => GestureDetector(
-                  onTap: () {
-                    _showSelectionDialog(
-                        "District",
-                        districtsController.selectedDistrict,
-                        districtsController.selectedDistrictId,
-                        districtsController.districtsList,
-                        "id",
-                        "name");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          districtsController.selectedDistrict.value,
-                          style: TextStyle(
-                              color:
-                                  districtsController.selectedDistrict.value ==
-                                          "District"
-                                      ? Colors.grey
-                                      : Colors.black),
-                        ),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
-                    ),
-                  ),
-                )),
-
-            const SizedBox(
-              height: 8,
-            ),
-            _buildDropdownField(
-                "Block",
-                blocksController.selectedBlock,
-                blocksController.selectedBlockId,
-                blocksController.blocksList,
-                "blockId",
-                "name"),
-            //    blocksController.getBlocks(districtsController.selectedDistrictId.value,userController.userId.value);
-            const SizedBox(
-              height: 8,
-            ),
-
-            const SizedBox(
-              height: 8,
-            ),
-
-            Obx(() => GestureDetector(
-                  onTap: () {
-                    _showSelectionDialog(
-                        "LocationType",
-                        locationTypeController.selectedLocationType,
-                        locationTypeController.selectedLocationTypeId,
-                        locationTypeController.locationTypes,
-                        "stopType_ID",
-                        "stopType_Name");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          locationTypeController.selectedLocationType.value,
-                          style: TextStyle(
-                              color: locationTypeController
-                                          .selectedLocationType.value ==
-                                      "Location"
-                                  ? Colors.grey
-                                  : Colors.black),
-                        ),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
-                    ),
-                  ),
-                )),
-
-            const SizedBox(
-              height: 8,
-            ),
-
-            _buildDropdownField(
-                "Location",
-                locationSubTypeController.selectedLocationName,
-                locationSubTypeController.selectedLocationId,
-                locationSubTypeController.location,
-                "stop_ID",
-                "stop_Name"),
-
-            const SizedBox(
-              height: 8,
-            ),
-
-            /*_buildTextField(
-                "Enter Ambulance Number", controller.ambulanceController),*/ /*
-            const SizedBox(
-              height: 8,
-            ),*/
-            Obx(() => GestureDetector(
-                  onTap: () {
-                    _showSelectionDialog(
-                        "Ambulance",
-                        ambulanceController.selectedAmbulanceName,
-                        ambulanceController.selectedAmbulanceId,
-                        ambulanceController.ambulanceList,
-                        "id",
-                        "asseT_NO");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          ambulanceController.selectedAmbulanceName.value,
-                          style: TextStyle(
-                              color: ambulanceController
-                                          .selectedAmbulanceName.value ==
-                                      "Ambulance"
-                                  ? Colors.grey
-                                  : Colors.black),
-                        ),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
-                    ),
-                  ),
-                )),
-
-            const SizedBox(
-              height: 8,
-            ),
-
-            _buildDropdownField(
-                "Doctor",
-                controller.selectedDoctor,
-                controller.selectedDoctorId,
-                controller.doctors,
-                "doctor_ID",
-                "doctor_Name"),
-            const SizedBox(
-              height: 8,
-            ),
-
-            _buildDropdownField(
-                "Driver",
-                controller.selectedDriver,
-                controller.selectedDriverId,
-                controller.drivers,
-                "driver_ID",
-                "driver_Name"),
-            const SizedBox(
-              height: 8,
-            ),
-
-            // _buildDropdownField("Doctor", controller.selectedDoctor, doctorController.doctors.values.toList().obs, "doctorId", "doctorName"),
-            // _buildDropdownField("Driver", controller.selectedDriver, driverController.drivers.values.toList().obs, "driverId", "driverName"),
-            _buildTextField("Base Odometer", controller.baseOdometerController),
-            const SizedBox(height: 20),
-            const Spacer(),
-            Obx(() => SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: controller.isLoading.value
-                        ? null
-                        : controller.submitForm,
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          // Add this
-                          borderRadius: BorderRadius.circular(
-                              28.0), // Adjust the radius as needed
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        textStyle: GoogleFonts.montserrat(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    child: controller.isLoading.value
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text("Submit"),
-                  ),
-                )),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDropdownField(
-      String title,
-      RxString selectedValue, // Stores valueField (UI)
-      RxString selectedKey, // Stores keyField (Submission)
-      List<dynamic> dataList,
-      String keyField,
-      String valueField) {
-    return Obx(() => GestureDetector(
-          onTap: () {
-            _showSelectionDialog(title, selectedValue, selectedKey, dataList,
-                keyField, valueField);
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  selectedValue.value,
-                  style: TextStyle(
-                      color: selectedValue.value == title
-                          ? Colors.grey
-                          : Colors.black),
-                ),
-                const Icon(Icons.arrow_drop_down),
-              ],
-            ),
-          ),
-        ));
-  }
 
   void _showSelectionDialog(
       String title,
@@ -936,14 +680,6 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
-    return TextField(
-      controller: controller,
-      decoration:
-          InputDecoration(labelText: label, border: const OutlineInputBorder()),
-      keyboardType: TextInputType.number,
-    );
-  }
 
   final ApiService apiService = ApiService();
 
@@ -958,10 +694,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
       var response = await apiService.getRequestForMaster(formattedEndpoint);
 
       if (response != null) {
-        // var decodedResponse = json.decode(response);
-        String errorCode =
-            response['error_Code'] ?? ""; // Use null-safe operator
-        String errorMessage = response['error_Message'] ?? "";
+
         var lastBaseKM = response['last_Base_KM'] ?? 0.00;
 
         // controller.baseOdometerController.text = "$lastBaseKM";

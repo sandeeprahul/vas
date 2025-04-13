@@ -611,21 +611,65 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   String? selectedDisease;
   MedicineItem? selectedItem;
 
+  bool _isLoadingMedicines = false;
+
   Future<void> fetchMedicines() async {
-    ApiService apiService = ApiService();
-    UserController userController = Get.put(UserController());
-    final response = await apiService
-        .getRequest('/GetMedicines/${userController.userId.value}/1/100');
-    if (response != null) {
-      List<dynamic> records = response['records'];
-      medicineList = records.map((e) {
-        return MedicineItem(
-          itemName: e['item_Name'] ?? '',
-          itemUnit: e['item_Unit'] ?? '',
-          itemNumber: e['item_Number'] ?? '',
+    setState(() {
+      _isLoadingMedicines = true;
+    });
+
+    try {
+      ApiService apiService = ApiService();
+      UserController userController = Get.put(UserController());
+      final response = await apiService
+          .getRequest('/GetMedicines/${userController.userId.value}/1/100');
+      
+      if (response != null) {
+        List<dynamic> records = response['records'];
+        medicineList = records.map((e) {
+          return MedicineItem(
+            item_ID: e['item_ID'] ?? 0,
+            itemName: e['item_Name'] ?? '',
+            itemUnit: e['item_Unit'] ?? '',
+            itemNumber: e['item_Number'] ?? '',
+            itemType: e['item_Type'] ?? '',
+            itemPrice: (e['item_Price'] ?? 0).toDouble(),
+            iD_Name: e['iD_Name'] ,
+          );
+        }).toList();
+        setState(() {});
+      } else {
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Failed to load medicines'),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
         );
-      }).toList();
-      setState(() {});
+      }
+    } catch (e) {
+      print("Error loading medicines: $e");
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Error'),
+          content: Text('Error loading medicines: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoadingMedicines = false;
+      });
     }
   }
 
@@ -725,12 +769,17 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                 if (selectedMedicine != null && quantityController.text.isNotEmpty) {
                   setState(() {
                     selectedMedicines.add(MedicineItem(
-                      quantity: quantityController.text,
+                      item_ID: selectedMedicine!.item_ID,
                       itemName: selectedMedicine!.itemName,
                       itemUnit: selectedMedicine!.itemUnit,
                       itemNumber: selectedMedicine!.itemNumber,
+                      itemType: selectedMedicine!.itemType,
+                      itemPrice: selectedMedicine!.itemPrice,
+                      quantity: quantityController.text,
+                      iD_Name: selectedMedicine!.iD_Name,
                     ));
                     quantityController.clear();
+                    selectedMedicine = null; // Clear selection after adding
                   });
                 }
               },
@@ -871,6 +920,17 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                 onChanged: (value) {
                   setState(() {
                     _formData[key] = value;
+                    // Handle gender mapping
+                    if (key == 'Gender') {
+                      if (value == 'M') {
+                        caseRegistrationController.genderController.value = '1';
+                      } else if (value == 'F') {
+                        caseRegistrationController.genderController.value = '2';
+                      }
+                    }
+                    print("caseRegistrationController.genderController.value");
+                    print(caseRegistrationController.genderController.value);
+
                   });
                 },
               ),
@@ -1131,18 +1191,19 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     final locationSubTypeController = Get.put(LocationSubTypeController());
 
     if (_formKey.currentState!.validate()) {
-      // setState(() {
-      //   isLoading = true;
-      // });
+      setState(() {
+        isLoading = true;
+      });
 
       try {
         // Convert medicine list to proper format
         List<Map<String, dynamic>> medicineList = [];
         for (var medicine in selectedMedicines) {
           medicineList.add({
-            "item_name": medicine.itemName,
-            "item_unit": medicine.itemUnit,
-            "item_number": medicine.itemNumber,
+            "item_ID": medicine.item_ID,
+            "iD_Value": medicine.item_ID,
+            "iD_Name": medicine.iD_Name,
+            "item_Number": medicine.itemNumber,
             "quantity": medicine.quantity.toString(),
           });
         }
@@ -1157,8 +1218,8 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           // "ImeiNumber": "",
           // "UserId":int.parse( userController.userId.value),
           // "VehicleId": int.parse(liveCaseController.formData['AmbulanceNo']),
-          "latitude": double.parse("16.73155"),
-          "longitude": double.parse("80.76242"),
+          "latitude": caseRegistrationController.latitude.value,
+          "longitude": caseRegistrationController.longitude.value,
           "doc2": "",
           "docName2": "",
           // "OwnerNo": liveCaseController.formData['OwnersContactNo'],
@@ -1181,44 +1242,41 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           // 'docname1': liveCaseController.fileName.value,
           // 'doc1': "",
         };
+        print(caseRegistrationController.genderController.value);
+        print(caseRegistrationController.yearsController.value);
+        print(caseRegistrationController.monthsController.value);
+
         final requestBody= {
 
             "locationId": 1,
-            "medicine": [
-              {
-                "item_ID": 0,
-                "item_Number": "string",
-                "quantity": 0,
-                "iD_Name": "string",
-                "iD_Value": "string"
-              }
-            ],
+            "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
             "cattleCount": 1,
-            "imeiNumber": "string",
+            "imeiNumber": "",
             "userId": 0,
             "latitude": 43.73155,
             "longitude": -79.76242,
-            "ownerNo": "8977771266",
-            "ownerName": "Sandeep",
+          "OwnerNo": liveCaseController.formData['OwnersContactNo'],
+          "OwnerName": liveCaseController.formData['Owners Name'],
           "districtId": int.parse(districtController.selectedDistrictId.value),
           "blockId": int.parse(blocksController.selectedBlockId.value),
           "villageId": int.parse(locationSubTypeController.selectedLocationId.value),//
             "address": "string",
             "cattleName": "string",
-            "gender": 0,
-            "yearAge": 0,
-            "monthAge": 0,
+            "gender": int.parse(caseRegistrationController.genderController.value),
+            "yearAge": int.parse(caseRegistrationController.yearsController.value),
+            "monthAge":int.parse(caseRegistrationController.monthsController.value),
             "daysAge": 0,
             "cattleType": int.parse(caseRegistrationController.cattleType.value),
             "cattleSubType":int.parse(caseRegistrationController.cattleBreedType.value),
             "incidentType": _selectedEventTypeId,
             "incidentSubType": _selectedCaseTypeId,
-            "approvalRemark": "string",
-            "regnRemark": "string",
-            "doc1": "string",
-            "docName1": "string",
-            "doc2": "string",
-            "docName2": "string"
+            "approvalRemark": liveCaseController.approvalRemark.value,
+            "regnRemark": liveCaseController.registrationRemark.value,
+        "docName1": liveCaseController.fileName.value,
+        "doc2": "string",
+        "docName2": "string",
+            "doc1": liveCaseController.base64File.value
+
 
         };
 
@@ -1334,7 +1392,10 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             ],
           ),
         ),
-        child: Padding(
+        child: isLoading?const Center(child: Column(mainAxisSize: MainAxisSize.min,children: [
+          Text('Please wait..'),
+          CircularProgressIndicator()
+        ],),):Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
@@ -1399,7 +1460,10 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  onPressed: showApprovalDialog,
+                  onPressed: (){
+                    showApprovalDialog();
+                  caseRegistrationController.getCurrentLocation();
+                  },
                   child: const Text('Register Case'),
                 ),
               ],
@@ -1526,7 +1590,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
 
         // Optional: show loading
         Get.back(); // close the dialog
-        Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+        // Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
 
         await submitLivestockForm();
 

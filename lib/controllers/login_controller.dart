@@ -51,6 +51,9 @@ class LoginController extends GetxController {
   Future<void> logoutUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear(); // Clear stored data
+    var time = DateTime.now();
+
+    prefs.setString("logoutTime", time.toString());
     Get.offAllNamed("/login");
   }
 

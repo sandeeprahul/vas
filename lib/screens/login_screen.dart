@@ -30,11 +30,11 @@ class _LoginScreenState extends State<LoginScreen> {
             end: Alignment.bottomRight,
             colors: [
               AppThemes.light.primaryColor,
-              AppThemes.light.primaryColor.withOpacity(0.8),
-              AppThemes.light.primaryColor.withOpacity(0.6),
-              /*  AppThemes.light.primaryColor,
-              AppThemes.light.primaryColor.withOpacity(0.8),
-              AppThemes.light.primaryColor.withOpacity(0.6),*/
+              Colors.black,
+              Colors.black,
+              /*   AppThemes.light.primaryColor,
+              Colors.black,
+              Colors.black,*/
             ],
           ),
         ),
@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     // const SizedBox(height: 24),
                     const Text(
-                      'VAS',
+                      '1962 - MVU APP',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -176,13 +176,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ? null
                                     : () {
                                         if (_formKey.currentState!.validate()) {
-                                          loginController  . loginUserSandBox(
-
+                                          loginController  . loginUser(
                                           );
                                         }
                                       },
                                         style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppThemes.light.primaryColor,
+                                  backgroundColor: Colors.black,
                                           shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -214,9 +213,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     Text(
                   textAlign: TextAlign.center,
-                      'Powered by\nBHY',
+                      'Powered by\nBHSPL',
                   style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                         color: Colors.white.withOpacity(0.8),
                       ),

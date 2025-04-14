@@ -56,7 +56,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor:  AppThemes.light.primaryColor,
       body: Stack(
 
         children: [
@@ -67,8 +67,11 @@ class _DashboardPageState extends State<DashboardPage> {
                 end: Alignment.bottomCenter,
                 colors: [
                   AppThemes.light.primaryColor,
-                  AppThemes.light.primaryColor.withOpacity(0.8),
-                  AppThemes.light.primaryColor.withOpacity(0.6),
+                  Colors.black,
+                  Colors.black,
+                 /* Colors.blue,
+                  Colors.blue.withOpacity(0.8),
+                  Colors.white.withOpacity(0.6),*/
                 ],
               ),
             ),
@@ -414,13 +417,13 @@ class _DashboardPageState extends State<DashboardPage> {
             // mainAxisAlignment: MainAxisAlignment.start,
 
             children: [
-              // Text(title, style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey)),
+              // Text(title, style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey)),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(value,
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                           fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(width: 5),
                   Transform.rotate(
@@ -441,10 +444,10 @@ class _DashboardPageState extends State<DashboardPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label,
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 14, fontWeight: FontWeight.bold)),
           Text(value,
-              style: GoogleFonts.montserrat(fontSize: 14, color: color)),
+              style: GoogleFonts.poppins(fontSize: 14, color: color)),
         ],
       ),
     );

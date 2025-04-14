@@ -37,7 +37,7 @@ class SummaryCard extends StatelessWidget {
               children: [
                 Text(
                   'Summary',
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
@@ -97,7 +97,7 @@ class SummaryCard extends StatelessWidget {
                         children: [
                           Text(
                             totalHours,
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
@@ -105,7 +105,7 @@ class SummaryCard extends StatelessWidget {
                           ),
                           Text(
                             'hrs',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 16,
                               color: Colors.grey[600],
                             ),
@@ -150,7 +150,7 @@ class SummaryCard extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.grey[600],
                 ),
@@ -158,7 +158,7 @@ class SummaryCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 time,
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,

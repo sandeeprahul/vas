@@ -5,6 +5,8 @@ import 'package:vas/controllers/login_controller.dart';
 import 'package:vas/controllers/trip_from_controller.dart';
 import 'package:vas/widgets/trip_details_widget.dart';
 
+import '../theme.dart';
+
 class SideMenu extends StatefulWidget {
   const SideMenu({super.key});
 
@@ -45,12 +47,13 @@ class _SideMenuState extends State<SideMenu> {
         children: [
            UserAccountsDrawerHeader(
 
-            decoration: const BoxDecoration(color: Colors.blue),
+            decoration:  BoxDecoration(color:     AppThemes.light.primaryColor,
+            ),
             accountName: Text(name??'', style: const TextStyle(fontSize: 18)),
             accountEmail: null,
-            currentAccountPicture: const CircleAvatar(
+            currentAccountPicture:  CircleAvatar(
               backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 40, color: Colors.blue),
+              child: Icon(Icons.person, size: 40, color: AppThemes.light.primaryColor.withOpacity(0.9)),
             ),
           ),
           _buildExpandableTile("Dashboard ", [

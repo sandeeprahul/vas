@@ -92,9 +92,9 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.light.primaryColor,
-              AppThemes.light.primaryColor.withOpacity(0.8),
-              AppThemes.light.primaryColor.withOpacity(0.6),
+               AppThemes.light.primaryColor,
+              Colors.black,
+              Colors.black,
             ],
           ),
         ),
@@ -211,7 +211,7 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
                                 28.0), // Adjust the radius as needed
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          textStyle: GoogleFonts.montserrat(
+                          textStyle: GoogleFonts.poppins(
                               fontSize: 16, fontWeight: FontWeight.bold)),
                       child: const Text("Go to Home"),
                     ),

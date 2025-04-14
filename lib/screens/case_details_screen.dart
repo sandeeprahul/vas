@@ -256,7 +256,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                     ),
                     child: Text(
                       'Cattle Details',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -309,7 +309,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: Colors.grey,
                       ),
@@ -324,7 +324,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                           contentPadding: EdgeInsets.symmetric(vertical: 8),
                           hintText: "$title"
                         ),
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                         ),
@@ -333,7 +333,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                     else
                       Text(
                         value ?? '',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                         ),
@@ -389,7 +389,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: Colors.grey,
                       ),

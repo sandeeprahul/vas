@@ -49,10 +49,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
           final trip = tripController.tripDetails.value;
           if (trip == null) {
             return const Center(child: Text("No trip details available"));
-          }/*
-          if (tripController.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }*/
+          }
 
           return Column(
             children: [
@@ -170,7 +167,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 15,
                       color: Colors.grey,
                     ),
@@ -180,7 +177,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                   ),
                   Text(
                     value,
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colors.black,
                         fontWeight: FontWeight.bold),

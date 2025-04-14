@@ -69,7 +69,7 @@ class ProfileCard extends StatelessWidget {
                     children: [
                       Text(
                         name,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -87,7 +87,7 @@ class ProfileCard extends StatelessWidget {
                         ),
                         child: Text(
                           'ClientId: $clientId',
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
@@ -155,7 +155,7 @@ class ProfileCard extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 12,
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w500,
@@ -164,7 +164,7 @@ class ProfileCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 value,
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 16,
                   color: Colors.black87,
                   fontWeight: FontWeight.w600,

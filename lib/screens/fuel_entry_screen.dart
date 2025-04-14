@@ -306,8 +306,8 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
             end: Alignment.bottomCenter,
             colors: [
                   AppThemes.light.primaryColor,
-                  AppThemes.light.primaryColor.withOpacity(0.8),
-                  AppThemes.light.primaryColor.withOpacity(0.6),
+                 Colors.black,
+                 Colors.black,
             ],
           ),
         ),
@@ -429,9 +429,9 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                                     children: [
                                       Text(
                                         'Unit Price',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 12,
-                                          color: Colors.grey,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          color: Colors.black,
                                         ),
                                       ),
                                       TextFormField(
@@ -442,7 +442,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                                           isDense: true,
                                           contentPadding: EdgeInsets.symmetric(vertical: 8),
                                         ),
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -467,14 +467,14 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                               children: [
                                 Text(
                                   'Total Amount: ',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     color: Colors.grey,
                                   ),
                                 ),
                                 Text(
                                   _calculateTotal(),
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: AppThemes.light.primaryColor,
@@ -486,7 +486,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 34),
 
                     // Mode of Payment
                     _buildPaymentModeSelector(),
@@ -544,7 +544,8 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                       child: ElevatedButton(
                         onPressed: isLoading ? null : _submitFuelEntry,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppThemes.light.primaryColor,
+                          backgroundColor:               Colors.white,
+
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -560,11 +561,11 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                                 ),
                               )
                             : Text(
-                                'Submit',
-                                style: GoogleFonts.montserrat(
+                                'SUBMIT',
+                                style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                       ),
@@ -628,9 +629,9 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 15,
-                      color: Colors.grey,
+                      color: Colors.black,
                     ),
                   ),
                   TextFormField(
@@ -641,7 +642,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 8),
                     ),
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -661,41 +662,55 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
         const Text(
           'Mode of Payment',
           style: TextStyle(
             fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: RadioListTile<int>(
-                title: const Text('Cash'),
-                value: 0,
-                groupValue: modeOfPayment,
-                onChanged: (value) {
-                  setState(() {
-                    modeOfPayment = value!;
-                  });
-                },
+        Container(
+          margin: EdgeInsets.all(4),
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+
+            borderRadius: BorderRadius.circular(12),
+
+          ),
+
+          child: Row(
+            children: [
+              Expanded(
+                child: RadioListTile<int>(
+                  // activeColor: Colors.white,
+                  title: const Text('Cash'),
+                  value: 0,
+                  groupValue: modeOfPayment,
+                  onChanged: (value) {
+                    setState(() {
+                      modeOfPayment = value!;
+                    });
+                  },
+                ),
               ),
-            ),
-            Expanded(
-              child: RadioListTile<int>(
-                title: const Text('Petrol Card'),
-                value: 1,
-                groupValue: modeOfPayment,
-                onChanged: (value) {
-                  setState(() {
-                    modeOfPayment = value!;
-                  });
-                },
+              Expanded(
+                child: RadioListTile<int>(
+                  title: const Text('Petrol Card'),
+                  value: 1,
+                  groupValue: modeOfPayment,
+                  onChanged: (value) {
+                    setState(() {
+                      modeOfPayment = value!;
+                    });
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -713,6 +728,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
           title,
           style: const TextStyle(
             fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -723,6 +739,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
             height: 150,
             width: double.infinity,
             decoration: BoxDecoration(
+              // color: Colors.white,
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(8),
             ),
@@ -733,7 +750,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                   )
                 : const Center(
                     child: Icon(
-                      Icons.camera_alt,
+                      Icons.camera,
                       size: 50,
                       color: Colors.grey,
                     ),

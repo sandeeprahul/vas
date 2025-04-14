@@ -24,7 +24,7 @@ void showErrorDialog(String title, String message) {
                     BorderRadius.circular(28.0), // Adjust the radius as needed
               ),
               padding: const EdgeInsets.symmetric(vertical: 14),
-              textStyle: GoogleFonts.montserrat(
+              textStyle: GoogleFonts.poppins(
                   fontSize: 16, fontWeight: FontWeight.bold)),*/
           child: const Text("OK",),
         ),

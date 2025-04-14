@@ -367,7 +367,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
       padding: const EdgeInsets.fromLTRB(4, 24, 4, 12),
       child: Text(
         title,
-        style: GoogleFonts.montserrat(
+        style: GoogleFonts.poppins(
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppThemes.light.primaryColor,
@@ -1111,6 +1111,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
   }
 
   CaseRegistrationNewController caseRegistrationController = Get.put(CaseRegistrationNewController());
+  AmbulanceController ambulanceController = Get.put(AmbulanceController());
   @override
   void initState() {
     // TODO: implement initState
@@ -1181,6 +1182,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           "monthAge": int.tryParse(caseRegistrationController.monthsController.value) ?? 0,
           "cattleType": int.tryParse(caseRegistrationController.cattleType.value) ?? 0,
           "cattleSubType": int.tryParse(caseRegistrationController.cattleBreedType.value) ?? 0,
+          "vehicleId": int.tryParse(ambulanceController.selectedAmbulanceId.value) ?? 0,
 
           "locationId": 1,
       "medicine": selectedMedicines.map((med) => med.toJson()).toList(),

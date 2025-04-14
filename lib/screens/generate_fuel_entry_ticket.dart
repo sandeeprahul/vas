@@ -62,8 +62,8 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
             end: Alignment.bottomCenter,
             colors: [
                   AppThemes.light.primaryColor,
-                  AppThemes.light.primaryColor.withOpacity(0.8),
-                  AppThemes.light.primaryColor.withOpacity(0.6),
+                  Colors.black,
+                  Colors.black,
             ],
           ),
         ),
@@ -104,19 +104,16 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
 
                           Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Select Ambulance',
+                                  "Select Ambulance",
                                   style: TextStyle(
-                                    fontSize: 12,
                                       color: ambulanceController
                                           .selectedAmbulanceName.value ==
                                           "Ambulance"
                                           ? Colors.grey
                                           : Colors.black),
                                 ),
-                                const SizedBox(height: 4,),
                                 Text(
                                   ambulanceController.selectedAmbulanceName.value,
                                   style: TextStyle(
@@ -147,7 +144,7 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppThemes.light.primaryColor,
+                backgroundColor: Colors.white,
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -165,7 +162,7 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                         letterSpacing: 1.2,
                       ),
                     ),

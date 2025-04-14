@@ -121,7 +121,7 @@ class DashboardCustomMenuWidget extends StatelessWidget {
                       Text(
                         title,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

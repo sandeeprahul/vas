@@ -26,7 +26,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Scheduled Trip Details Card
-          _buildScheduledTripCard(),
+          // _buildScheduledTripCard(),
           const SizedBox(height: 16),
 
           // Emergency Case Details Card
@@ -50,7 +50,7 @@ class VehicleDetailsScreen extends StatelessWidget {
         children: [
           Text(
             'Error Information',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.red,
@@ -77,7 +77,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           children: [
             Text(
               'Vehicle Status',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -105,7 +105,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           children: [
             Text(
               'Vehicle Information',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -138,7 +138,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           children: [
             Text(
               'Scheduled Trip',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -171,7 +171,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           children: [
             Text(
               'Emergency Case',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -204,7 +204,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           children: [
             Text(
               'Fuel History',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -244,7 +244,7 @@ class VehicleDetailsScreen extends StatelessWidget {
             width: 140,
             child: Text(
               label,
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[700],
@@ -254,7 +254,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,

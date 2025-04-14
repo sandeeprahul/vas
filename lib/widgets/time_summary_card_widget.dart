@@ -17,11 +17,11 @@ class _TimeSummaryCardWidgetState extends State<TimeSummaryCardWidget> {
   String _timeDifference = '00:00';
   Timer? _timer;
   String logInTime = '00:00 AM';
+  String loggedOutTime = '00:00 AM';
   @override
   void initState() {
     super.initState();
     getLoginTime();
-
     _startTimer();
   }
   @override
@@ -154,11 +154,11 @@ class _TimeSummaryCardWidgetState extends State<TimeSummaryCardWidget> {
                         child: const Icon(Icons.outbond, color: Color(0xFFFF7849), size: 18),
                       ),
                       const SizedBox(width: 10),
-                      const Column(
+                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Logged Out", style: TextStyle(fontSize: 12, color: Colors.black54)),
-                          Text("05:44 PM", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                          const Text("Logged Out", style: TextStyle(fontSize: 12, color: Colors.black54)),
+                          Text(loggedOutTime, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ],
@@ -173,7 +173,7 @@ class _TimeSummaryCardWidgetState extends State<TimeSummaryCardWidget> {
                 // percent: 0.75,
                 center: Text("$_timeDifference\nhrs",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         fontSize: 16, fontWeight: FontWeight.bold)),
                 progressColor: Colors.blueAccent,
                 backgroundColor: Colors.grey[200]!,
@@ -209,6 +209,7 @@ class _TimeSummaryCardWidgetState extends State<TimeSummaryCardWidget> {
   Future<void> getLoginTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? loggedInTimeString = prefs.getString('loggedInTime');
+    String? logOutTimeString = prefs.getString('logoutTime');
 
     if (loggedInTimeString != null) {
       // Parse the stored time string into a DateTime object
@@ -216,10 +217,22 @@ class _TimeSummaryCardWidgetState extends State<TimeSummaryCardWidget> {
 
       String formattedLogInTime = DateFormat('hh:mm a').format(loggedInTime);
 
+
+
       // Update the UI
       setState(() {
         logInTime = formattedLogInTime;
       });
+      if(logOutTimeString != null){
+        DateTime logOutTime = DateTime.parse(logOutTimeString);
+
+        String formattedLogOutTime = DateFormat('hh:mm a').format(loggedInTime);
+        // Update the UI
+        setState(() {
+          loggedOutTime = formattedLogOutTime;
+        });
+      }
+
     } else {
       setState(() {
         logInTime = '00:00 AM';

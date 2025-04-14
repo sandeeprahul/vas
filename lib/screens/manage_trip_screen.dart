@@ -120,7 +120,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Manage Trip",
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontWeight: FontWeight.w600,
             )),
         elevation: 0,
@@ -132,9 +132,9 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.light.primaryColor,
-              AppThemes.light.primaryColor.withOpacity(0.8),
-              AppThemes.light.primaryColor.withOpacity(0.6),
+               AppThemes.light.primaryColor,
+              Colors.black,
+              Colors.black,
             ],
           ),
         ),
@@ -150,7 +150,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                       padding: const EdgeInsets.fromLTRB(4, 24, 4, 12),
                       child: Text(
                         'Location Details',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -175,7 +175,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                     Obx(() {
                       return _buildSelectionCard(
                         icon: Icons.map,
-                        title: "Block",
+                        title: "Village",
                         value: blocksController.selectedBlock.value,
                         onTap: () => _showSelectionDialog(
                             "Block",
@@ -386,7 +386,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                             ""
                                     ? Text(
                                         "Submit Trip Details",
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.white,
@@ -399,7 +399,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                                 ""
                                         ? Text(
                                             "Submit Seen Arrival",
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                               color: Colors.white,
@@ -412,7 +412,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                                     ""
                                             ? Text(
                                                 "Submit Departure",
-                                                style: GoogleFonts.montserrat(
+                                                style: GoogleFonts.poppins(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
                                                   color: Colors.white,
@@ -429,7 +429,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                                 ? Text(
                                                     "Close Trip",
                                                     style:
-                                                        GoogleFonts.montserrat(
+                                                        GoogleFonts.poppins(
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -439,7 +439,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                                 : Text(
                                                     "Submit Trip Details",
                                                     style:
-                                                        GoogleFonts.montserrat(
+                                                        GoogleFonts.poppins(
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -469,7 +469,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
       padding: const EdgeInsets.fromLTRB(4, 24, 4, 12),
       child: Text(
         title,
-        style: GoogleFonts.montserrat(
+        style: GoogleFonts.poppins(
           fontSize: 18,
           fontWeight: FontWeight.w600,
                                  color: Colors.white,
@@ -513,15 +513,16 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.montserrat(
-                        fontSize: 12,
-                        color: Colors.grey,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       value,
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -574,7 +575,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 15,
                       color: Colors.grey,
                     ),
@@ -587,7 +588,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 8),
                     ),
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),

@@ -15,21 +15,24 @@ class SplashScreen extends StatelessWidget {
     // Initialize LoginController only here
     final LoginController loginController = Get.put(LoginController());
 
-    /// Check login status after 2 seconds
-     Future.delayed(const Duration(seconds: 2), () {
+    /// Check login status after 3 seconds
+     Future.delayed(const Duration(seconds: 3), () {
       loginController.checkLoginStatus();
     });
 
     return Scaffold(
       backgroundColor: Colors.white, // Change to match your theme
       body: Container(
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.blue,
-              Colors.white,
+              AppThemes.light.primaryColor,
+              Colors.black,
+              Colors.black,
+              // Colors.blue,
+              // Colors.white,
             ],
           ),
         ),
@@ -40,16 +43,20 @@ class SplashScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'VAS',
-                    style: TextStyle(fontSize: 66, fontWeight: FontWeight.w600),
+                    '1962',
+                    style: TextStyle(fontSize: 44, fontWeight: FontWeight.w600,color: Colors.white),
+                  ), Text(
+                    'MVU APP',
+                    style: TextStyle(fontSize: 42, fontWeight: FontWeight.w600,color: Colors.white),
                   ),
+                  SizedBox(height: 12,),
                   Text(
                     'Powered By',
-                    style: TextStyle(fontSize: 14),
+                    style: TextStyle(fontSize: 14,color: Colors.white),
                   ),
                   Text(
-                    'BHY',
-                    style: TextStyle(fontSize: 14),
+                    'BHSPL',
+                    style: TextStyle(fontSize: 14,color: Colors.white),
                   ),
                 ],
               ),

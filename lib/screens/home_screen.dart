@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/screens/dashboard_page.dart';
+import '../theme.dart';
 import '../widgets/side_menu.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -45,14 +46,25 @@ class _HomeScreenState extends State<HomeScreen> {
       // backgroundColor: Colors.transparent,
       appBar: AppBar(
         // excludeHeaderSemantics: true,
+        backgroundColor:  AppThemes.light.primaryColor,
+
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
-        centerTitle: false,
-        title: const Text(
-          "Vas App",
-          style: TextStyle(color: Colors.white),
+        centerTitle: true,
+        title: Row(
+          // mainAxisAlignment: MainAxisAlignment.center,
+
+          children: [
+            const Text(
+              "1962 - ",
+              style: TextStyle(color: Colors.white),
+            ),
+            Text(
+              "MVU APP",
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
         ),
-        backgroundColor: Colors.blue,
       ),
       drawer: const SideMenu(),
       body: Column(

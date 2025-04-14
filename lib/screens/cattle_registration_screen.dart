@@ -54,24 +54,24 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     });
 
     try {
-      ApiService apiService = ApiService();
+    ApiService apiService = ApiService();
       final incidentResponse = await apiService.getRequestList("/GetIncidentTypes");//EventType
       final subIncidentResponse = await apiService.getRequestList("/GetIncidentSubTypes");//CaseType
 
       print("loadIncidentDataloadIncidentDataloadIncidentDataloadIncidentData");
       print(subIncidentResponse);
-      print(incidentResponse);
+    print(incidentResponse);
 
       if (incidentResponse != null && subIncidentResponse != null) {
-        setState(() {
-          _incidentTypes = (incidentResponse as List)
-              .map((e) => IncidentType.fromJson(e))
-              .toList();
+    setState(() {
+      _incidentTypes = (incidentResponse as List)
+          .map((e) => IncidentType.fromJson(e))
+          .toList();
 
-          _incidentSubTypes = (subIncidentResponse as List)
-              .map((e) => IncidentSubType.fromJson(e))
-              .toList();
-        });
+      _incidentSubTypes = (subIncidentResponse as List)
+          .map((e) => IncidentSubType.fromJson(e))
+          .toList();
+    });
       } else {
         Get.dialog(
           AlertDialog(
@@ -149,27 +149,27 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   labelText: 'Event Type',
                   border: InputBorder.none,
                 ),
-                value: _selectedEventType,
-                items: _incidentTypes.map((e) {
-                  return DropdownMenuItem<String>(
-                    value: e.incidentName,
-                    child: Text(e.incidentName!),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedEventType = value;
-                    final selectedId = _incidentTypes
-                        .firstWhere((e) => e.incidentName == value)
-                        .incidentId;
+      value: _selectedEventType,
+      items: _incidentTypes.map((e) {
+        return DropdownMenuItem<String>(
+          value: e.incidentName,
+          child: Text(e.incidentName!),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _selectedEventType = value;
+          final selectedId = _incidentTypes
+              .firstWhere((e) => e.incidentName == value)
+              .incidentId;
                     _selectedEventTypeId = selectedId;
-                    _filteredSubTypes = _incidentSubTypes
-                        .where((s) => s.incidentID == selectedId)
-                        .map((s) => s.subType)
-                        .toList();
-                    _selectedCaseType = null;
-                  });
-                },
+          _filteredSubTypes = _incidentSubTypes
+              .where((s) => s.incidentID == selectedId)
+              .map((s) => s.subType)
+              .toList();
+          _selectedCaseType = null;
+        });
+      },
               ),
             ),
           ],
@@ -204,25 +204,25 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   labelText: 'Case Type',
                   border: InputBorder.none,
                 ),
-                value: _selectedCaseType,
-                items: _filteredSubTypes.map((caseType) {
-                  return DropdownMenuItem<String>(
-                    value: caseType,
-                    child: Text(caseType),
-                  );
-                }).toList(),
-                onChanged: (value) {
+      value: _selectedCaseType,
+      items: _filteredSubTypes.map((caseType) {
+        return DropdownMenuItem<String>(
+          value: caseType,
+          child: Text(caseType),
+        );
+      }).toList(),
+      onChanged: (value) {
                   if (value != null) {
                     final selectedSubType = _incidentSubTypes.firstWhere(
                       (s) => s.subType == value,
                       orElse: () => IncidentSubType(incidentID: 0, subType: '', subID: 0),
                     );
-                    setState(() {
-                      _selectedCaseType = value;
+        setState(() {
+          _selectedCaseType = value;
                       _selectedCaseTypeId = selectedSubType.subID;
-                    });
+        });
                   }
-                },
+      },
               ),
             ),
           ],
@@ -425,20 +425,20 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     });
 
     try {
-      ApiService apiService = ApiService();
+    ApiService apiService = ApiService();
       final response = await apiService.getRequest("/GetPatientTypes");
 
-      if (response != null) {
-        setState(() {
+    if (response != null) {
+      setState(() {
           // Handle p_Type_Data
-          _types = (response['p_Type_Data'] as List)
-              .map((e) => PatientType.fromJson(e))
-              .toList();
+        _types = (response['p_Type_Data'] as List)
+            .map((e) => PatientType.fromJson(e))
+            .toList();
 
           // Handle p_SubType_Data
-          _allSubtypes = (response['p_SubType_Data'] as List)
-              .map((e) => PatientSubType.fromJson(e))
-              .toList();
+        _allSubtypes = (response['p_SubType_Data'] as List)
+            .map((e) => PatientSubType.fromJson(e))
+            .toList();
 
           // Initialize breed options based on first type if available
           if (_types.isNotEmpty) {
@@ -525,27 +525,27 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   labelText: 'Cattle\'s Type',
                   border: InputBorder.none,
                 ),
-                value: _selectedType,
-                items: _types.map((type) {
-                  return DropdownMenuItem(
-                    value: type.pT_TEXT,
-                    child: Text(type.pT_TEXT),
-                  );
-                }).toList(),
-                onChanged: (value) {
+      value: _selectedType,
+      items: _types.map((type) {
+        return DropdownMenuItem(
+          value: type.pT_TEXT,
+          child: Text(type.pT_TEXT),
+        );
+      }).toList(),
+      onChanged: (value) {
                   if (value != null) {
                     final selectedTypeObj = _types.firstWhere((t) => t.pT_TEXT == value);
                     caseRegistrationController.cattleType.value = "${selectedTypeObj.pT_ID}";
 
-                    setState(() {
-                      _selectedType = value;
-                      _breedOptions = _allSubtypes
+        setState(() {
+          _selectedType = value;
+          _breedOptions = _allSubtypes
                           .where((s) => s.pT_ID == selectedTypeObj.pT_ID)
-                          .toList();
+              .toList();
                       _selectedBreed = null;
-                    });
+        });
                   }
-                },
+      },
               ),
             ),
           ],
@@ -580,21 +580,21 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   labelText: 'Cattle\'s Breed',
                   border: InputBorder.none,
                 ),
-                value: _selectedBreed,
-                items: _breedOptions.map((breed) {
+      value: _selectedBreed,
+      items: _breedOptions.map((breed) {
                   return DropdownMenuItem<PatientSubType>(
-                    value: breed,
+          value: breed,
                     child: Text(breed.ptS_TEXT),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedBreed = value;
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _selectedBreed = value;
                     if (value != null) {
                       caseRegistrationController.cattleBreedType.value = value.ptS_ID.toString();
                     }
-                  });
-                },
+        });
+      },
               ),
             ),
           ],
@@ -619,25 +619,25 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     });
 
     try {
-      ApiService apiService = ApiService();
-      UserController userController = Get.put(UserController());
-      final response = await apiService
-          .getRequest('/GetMedicines/${userController.userId.value}/1/100');
+    ApiService apiService = ApiService();
+    UserController userController = Get.put(UserController());
+    final response = await apiService
+        .getRequest('/GetMedicines/${userController.userId.value}/1/100');
       
-      if (response != null) {
-        List<dynamic> records = response['records'];
-        medicineList = records.map((e) {
-          return MedicineItem(
+    if (response != null) {
+      List<dynamic> records = response['records'];
+      medicineList = records.map((e) {
+        return MedicineItem(
             item_ID: e['item_ID'] ?? 0,
-            itemName: e['item_Name'] ?? '',
-            itemUnit: e['item_Unit'] ?? '',
-            itemNumber: e['item_Number'] ?? '',
+          itemName: e['item_Name'] ?? '',
+          itemUnit: e['item_Unit'] ?? '',
+          itemNumber: e['item_Number'] ?? '',
             itemType: e['item_Type'] ?? '',
             itemPrice: (e['item_Price'] ?? 0).toDouble(),
             iD_Name: e['iD_Name'] ,
-          );
-        }).toList();
-        setState(() {});
+        );
+      }).toList();
+      setState(() {});
       } else {
         Get.dialog(
           AlertDialog(
@@ -687,7 +687,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
-              children: [
+          children: [
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -697,20 +697,20 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   child: Icon(Icons.medication, color: AppThemes.light.primaryColor),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
-                  child: DropdownButtonFormField<MedicineItem>(
-                    value: selectedMedicine,
-                    items: medicineList.map((medicine) {
-                      return DropdownMenuItem(
-                        value: medicine,
-                        child: Text('${medicine.itemName} (${medicine.itemUnit})'),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedMedicine = value;
-                      });
-                    },
+            Expanded(
+              child: DropdownButtonFormField<MedicineItem>(
+                value: selectedMedicine,
+                items: medicineList.map((medicine) {
+                  return DropdownMenuItem(
+                    value: medicine,
+                    child: Text('${medicine.itemName} (${medicine.itemUnit})'),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedMedicine = value;
+                  });
+                },
                     decoration: const InputDecoration(
                       labelText: 'Select Medicine',
                       border: InputBorder.none,
@@ -739,19 +739,19 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(Icons.numbers, color: AppThemes.light.primaryColor),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: TextField(
-                    controller: quantityController,
-                    keyboardType: TextInputType.number,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextField(
+                controller: quantityController,
+                keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: 'Quantity',
                       border: InputBorder.none,
-                    ),
+              ),
                   ),
                 ),
-              ],
+          ],
             ),
           ),
         ),
@@ -764,25 +764,25 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: ElevatedButton(
-              onPressed: () {
+          child: ElevatedButton(
+            onPressed: () {
                 if (selectedMedicine != null && quantityController.text.isNotEmpty) {
-                  setState(() {
-                    selectedMedicines.add(MedicineItem(
+                setState(() {
+                  selectedMedicines.add(MedicineItem(
                       item_ID: selectedMedicine!.item_ID,
-                      itemName: selectedMedicine!.itemName,
-                      itemUnit: selectedMedicine!.itemUnit,
-                      itemNumber: selectedMedicine!.itemNumber,
+                    itemName: selectedMedicine!.itemName,
+                    itemUnit: selectedMedicine!.itemUnit,
+                    itemNumber: selectedMedicine!.itemNumber,
                       itemType: selectedMedicine!.itemType,
                       itemPrice: selectedMedicine!.itemPrice,
                       quantity: quantityController.text,
                       iD_Name: selectedMedicine!.iD_Name,
-                    ));
-                    quantityController.clear();
+                  ));
+                  quantityController.clear();
                     selectedMedicine = null; // Clear selection after adding
-                  });
-                }
-              },
+                });
+              }
+            },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppThemes.light.primaryColor,
                 shape: RoundedRectangleBorder(
@@ -790,9 +790,9 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                 ),
                 minimumSize: const Size(double.infinity, 50),
               ),
-              child: const Text('Add Medicine'),
-            ),
+            child: const Text('Add Medicine'),
           ),
+        ),
         ),
         const SizedBox(height: 10),
         Card(
@@ -815,9 +815,9 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                 child: const Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        'Item No',
-                        textAlign: TextAlign.center,
+                        child: Text(
+                      'Item No',
+                      textAlign: TextAlign.center,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -848,34 +848,34 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
               ...selectedMedicines.map((entry) => Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
                           child: Text(
                             '${entry.itemNumber}',
-                            textAlign: TextAlign.center,
+                        textAlign: TextAlign.center,
                           ),
                         ),
-                        Expanded(
+                      Expanded(
                           child: Text(
                             entry.itemName,
-                            textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
                           ),
                         ),
-                        Expanded(
+                      Expanded(
                           child: Text(
                             entry.quantity,
-                            textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
                           ),
                         ),
-                        Expanded(
+                      Expanded(
                           child: Text(
                             entry.itemUnit,
-                            textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
                           ),
                         ),
-                      ],
-                    ),
+                    ],
+              ),
                   )),
             ],
           ),
@@ -910,16 +910,16 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   labelText: label,
                   border: InputBorder.none,
                 ),
-                value: _formData[key],
-                items: options.map((option) {
-                  return DropdownMenuItem(
-                    value: option,
-                    child: Text(option),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _formData[key] = value;
+      value: _formData[key],
+      items: options.map((option) {
+        return DropdownMenuItem(
+          value: option,
+          child: Text(option),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _formData[key] = value;
                     // Handle gender mapping
                     if (key == 'Gender') {
                       if (value == 'M') {
@@ -931,8 +931,8 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                     print("caseRegistrationController.genderController.value");
                     print(caseRegistrationController.genderController.value);
 
-                  });
-                },
+        });
+      },
               ),
             ),
           ],
@@ -967,11 +967,11 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                   labelText: label,
                   border: InputBorder.none,
                 ),
-                onChanged: (value) {
+      onChanged: (value) {
 
-                  setState(() {
-                    _formData[key] = value;
-                  });
+        setState(() {
+          _formData[key] = value;
+        });
                   if(label=="Months"){
                     caseRegistrationController.monthsController.value = value;
                   }
@@ -997,14 +997,14 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
     });
 
     try {
-      ApiService apiService = ApiService();
+    ApiService apiService = ApiService();
       final diseaseResponse = await apiService.getRequestList("/GetDiseaseTypes/1888");
 
-      if (diseaseResponse != null && diseaseResponse is List) {
-        setState(() {
+    if (diseaseResponse != null && diseaseResponse is List) {
+      setState(() {
           _diseaseTypes = diseaseResponse.map((e) => DiseaseType.fromJson(e)).toList();
-        });
-      } else {
+      });
+    } else {
         Get.dialog(
           AlertDialog(
             title: const Text('Error'),
@@ -1077,23 +1077,23 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             const SizedBox(width: 16),
             Expanded(
               child: DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Disease Type',
+      decoration: const InputDecoration(
+        labelText: 'Disease Type',
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
-                ),
-                value: selectedDisease,
-                items: _diseaseTypes
-                    .map((disease) => DropdownMenuItem<String>(
-                          value: disease.diseaseName,
-                          child: Text(disease.diseaseName),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedDisease = value;
-                  });
-                },
+        contentPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+      ),
+      value: selectedDisease,
+      items: _diseaseTypes
+          .map((disease) => DropdownMenuItem<String>(
+                value: disease.diseaseName,
+                child: Text(disease.diseaseName),
+              ))
+          .toList(),
+      onChanged: (value) {
+        setState(() {
+          selectedDisease = value;
+        });
+      },
               ),
             ),
           ],
@@ -1183,7 +1183,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           "cattleSubType": int.tryParse(caseRegistrationController.cattleBreedType.value) ?? 0,
 
           "locationId": 1,
-            "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
+      "medicine": selectedMedicines.map((med) => med.toJson()).toList(),
             "cattleCount": 1,
             "imeiNumber": "",
           "latitude": caseRegistrationController.latitude.value,
@@ -1316,8 +1316,9 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.light.primaryColor,
-              Colors.white,
+                  AppThemes.light.primaryColor,
+                  AppThemes.light.primaryColor.withOpacity(0.8),
+                  AppThemes.light.primaryColor.withOpacity(0.6),
             ],
           ),
         ),
@@ -1326,11 +1327,11 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
           SizedBox(height: 6,),
           CircularProgressIndicator()
         ],),):Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
                 Card(
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -1356,33 +1357,33 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                               labelText: 'Registration Type',
                               border: InputBorder.none,
                             ),
-                            value: _registrationType,
-                            items: [
-                              'Individual Registration',
-                              // 'Lab Sample',
-                              'Mass Registration',
-                            ].map((type) {
-                              return DropdownMenuItem(
-                                value: type,
-                                child: Text(type),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _registrationType = value!;
-                                _formData.clear(); // Clear form data when type changes
-                              });
-                            },
-                          ),
+                value: _registrationType,
+                items: [
+                  'Individual Registration',
+                  // 'Lab Sample',
+                  'Mass Registration',
+                ].map((type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(type),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _registrationType = value!;
+                    _formData.clear(); // Clear form data when type changes
+                  });
+                },
+              ),
                         ),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
-                ..._buildFormFields(),
-                const SizedBox(height: 20),
-                ElevatedButton(
+              ..._buildFormFields(),
+              const SizedBox(height: 20),
+              ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppThemes.light.primaryColor,
                     elevation: 2,
@@ -1394,9 +1395,9 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
                     showApprovalDialog();
                   caseRegistrationController.getCurrentLocation();
                   },
-                  child: const Text('Register Case'),
-                ),
-              ],
+                child: const Text('Register Case'),
+              ),
+            ],
             ),
           ),
         ),

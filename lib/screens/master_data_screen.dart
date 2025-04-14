@@ -20,6 +20,7 @@ import '../controllers/general_settings_controller.dart';
 import '../controllers/location_controller.dart';
 import '../controllers/user_controller.dart';
 import '../shared_pref_helper.dart';
+import '../theme.dart';
 
 class MasterDataScreen extends StatefulWidget {
   final bool fromLogin;
@@ -78,133 +79,146 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: AppThemes.light.primaryColor,
         title: const Text(
           'Master Data',
           style: TextStyle(color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              children: [
-
-                buildSyncTile(
-                  "Event Types",
-                  eventController.lastSyncedTime,
-                  eventController.syncEventTypes,
-                  eventController.isLoading,
-                ),
-                buildSyncTile(
-                    "Denial Types",
-                    denialController.lastSyncedTime,
-                        () => denialController
-                        .syncDenialTypes(userController.userId.value),
-                    denialController.isLoading),
-                buildSyncTile(
-                    "Blocks",
-                    blocksController.lastSyncedTime,
-                        () => blocksController.syncBlocks(
-                        userController.zoneId.value, userController.userId.value),
-                    blocksController.isLoading),
-                buildSyncTile(
-                    "Incident Types",
-                    incidentTypesController.lastSyncedTime,
-                    incidentTypesController.syncIncidentTypes,
-                    incidentTypesController.isLoading),
-                buildSyncTile(
-                    "Incident Subtypes",
-                    incidentSubTypesController.lastSyncedTime,
-                    incidentSubTypesController.syncIncidentSubTypes,
-                    incidentSubTypesController.isLoading),
-                buildSyncTile(
-                    "Patient Types",
-                    patientTypesController.lastSyncedTime,
-                    patientTypesController.syncPatientTypes,
-                    patientTypesController.isLoading),
-                buildSyncTile(
-                    "General Settings",
-                    generalSettingsController.lastSyncedTime,
-                    () => generalSettingsController
-                        .syncGeneralSettings(userController.userId.value),
-                    generalSettingsController.isLoading),
-                buildSyncTile(
-                    "Districts",
-                    districtsController.lastSyncedTime,
-                    () => districtsController
-                        .syncDistricts(userController.userId.value),
-                    districtsController.isLoading),
-                buildSyncTile(
-                    "Payment Methods",
-                    paymentMethodsController.lastSyncedTime,
-                    () => paymentMethodsController
-                        .syncPaymentMethods(userController.userId.value),
-                    paymentMethodsController.isLoading),
-                buildSyncTile(
-                    "Disease Types",
-                    diseaseTypesController.lastSyncedTime,
-                    () => diseaseTypesController
-                        .syncDiseaseTypes(userController.userId.value),
-                    diseaseTypesController.isLoading),
-                buildSyncTile(
-                    "Standard Remarks",
-                    standardRemarksController.lastSyncedTime,
-                    () => standardRemarksController
-                        .syncStandardRemarks(userController.userId.value),
-                    standardRemarksController.isLoading),
-                buildSyncTile(
-                    "Doctors",
-                    doctorsController.lastSyncedTime,
-                    () => doctorsController.syncDoctors(
-                        userController.userId.value,userController.zoneId.value, userController.blockId.value),
-                    doctorsController.isLoading),
-                buildSyncTile(
-                    "Drivers",
-                    driversController.lastSyncedTime,
-                    () => driversController.syncDrivers(
-                        userController.userId.value, "ZONE_ID", "BLOCK_ID"),
-                    driversController.isLoading),
-                buildSyncTile(
-                    "Hospitals",
-                    hospitalsController.lastSyncedTime,
-                    () => hospitalsController.syncHospitals("DEPT_ID",
-                        "ZONE_ID", userController.userId.value, 1, 1),
-                    hospitalsController.isLoading),
-                buildSyncTile(
-                    "Locations",
-                    locationsController.lastSyncedTime,
-                    () => locationsController.syncLocations(
-                        "DEP_ID", "ZONE_ID", userController.userId.value, 1, 1),
-                    locationsController.isLoading),
-              ],
-            ),
+      body: Container(
+        decoration:  BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppThemes.light.primaryColor,
+              AppThemes.light.primaryColor.withOpacity(0.8),
+              AppThemes.light.primaryColor.withOpacity(0.6),
+            ],
           ),
-          widget.fromLogin
-              ? Container(
-                  margin: const EdgeInsets.all(16),
-                  width: double.maxFinite,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Get.offAll(HomeScreen()); // Auto-login if token exists
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        shape: RoundedRectangleBorder(
-                          // Add this
-                          borderRadius: BorderRadius.circular(
-                              28.0), // Adjust the radius as needed
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        textStyle: GoogleFonts.montserrat(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    child: const Text("Go to Home"),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
+
+                  buildSyncTile(
+                    "Event Types",
+                    eventController.lastSyncedTime,
+                    eventController.syncEventTypes,
+                    eventController.isLoading,
                   ),
-                )
-              : const SizedBox.shrink()
-        ],
+                  buildSyncTile(
+                      "Denial Types",
+                      denialController.lastSyncedTime,
+                          () => denialController
+                          .syncDenialTypes(userController.userId.value),
+                      denialController.isLoading),
+                  buildSyncTile(
+                      "Blocks",
+                      blocksController.lastSyncedTime,
+                          () => blocksController.syncBlocks(
+                          userController.zoneId.value, userController.userId.value),
+                      blocksController.isLoading),
+                  buildSyncTile(
+                      "Incident Types",
+                      incidentTypesController.lastSyncedTime,
+                      incidentTypesController.syncIncidentTypes,
+                      incidentTypesController.isLoading),
+                  buildSyncTile(
+                      "Incident Subtypes",
+                      incidentSubTypesController.lastSyncedTime,
+                      incidentSubTypesController.syncIncidentSubTypes,
+                      incidentSubTypesController.isLoading),
+                  buildSyncTile(
+                      "Patient Types",
+                      patientTypesController.lastSyncedTime,
+                      patientTypesController.syncPatientTypes,
+                      patientTypesController.isLoading),
+                  buildSyncTile(
+                      "General Settings",
+                      generalSettingsController.lastSyncedTime,
+                      () => generalSettingsController
+                          .syncGeneralSettings(userController.userId.value),
+                      generalSettingsController.isLoading),
+                  buildSyncTile(
+                      "Districts",
+                      districtsController.lastSyncedTime,
+                      () => districtsController
+                          .syncDistricts(userController.userId.value),
+                      districtsController.isLoading),
+                  buildSyncTile(
+                      "Payment Methods",
+                      paymentMethodsController.lastSyncedTime,
+                      () => paymentMethodsController
+                          .syncPaymentMethods(userController.userId.value),
+                      paymentMethodsController.isLoading),
+                  buildSyncTile(
+                      "Disease Types",
+                      diseaseTypesController.lastSyncedTime,
+                      () => diseaseTypesController
+                          .syncDiseaseTypes(userController.userId.value),
+                      diseaseTypesController.isLoading),
+                  buildSyncTile(
+                      "Standard Remarks",
+                      standardRemarksController.lastSyncedTime,
+                      () => standardRemarksController
+                          .syncStandardRemarks(userController.userId.value),
+                      standardRemarksController.isLoading),
+                  buildSyncTile(
+                      "Doctors",
+                      doctorsController.lastSyncedTime,
+                      () => doctorsController.syncDoctors(
+                          userController.userId.value,userController.zoneId.value, userController.blockId.value),
+                      doctorsController.isLoading),
+                  buildSyncTile(
+                      "Drivers",
+                      driversController.lastSyncedTime,
+                      () => driversController.syncDrivers(
+                          userController.userId.value, "ZONE_ID", "BLOCK_ID"),
+                      driversController.isLoading),
+                  buildSyncTile(
+                      "Hospitals",
+                      hospitalsController.lastSyncedTime,
+                      () => hospitalsController.syncHospitals("DEPT_ID",
+                          "ZONE_ID", userController.userId.value, 1, 1),
+                      hospitalsController.isLoading),
+                  buildSyncTile(
+                      "Locations",
+                      locationsController.lastSyncedTime,
+                      () => locationsController.syncLocations(
+                          "DEP_ID", "ZONE_ID", userController.userId.value, 1, 1),
+                      locationsController.isLoading),
+                ],
+              ),
+            ),
+            widget.fromLogin
+                ? Container(
+                    margin: const EdgeInsets.all(16),
+                    width: double.maxFinite,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.offAll(HomeScreen()); // Auto-login if token exists
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          shape: RoundedRectangleBorder(
+                            // Add this
+                            borderRadius: BorderRadius.circular(
+                                28.0), // Adjust the radius as needed
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          textStyle: GoogleFonts.montserrat(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      child: const Text("Go to Home"),
+                    ),
+                  )
+                : const SizedBox.shrink()
+          ],
+        ),
       ),
     );
   }
@@ -212,81 +226,139 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
   Widget buildSyncTile(String title, RxString lastSyncedTime,
       VoidCallback syncFunction, RxBool isLoading) {
     return Container(
-
-        // height: 100,
-        // width: 200,
-        margin: const EdgeInsets.only(top: 16, left:12,right: 6),
-        decoration:    BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: Colors.blue,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.grey.shade300, blurRadius: 7, spreadRadius: 0.7)
-            ]),
-        child: Stack(
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 12,top: 12),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.orange),
-                  padding: const EdgeInsets.all(8),
-                  child: const Icon(
-                    Icons.event,
-                    color: Colors.white,
-                  ),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+        // gradient: LinearGradient(
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        //   colors: [
+        //     // AppThemes.light.primaryColor.withOpacity(0.8),
+        //
+        //   ],
+        // ),
+        boxShadow: [
+          BoxShadow(
+            color: AppThemes.light.primaryColor.withOpacity(0.3),
+            blurRadius: 10,
+            spreadRadius: 2,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: syncFunction,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Stack(
+            children: [
+              // Background Pattern
+              Positioned(
+                right: -20,
+                top: -20,
+                child: Icon(
+                  Icons.sync,
+                  size: 120,
+                  color: Colors.white.withOpacity(0.1),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              // Content
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Icon and Title Row
+                  Row(
                     children: [
-                      Text(title,
-                          maxLines: 2,
-                          style:
-                              const TextStyle(color: Colors.white, fontSize: 18,fontWeight: FontWeight.bold)),
-                      Obx(() =>  Text(
-                        maxLines: 2,
-                            // "Last Synced: Never",
-                            "Last Synced: ${lastSyncedTime.value}",
-                            style: TextStyle(color: Colors.white),
-                          )),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  // width: double.infinity,
-                  child: ElevatedButton(
-            
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppThemes.light.primaryColor.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child:  Icon(
+                          Icons.sync,
+                          color: AppThemes.light.primaryColor,
+                          size: 24,
                         ),
                       ),
-                      onPressed: syncFunction,
-                      child: const Text(
-                        '    Synchronize    ',
-                        style: TextStyle(color: Colors.black),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style:  TextStyle(
+                            color: AppThemes.light.primaryColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  // Last Synced Time
+                  Obx(() => Text(
+                        "Last Synced: ${lastSyncedTime.value}",
+                        style: TextStyle(
+                          color: AppThemes.light.primaryColor.withOpacity(0.8),
+                          fontSize: 14,
+                        ),
                       )),
-                )
-              ],
-            ),
-             Positioned(
-               top: -30,
-                 right: -36,
-                 child: Icon((Icons.pages_rounded),size: 150,color: Colors.white.withOpacity(0.1),))
-          ],
-        ));
+                  const SizedBox(height: 16),
+                  // Sync Button
+                  Obx(() => Container(
+                        width: double.infinity,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppThemes.light.primaryColor,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: isLoading.value
+                            ? const Center(
+                                child: SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                  ),
+                                ),
+                              )
+                            : const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.sync,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Synchronize',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      )),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 /*

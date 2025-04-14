@@ -68,7 +68,7 @@ class _SideMenuState extends State<SideMenu> {
               Navigator.pushNamed(context, '/change_password');
             })
           ]),
-          _buildExpandableTile("Booking ", [
+          _buildExpandableTile("Fuel ", [
             _buildSubMenuItem("Generate Fuel Entry Ticket", Icons.arrow_right, () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/fuel_ticket_entry_screen');

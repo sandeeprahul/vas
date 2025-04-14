@@ -133,7 +133,8 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
             end: Alignment.bottomCenter,
             colors: [
               AppThemes.light.primaryColor,
-              Colors.white,
+              AppThemes.light.primaryColor.withOpacity(0.8),
+              AppThemes.light.primaryColor.withOpacity(0.6),
             ],
           ),
         ),
@@ -471,7 +472,8 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
         style: GoogleFonts.montserrat(
           fontSize: 18,
           fontWeight: FontWeight.w600,
-          color: AppThemes.light.primaryColor,
+                                 color: Colors.white,
+
         ),
       ),
     );
@@ -573,7 +575,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                   Text(
                     title,
                     style: GoogleFonts.montserrat(
-                      fontSize: 12,
+                      fontSize: 15,
                       color: Colors.grey,
                     ),
                   ),

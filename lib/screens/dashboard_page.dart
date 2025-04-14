@@ -61,13 +61,14 @@ class _DashboardPageState extends State<DashboardPage> {
 
         children: [
           Container(
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.blue,
-                  Colors.white,
+                  AppThemes.light.primaryColor,
+                  AppThemes.light.primaryColor.withOpacity(0.8),
+                  AppThemes.light.primaryColor.withOpacity(0.6),
                 ],
               ),
             ),

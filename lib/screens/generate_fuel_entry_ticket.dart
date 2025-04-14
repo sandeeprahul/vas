@@ -61,8 +61,9 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.light.primaryColor,
-              Colors.white,
+                  AppThemes.light.primaryColor,
+                  AppThemes.light.primaryColor.withOpacity(0.8),
+                  AppThemes.light.primaryColor.withOpacity(0.6),
             ],
           ),
         ),

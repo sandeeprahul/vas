@@ -305,8 +305,9 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.light.primaryColor,
-              Colors.white,
+                  AppThemes.light.primaryColor,
+                  AppThemes.light.primaryColor.withOpacity(0.8),
+                  AppThemes.light.primaryColor.withOpacity(0.6),
             ],
           ),
         ),
@@ -628,7 +629,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                   Text(
                     title,
                     style: GoogleFonts.montserrat(
-                      fontSize: 12,
+                      fontSize: 15,
                       color: Colors.grey,
                     ),
                   ),

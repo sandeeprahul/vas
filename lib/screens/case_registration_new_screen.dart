@@ -171,7 +171,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                   Text(
                     title,
                     style: GoogleFonts.montserrat(
-                      fontSize: 12,
+                      fontSize: 15,
                       color: Colors.grey,
                     ),
                   ),
@@ -185,22 +185,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                         color: Colors.black,
                         fontWeight: FontWeight.bold),
                   ),
-                  // TextField(
-                  //   enabled: false,
-                  //   // controller: controller,
-                  //   keyboardType: keyboardType,
-                  //   decoration:  InputDecoration(
-                  //     border: InputBorder.none,
-                  //     isDense: true,
-                  //     hintText: value,
-                  //     contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                  //   ),
-                  //
-                  //   style: GoogleFonts.montserrat(
-                  //     fontSize: 15,
-                  //     fontWeight: FontWeight.w500,
-                  //   ),
-                  // ),
+
                 ],
               ),
             ),

@@ -56,7 +56,7 @@ class FormController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    baseOdometerController.text = "";
+    // baseOdometerController.text = "";
     loadLastSyncedData();
     _getCurrentLocation();
     // loadTripDetails("StartTrip"); // Load previously saved trip details
@@ -195,17 +195,17 @@ class FormController extends GetxController {
         "depT_ID": userController.deptId.value,
         "user_ID": userController.userId.value,
         "driver_ID": selectedDriverId.value,
-        // "doctor_ID": "23",
         "doctor_ID": selectedDoctorId.value,
         "zone_ID": districtsController.selectedDistrictId.value,
+        "district": districtsController.selectedDistrictId.value,
         "block_ID": blocksController.selectedBlockId.value,
         "location_ID": locationSubTypeController.selectedLocationId.value,
         "address": "",
         "vehicle_ID": ambulanceController.selectedAmbulanceId.value,
         // "base_KM": "",
         "base_KM": baseOdometerController.value.text,
-        "lat":latitude.value ,
-        "lng": longitude.value,
+        "latitude":latitude.value ,
+        "longitude": longitude.value,
         "device_Regn_ID": userController.deviceRegnId.value,
         "imeI_Number": userController.imeiNumber.value,
         "os_Version": "13"
@@ -236,10 +236,9 @@ class FormController extends GetxController {
         // Handle success (e.g., show success message, navigate, etc.)
 
         if (response['result'] == 1) {
-
+          clearAllFields();
           TripController tripController = Get.put(TripController());
           tripController.fetchTripDetails();
-          clearAllFields();
           showErrorDialog('Alert', "${response["message"]}");
 
 

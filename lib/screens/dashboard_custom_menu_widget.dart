@@ -41,7 +41,7 @@ class DashboardCustomMenuWidget extends StatelessWidget {
                     ),
                   ),*/
                   _buildDashboardCard(
-                    title: 'Case Register',
+                    title: 'Scheduled Trip',
                     icon: Icons.book,
                     onTap: () => Get.toNamed('/case_registration_new'),
                     gradient: const LinearGradient(

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../utils/showDialogNoContext.dart';
@@ -20,11 +22,31 @@ class ApiService {
       } else {
         print("API Error: ${response.body}");
         // showErrorDialog('Failure', response.body);
+        if (response.statusCode == 400) {
+          final error = jsonDecode(response.body);
+          String message = error['reasonPhrase'] ?? "Bad Request";
 
+          Get.defaultDialog(
+            title: "Error 400",
+            middleText: message,
+            confirm: ElevatedButton(
+              onPressed: () => Get.back(),
+              child: const Text("OK"),
+            ),
+          );
+        }
         return null;
       }
     } catch (e) {
       print("Request Failed: $e");
+      Get.defaultDialog(
+        title: "Request Failed",
+        middleText: e.toString(),
+        confirm: ElevatedButton(
+          onPressed: () => Get.back(),
+          child: const Text("OK"),
+        ),
+      );
       return null;
     }
   }

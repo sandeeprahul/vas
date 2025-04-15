@@ -69,10 +69,10 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
           "${tripController.tripDetails.value!.blockId}";
 
       ///locationtype
-      // locationTypeController.selectedLocationType.value =
-      //     tripController.tripDetails.value!.lo;
-      // districtsController.selectedDistrictId.value =
-      //     "${tripController.tripDetails.value!.districtId}";
+      locationTypeController.selectedLocationType.value =
+          tripController.tripDetails.value!.location;
+      locationTypeController.selectedLocationTypeId.value =
+          "${tripController.tripDetails.value!.locationId}";
 
       ///location
 
@@ -149,7 +149,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(4, 24, 4, 12),
                       child: Text(
-                        'Location Details',
+                        'Location Details : ',
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -218,7 +218,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                             "stop_Name"),
                       );
                     }),
-                    _buildSectionTitle("Vehicle Details"),
+                    _buildSectionTitle("Vehicle Details : "),
                     Obx(() {
                       return _buildSelectionCard(
                         icon: Icons.local_hospital,
@@ -307,7 +307,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                       }
                     }),
 
-                    _buildSectionTitle("Staff Details"),
+                    _buildSectionTitle("Staff Details : "),
                     Obx(() {
                       return _buildSelectionCard(
                         icon: Icons.medical_services,
@@ -341,7 +341,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                     Obx(() => Container(
                           width: double.infinity,
                           height: 54,
-                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
                           child: ElevatedButton(
                             onPressed: tripController.tripDetails.value == null
                                 ? controller.submitForm
@@ -364,7 +364,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                             ? controller.submitFormDeparture
                                             : controller.submitFormClose,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppThemes.light.primaryColor,
+                              backgroundColor: Colors.white,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
@@ -389,7 +389,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                         style: GoogleFonts.poppins(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          color: Colors.white,
+                                          color: Colors.black,
                                         ),
                                       )
                                     : tripController.tripDetails.value !=
@@ -402,7 +402,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                             style: GoogleFonts.poppins(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
-                                              color: Colors.white,
+                                              color: Colors.black,
                                             ),
                                           )
                                         : tripController.tripDetails.value !=
@@ -415,7 +415,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                                 style: GoogleFonts.poppins(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
-                                                  color: Colors.white,
+                                                  color: Colors.black,
                                                 ),
                                               )
                                             : tripController.tripDetails
@@ -433,7 +433,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
-                                                      color: Colors.white,
+                                                      color: Colors.black,
                                                     ),
                                                   )
                                                 : Text(
@@ -443,7 +443,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
-                                                      color: Colors.white,
+                                                      color: Colors.black,
                                                     ),
                                                   ),
                           ),
@@ -576,8 +576,10 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                   Text(
                     title,
                     style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      color: Colors.grey,
+                      fontSize: 13,
+                      color: edit ? Colors.red:Colors.black,
+                      fontWeight: FontWeight.bold,
+
                     ),
                   ),
                   TextField(
@@ -589,6 +591,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                       contentPadding: EdgeInsets.symmetric(vertical: 8),
                     ),
                     style: GoogleFonts.poppins(
+                      color:  edit ? Colors.red:Colors.black,
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),

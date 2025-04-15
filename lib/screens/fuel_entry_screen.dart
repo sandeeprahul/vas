@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../controllers/user_controller.dart';
 import '../models/fuel_entry_model.dart';
 import '../models/vehicle_details_model.dart';
@@ -63,20 +64,62 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
 
   Future<void> _getCurrentLocation() async {
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+    // Request location permission
+    var status = await Permission.location.request();
+
+    if (status.isGranted) {
+      try {
+        LocationSettings locationSettings = const LocationSettings(
+          accuracy: LocationAccuracy.bestForNavigation,
+          distanceFilter: 0,
+        );
+        Position position = await Geolocator.getCurrentPosition(
+          locationSettings: locationSettings,
+        );
+        setState(() {
+          latitude = position.latitude;
+          longitude = position.longitude;
+        });
+        print("Latitude: $latitude");
+        print("Longitude: $longitude");
+      } catch (e) {
+        Get.snackbar('Error', 'Could not get location: $e');
+      }
+    } else if (status.isDenied) {
+      Get.defaultDialog(
+        title: "Permission Denied",
+        middleText: "Location permission is required to get your current position.",
+        confirm: ElevatedButton(
+          onPressed: () {
+            openAppSettings(); // Open settings to enable manually
+            Get.back();
+          },
+          child: const Text("Open Settings"),
+        ),
+        cancel: TextButton(
+          onPressed: () => Get.back(),
+          child: const Text("Cancel"),
+        ),
       );
-      setState(() {
-        latitude = position.latitude;
-        longitude = position.longitude;
-      });
-      print(latitude);
-      print(longitude);
-    } catch (e) {
-      Get.snackbar('Error', 'Could not get location: $e');
+    } else if (status.isPermanentlyDenied) {
+      Get.defaultDialog(
+        title: "Permission Permanently Denied",
+        middleText: "Please enable location permission from app settings.",
+        confirm: ElevatedButton(
+          onPressed: () {
+            openAppSettings();
+            Get.back();
+          },
+          child: const Text("Open Settings"),
+        ),
+        cancel: TextButton(
+          onPressed: () => Get.back(),
+          child: const Text("Cancel"),
+        ),
+      );
     }
   }
+
 
   Future<void> _takePicture(bool isOdometer) async {
     try {
@@ -524,7 +567,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
                     // Odometer Photo
                     _buildPhotoSection(
-                      title: 'Odometer Photo',
+                      title: 'Take Odometer Photo',
                       imageBase64: odometerImageBase64,
                       onTap: () => _takePicture(true),
                     ),
@@ -532,7 +575,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
                     // Bill Photo
                     _buildPhotoSection(
-                      title: 'Bill Photo',
+                      title: 'Take Bill Photo',
                       imageBase64: billImageBase64,
                       onTap: () => _takePicture(false),
                     ),
@@ -735,28 +778,45 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
         const SizedBox(height: 8),
         InkWell(
           onTap: onTap,
-          child: Container(
+          child: SizedBox(
             height: 150,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              // color: Colors.white,
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: imageBase64 != null
-                ? Image.memory(
-                    base64Decode(imageBase64),
-                    fit: BoxFit.cover,
-                  )
-                : const Center(
-                    child: Icon(
-                      Icons.camera,
-                      size: 50,
-                      color: Colors.grey,
-                    ),
+
+            child: Container(
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                // color: Colors.white,
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: imageBase64 != null
+                  ? Image.memory(
+                      base64Decode(imageBase64),
+                      fit: BoxFit.cover,
+                    )
+                  : Column(
+                mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.camera,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        "Click Here",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
+            ),
           ),
         ),
+
       ],
     );
   }

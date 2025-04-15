@@ -20,9 +20,45 @@ class _TripDetailsNewWidgetState extends State<TripDetailsNewWidget> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      if(tripController.isLoading.value){
+        return const CircularProgressIndicator();
+      }
       final trip = tripController.tripDetails.value;
       if (trip == null || trip.startTime.isEmpty) {
-        return const SizedBox.shrink(); // Don't show widget if no start time
+        return InkWell(
+          onTap: (){
+            tripController.fetchTripDetails();
+          },
+          child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    blurRadius: 10,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child:  Column(
+                children: [
+                  const Text('No Trip details available' ,style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),),
+                  TextButton(onPressed: (){
+                    tripController.fetchTripDetails();
+
+                  }, child: const Text('Click to REFRESH'))
+
+                ],
+              )),
+        ); // Don't show widget if no start time
       }
 
       /*if (tripController.isLoading.value) {

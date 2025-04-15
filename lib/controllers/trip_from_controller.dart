@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/controllers/ambulance_controller.dart';
 import 'package:vas/controllers/blocks_controller.dart';
@@ -57,6 +58,7 @@ class FormController extends GetxController {
     super.onInit();
     baseOdometerController.text = "";
     loadLastSyncedData();
+    _getCurrentLocation();
     // loadTripDetails("StartTrip"); // Load previously saved trip details
   }
 
@@ -189,26 +191,6 @@ class FormController extends GetxController {
     try {
       isLoading.value = true;
 
-      LocationPermission  permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          // Permissions are denied, next time you could try
-          // requesting permissions again (this is also where
-          // Android's shouldShowRequestPermissionRationale
-          // returned true. According to Android guidelines
-          // your App should show an explanatory UI now.
-          return Future.error('Location permissions are denied');
-        }
-      }
-
-
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-
-
-
-
       final Map<String, dynamic> formData = {
         "depT_ID": userController.deptId.value,
         "user_ID": userController.userId.value,
@@ -222,8 +204,8 @@ class FormController extends GetxController {
         "vehicle_ID": ambulanceController.selectedAmbulanceId.value,
         // "base_KM": "",
         "base_KM": baseOdometerController.value.text,
-        "latitude": position.latitude,
-        "longitude": position.longitude,
+        "lat":latitude.value ,
+        "lng": longitude.value,
         "device_Regn_ID": userController.deviceRegnId.value,
         "imeI_Number": userController.imeiNumber.value,
         "os_Version": "13"
@@ -374,8 +356,8 @@ class FormController extends GetxController {
       "tripId": tripController.tripDetails.value!.tripId,
       // "tripId": tripController.tripDetails.value?.tripId ?? 0,
       "odometer":double.tryParse(seenArrivalOdometerController.text) ?? 0.0, // Convert to integer
-      "lat":16.470866 ,
-      "lng": 80.6065381
+      "lat":latitude.value ,
+      "lng": longitude.value
     };
     print(requestData);
 
@@ -446,8 +428,8 @@ class FormController extends GetxController {
       "tripId": tripController.tripDetails.value!.tripId,
       // "tripId": tripController.tripDetails.value?.tripId ?? 0,
       "odometer":double.tryParse(departureOdometerController.text) ?? 0.0, // Convert to integer
-      "lat":16.470866 ,
-      "lng": 80.6065381
+      "lat":latitude.value ,
+      "lng": longitude.value
     };
     print(requestData);
 
@@ -502,6 +484,65 @@ class FormController extends GetxController {
 
     }
   }
+
+  RxDouble latitude = 0.0.obs;
+  RxDouble longitude = 0.0.obs;
+  Future<void> _getCurrentLocation() async {
+    // Request location permission
+    var status = await Permission.location.request();
+
+    if (status.isGranted) {
+      try {
+        // Use platform-specific location settings
+        LocationSettings locationSettings = const LocationSettings(
+          accuracy: LocationAccuracy.bestForNavigation,
+          distanceFilter: 0,
+        );
+        Position position = await Geolocator.getCurrentPosition(
+          locationSettings: locationSettings,
+        );
+
+        latitude.value = position.latitude;
+        longitude.value= position.longitude;
+
+      } catch (e) {
+        Get.snackbar('Error', 'Could not get location: $e');
+      }
+    } else if (status.isDenied) {
+      Get.defaultDialog(
+        title: "Permission Denied",
+        middleText: "Location permission is required to get your current position.",
+        confirm: ElevatedButton(
+          onPressed: () {
+            openAppSettings(); // Open settings to enable manually
+            Get.back();
+          },
+          child: const Text("Open Settings"),
+        ),
+        cancel: TextButton(
+          onPressed: () => Get.back(),
+          child: const Text("Cancel"),
+        ),
+      );
+    } else if (status.isPermanentlyDenied) {
+      Get.defaultDialog(
+        title: "Permission Permanently Denied",
+        middleText: "Please enable location permission from app settings.",
+        confirm: ElevatedButton(
+          onPressed: () {
+            openAppSettings();
+            Get.back();
+          },
+          child: const Text("Open Settings"),
+        ),
+        cancel: TextButton(
+          onPressed: () => Get.back(),
+          child: const Text("Cancel"),
+        ),
+      );
+    }
+  }
+
   Future<void> submitFormClose() async {
     UserController userController = Get.put(UserController());
     TripController tripController = Get.put(TripController());
@@ -516,8 +557,8 @@ class FormController extends GetxController {
       "tripId": tripController.tripDetails.value!.tripId,
       // "tripId": tripController.tripDetails.value?.tripId ?? 0,
       "odometer":double.tryParse(backToBaseOdometerController.text) ?? 0.0, // Convert to integer
-      "lat":16.470866 ,
-      "lng": 80.6065381
+      "lat":latitude.value ,
+      "lng": longitude.value
     };
     print(requestData);
 
@@ -539,8 +580,9 @@ class FormController extends GetxController {
           Future.delayed(const Duration(milliseconds: 300), () {
             showErrorDialog("Alert!", "${response['message']}");
           });
-          // tripController.fetchTripDetails();
+          tripController.fetchTripDetails();
           //
+
           clearAllFields();
           Get.back();
           SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -550,7 +592,7 @@ class FormController extends GetxController {
 
         }else{
           Future.delayed(const Duration(milliseconds: 300), () {
-            showErrorDialog("Alert!", "$response");
+            showErrorDialog("Alert!", response['message'] );
           });
         }
 

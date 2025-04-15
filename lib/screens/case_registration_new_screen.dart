@@ -31,7 +31,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Case Registration New'),
-        backgroundColor: AppThemes.dark.primaryColor,
+        backgroundColor: AppThemes.light.primaryColor,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -39,8 +39,9 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppThemes.dark.primaryColor.withOpacity(0.05),
-              Colors.white,
+              AppThemes.light.primaryColor,
+              Colors.black,
+              Colors.black,
             ],
           ),
         ),
@@ -48,7 +49,9 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
         child: Obx(() {
           final trip = tripController.tripDetails.value;
           if (trip == null) {
-            return const Center(child: Text("No trip details available"));
+            return Container(
+              color: Colors.white,
+                child: const Center(child: Text("No trip details available",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),)));
           }
 
           return Column(
@@ -80,7 +83,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                     _buildInputCard(
                         icon: Icons.speed,
                         title: 'Seen Departure Odometer',
-                        value: "${trip.reachKm}"),
+                        value: "${trip.departKm}"),
                     _buildInputCard(
                         icon: Icons.vaccines,
                         title: 'Service Village',
@@ -110,13 +113,13 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
 
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppThemes.dark.primaryColor,
+                    backgroundColor: Colors.white,
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text("Continue"),
+                  child: const Text("CONTINUE",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
                 ),
               ),
             ],
@@ -169,7 +172,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
                     title,
                     style: GoogleFonts.poppins(
                       fontSize: 15,
-                      color: Colors.grey,
+                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(

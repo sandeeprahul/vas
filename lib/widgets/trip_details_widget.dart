@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vas/controllers/user_controller.dart';
+import 'package:vas/utils/showLoadingDialog.dart';
 import 'package:vas/widgets/trip_history_seek_bar.dart';
 import 'dart:convert';
 
@@ -36,18 +37,19 @@ class TripController extends GetxController {
     final UserController userController = Get.put(UserController());
     final ambulanceController = Get.put(AmbulanceController());
 
+
     try {
 
-      final response = await _apiService
-          .getRequestForMaster(
-              "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/3/1/1");
-      print(response);
+      // final response = await _apiService
+      //     .getRequestForMaster(
+      //         "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/3/1/1");
+      // print(response);
       var vehicleId = ambulanceController.selectedAmbulanceId.value.isEmpty?userController.vehicleId.value:ambulanceController.selectedAmbulanceId.value;
-      // final response = await _apiService.getRequestForMaster(
-      //     "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/$vehicleId/1/1");
+      final response = await _apiService.getRequestForMaster(
+          "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/$vehicleId/1/1");
       print(response);
       print(
-          "http://49.207.44.107/mvas/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/${ambulanceController.selectedAmbulanceId.value}/1/1");
+          "http://49.207.44.107/mvas/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/$vehicleId/1/1");
       // tripDetails.value = null;
 
       if (response != null &&
@@ -56,18 +58,22 @@ class TripController extends GetxController {
           response['records'] is List &&
           response['records'].isNotEmpty) {
         try {
+          isLoading.value = false;
+
           if (response['total_Records'] != 0) {
             tripDetails.value =
                 TripDetailsModel.fromJson(response['records'][0]);
           }
         } catch (e) {
           tripDetails.value = null;
+          isLoading.value = false;
+
         }
       } else {
         print("No records found or invalid format");
         tripDetails.value = null;
         isLoading.value = false;
-        Get.snackbar('Alert', 'Error:No records found or invalid format',overlayBlur: 2,backgroundColor: Colors.red);
+        // Get.snackbar('Alert', 'Error:No records found or invalid format',overlayBlur: 2,backgroundColor: Colors.red);
 
       }
 
@@ -77,6 +83,7 @@ class TripController extends GetxController {
       Get.snackbar('Alert', 'Error:$e',overlayBlur: 2,backgroundColor: Colors.red);
     }finally{
       isLoading.value = false;
+      // hideLoadingDialog();
 
     }
   }

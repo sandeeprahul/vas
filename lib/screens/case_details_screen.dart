@@ -70,7 +70,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Details'),
+        title: const Text('Owner Details'),
         elevation: 0,
         backgroundColor: AppThemes.light.primaryColor,
       ),
@@ -81,8 +81,8 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
             end: Alignment.bottomCenter,
             colors: [
                   AppThemes.light.primaryColor,
-                  AppThemes.light.primaryColor.withOpacity(0.8),
-                  AppThemes.light.primaryColor.withOpacity(0.6),
+                 Colors.black,
+                 Colors.black,
             ],
           ),
         ),
@@ -248,18 +248,19 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                   child: ElevatedButton(
                     onPressed: _submitForm,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppThemes.light.primaryColor,
+                      backgroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: Text(
-                      'Cattle Details',
+                      'CONTINUE',
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -310,8 +311,8 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                     Text(
                       title,
                       style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        color: Colors.grey,
+                        fontSize: 14,
+                        color: Colors.black,
                       ),
                     ),
                     if (controller != null)
@@ -390,8 +391,8 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                     Text(
                       title,
                       style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        color: Colors.grey,
+                        fontSize: 14,
+                        color: Colors.black,
                       ),
                     ),
                     Text(

@@ -10,28 +10,28 @@ class VehicleDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(4.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
 
           // Vehicle Status Card
-          _buildStatusCard(),
-          const SizedBox(height: 16),
+          // _buildStatusCard(),
+          // const SizedBox(height: 16),
 
           // Vehicle Details Card
           _buildVehicleDetailsCard(),
-          const SizedBox(height: 16),
+          const SizedBox(height: 4),
 
           // Scheduled Trip Details Card
           // _buildScheduledTripCard(),
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
 
           // Emergency Case Details Card
           // _buildEmergencyCaseCard(),
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
 
           // Fuel History Card
           _buildFuelHistoryCard(),
@@ -211,23 +211,27 @@ class VehicleDetailsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            ...vehicleData.fuelHistory.map((entry) => Column(
-              children: [
-                _buildInfoRow('Ticket Number', entry.ticketNumber),
-                _buildInfoRow('Entry Time', entry.entryTime),
-                _buildInfoRow('Trip ID', entry.tripId),
-                _buildInfoRow('Case No', entry.caseNo),
-                _buildInfoRow('Odometer Base', entry.odometerBase),
-                _buildInfoRow('Odometer', entry.odometer),
-                _buildInfoRow('Odometer Back At Base', entry.odometerBackAtBase),
-                _buildInfoRow('Fuel Station', entry.fuelStationName),
-                _buildInfoRow('Quantity', entry.quantity.toString()),
-                _buildInfoRow('Unit Price', entry.unitPrice.toString()),
-                _buildInfoRow('Amount', entry.amount.toString()),
-                _buildInfoRow('Payment Mode', entry.paymentMode),
-                const Divider(),
-              ],
-            )).toList(),
+            ...[ if (vehicleData.fuelHistory.isEmpty)
+              const Text('No fuel history available.')
+            else
+              ...vehicleData.fuelHistory.map((entry) => Column(
+                children: [
+                  _buildInfoRow('Ticket Number', entry.ticketNumber),
+                  _buildInfoRow('Entry Time', entry.entryTime),
+                  _buildInfoRow('Trip ID', entry.tripId),
+                  _buildInfoRow('Case No', entry.caseNo),
+                  _buildInfoRow('Odometer Base', entry.odometerBase),
+                  _buildInfoRow('Odometer', entry.odometer),
+                  _buildInfoRow('Odometer Back At Base', entry.odometerBackAtBase),
+                  _buildInfoRow('Fuel Station', entry.fuelStationName),
+                  _buildInfoRow('Quantity', entry.quantity.toString()),
+                  _buildInfoRow('Unit Price', entry.unitPrice.toString()),
+                  _buildInfoRow('Amount', entry.amount.toString()),
+                  _buildInfoRow('Payment Mode', entry.paymentMode),
+                  const Divider(),
+                ],
+              )).toList(),]
+
           ],
         ),
       ),

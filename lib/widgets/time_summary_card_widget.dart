@@ -226,7 +226,7 @@ class _TimeSummaryCardWidgetState extends State<TimeSummaryCardWidget> {
       if(logOutTimeString != null){
         DateTime logOutTime = DateTime.parse(logOutTimeString);
 
-        String formattedLogOutTime = DateFormat('hh:mm a').format(loggedInTime);
+        String formattedLogOutTime = DateFormat('hh:mm a').format(logOutTime);
         // Update the UI
         setState(() {
           loggedOutTime = formattedLogOutTime;

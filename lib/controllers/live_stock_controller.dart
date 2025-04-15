@@ -30,6 +30,8 @@ class LivestockController extends GetxController {
   void clearAll() {
     approvalRemark.value = '';
     registrationRemark.value = '';
+    base64File.value = '';
+    fileName.value = '';
     selectedFile.value = null;
     formData.clear();
   }

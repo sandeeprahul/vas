@@ -27,7 +27,7 @@ class FuelEntryScreen extends StatefulWidget {
 }
 
 class _FuelEntryScreenState extends State<FuelEntryScreen> {
-  final UserController userController = Get.find<UserController>();
+  final UserController userController = Get.put(UserController());
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
   final ApiService apiService = ApiService();

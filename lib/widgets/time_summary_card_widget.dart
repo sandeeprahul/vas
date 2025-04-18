@@ -134,7 +134,7 @@ class _TimeSummaryCardWidgetState extends State<TimeSummaryCardWidget> {
                        Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Logged In", style: TextStyle(fontSize: 12, color: Colors.black54)),
+                          const Text("Last LogIn", style: TextStyle(fontSize: 12, color: Colors.black54)),
                           Text(logInTime, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                         ],
                       ),
@@ -157,7 +157,7 @@ class _TimeSummaryCardWidgetState extends State<TimeSummaryCardWidget> {
                        Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Logged Out", style: TextStyle(fontSize: 12, color: Colors.black54)),
+                          const Text("Last LogOut", style: TextStyle(fontSize: 12, color: Colors.black54)),
                           Text(loggedOutTime, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                         ],
                       ),

@@ -54,11 +54,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.white.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        Icons.emergency,
-                        size: 80,
-                        color: Colors.white,
-                      ),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(36),
+
+                          child: Image.asset('assets/logo_vas.jpeg',scale: 7,))
                     ),
                     // const SizedBox(height: 24),
                     const Text(
@@ -220,7 +219,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.white.withOpacity(0.8),
                       ),
                     ),
+                const SizedBox(height: 8),
 
+                Text(
+                  'Version:1.0',
+                  style: TextStyle(fontSize: 12,color: Colors.white,fontWeight: FontWeight.w600),
+                ),
                     // Error Message
              /*       Obx(() {
                       if (loginController.errorMessage.value.isNotEmpty) {

@@ -75,7 +75,7 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final UserController userController = Get.find<UserController>();
+    final UserController userController = Get.put(UserController());
 
     return Scaffold(
       appBar: AppBar(
@@ -230,14 +230,6 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
-        // gradient: LinearGradient(
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        //   colors: [
-        //     // AppThemes.light.primaryColor.withOpacity(0.8),
-        //
-        //   ],
-        // ),
         boxShadow: [
           BoxShadow(
             color: AppThemes.light.primaryColor.withOpacity(0.3),
@@ -361,104 +353,4 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
     );
   }
 }
-/*
-* ListTile(
-                title: Text(title),
-                subtitle: Obx(() => Text("Last Synced: ${lastSyncedTime.value}")),
-                trailing: Obx(
-                  () => isLoading.value
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                              strokeWidth: 2), // ✅ Loading Indicator
-                        )
-                      : IconButton(
-                          icon: const Icon(Icons.sync, color: Colors.blue),
-                          onPressed: syncFunction,
-                        ),
-                ),
-              )*/
 
-/*class MasterDataScreen extends StatefulWidget {
-  const MasterDataScreen({super.key});
-
-  @override
-  _MasterDataScreenState createState() => _MasterDataScreenState();
-}
-
-class _MasterDataScreenState extends State<MasterDataScreen> {
-  final EventTypesController eventController = Get.put(EventTypesController());
-  final DenialTypesController denialController = Get.put(DenialTypesController());
-  final BlocksController blocksController = Get.put(BlocksController());
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Master Data'),
-      ),
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: ListView.builder(
-
-          itemCount: 5,
-
-            scrollDirection: Axis.vertical,
-            itemBuilder: (context, index) {
-          return Container(
-            // width: 200,
-            // height: 200,
-
-            margin: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-                color: Colors.teal.shade100,
-                boxShadow: const [BoxShadow(color: Colors.black12)],
-                borderRadius: BorderRadius.circular(28)),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      boxShadow: const [BoxShadow(color: Colors.grey)],
-                      borderRadius: BorderRadius.circular(28)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Get Event Types',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Last Downloaded: \n02:00 AM",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                InkWell(
-                  // onPressed: () => _synchronize(dataType),
-                  onTap: () {},
-                  child: const Text(textAlign: TextAlign.center,'SYNCHRONIZE\nNOW'),
-                ),
-                // Text('SYNCHRONIZE'),
-              ],
-            ),
-          );
-        }),
-      ),
-    );
-  }
-}*/

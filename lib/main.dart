@@ -9,6 +9,7 @@ import 'package:vas/screens/form_temp.dart';
 import 'package:vas/screens/home_screen.dart';
 import 'package:vas/screens/splash_screen.dart';
 import 'package:vas/theme.dart';
+import 'package:vas/utils/AppLifecycleHandler.dart';
 
 import 'controllers/login_controller.dart';
 import 'controllers/theme_controller.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
           theme: AppThemes.light,
           darkTheme: AppThemes.dark,
           themeMode: themeController.theme,
-          home: const SplashScreen(),
+          home: const AppLifecycleHandler(child: SplashScreen()),
           routes: {
             // '/manage_trip': (context) => ManageTripScreen(), // Define route
             '/home': (context) => HomeScreen(),

@@ -10,7 +10,7 @@ class TripHistorySeekBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final steps = ["Started", "SeenArrival", "Departure"];
-    final TripController tripController = Get.find();
+    final TripController tripController = Get.put(TripController());
 
     return Obx(() {
       final currentStatus = tripController.tripStatus.value;

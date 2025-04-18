@@ -9,6 +9,7 @@ import 'package:vas/controllers/ambulance_controller.dart';
 import 'package:vas/controllers/blocks_controller.dart';
 import 'package:vas/controllers/districts_controller.dart';
 import 'package:vas/controllers/location_type_controller.dart';
+import 'package:vas/controllers/login_controller.dart';
 import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/utils/showDialogNoContext.dart';
 import 'package:vas/widgets/trip_details_widget.dart';
@@ -378,6 +379,7 @@ class FormController extends GetxController {
           Future.delayed(const Duration(milliseconds: 300), () {
             showErrorDialog("Alert!", "${response['message']}");
           });
+
           tripController.fetchTripDetails();
           Get.back();
 
@@ -545,7 +547,7 @@ class FormController extends GetxController {
   Future<void> submitFormClose() async {
     UserController userController = Get.put(UserController());
     TripController tripController = Get.put(TripController());
-
+    LoginController loginController = Get.put(LoginController());
     // String? odometerValue = await showOdometerDialog(Get.context!);
     // if (odometerValue == null) return;
 
@@ -579,8 +581,9 @@ class FormController extends GetxController {
           Future.delayed(const Duration(milliseconds: 300), () {
             showErrorDialog("Alert!", "${response['message']}");
           });
-          tripController.fetchTripDetails();
+          // tripController.fetchTripDetails();
           //
+          loginController .  logoutUser();
 
           clearAllFields();
           Get.back();

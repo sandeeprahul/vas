@@ -30,7 +30,7 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Case Registration New'),
+        title: const Text('Case Registration'),
         backgroundColor: AppThemes.light.primaryColor,
       ),
       body: Container(

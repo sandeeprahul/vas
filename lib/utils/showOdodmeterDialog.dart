@@ -9,7 +9,7 @@ Future<String?> showOdometerDialog(BuildContext context) async {
   final OdometerController odometerController = Get.put(OdometerController());
   final FormController formController = Get.put(FormController());
   TextEditingController textController = TextEditingController();
-  final TripController tripController = Get.find<TripController>();
+  final TripController tripController = Get.put(TripController());
 
   return await Get.dialog(
     AlertDialog(

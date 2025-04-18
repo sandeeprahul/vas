@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:vas/services/api_service.dart';
 import 'package:get/get.dart';
+import 'package:vas/theme.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -21,8 +23,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Change Password'),
+        backgroundColor: AppThemes.light.primaryColor,
       ),
-      body: Padding(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppThemes.light.primaryColor,
+              Colors.black,
+              Colors.black,
+            ],
+          ),
+        ),
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -80,10 +94,21 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
                   onPressed: _isLoading ? null : _handleChangePassword,
                   child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text('Change Password'),
+                      ? const CircularProgressIndicator(color: Colors.white,)
+                      :  Text('CHANGE PASSWORD',   style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),),
                 ),
               ),
             ],

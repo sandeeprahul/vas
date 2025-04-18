@@ -5,6 +5,7 @@ import 'package:vas/controllers/login_controller.dart';
 import 'package:vas/controllers/trip_from_controller.dart';
 import 'package:vas/widgets/trip_details_widget.dart';
 
+import '../screens/case_selection_screen.dart';
 import '../theme.dart';
 
 class SideMenu extends StatefulWidget {
@@ -21,7 +22,7 @@ class _SideMenuState extends State<SideMenu> {
   String? roleId;
 
   final LoginController loginController  = LoginController();
-  TripController tripController = Get.find<TripController>();
+  TripController tripController = Get.put(TripController());
   @override
   void initState() {
     // TODO: implement initState
@@ -71,7 +72,7 @@ class _SideMenuState extends State<SideMenu> {
               Navigator.pushNamed(context, '/change_password');
             })
           ]),
-          _buildExpandableTile("Fuel ", [
+          _buildExpandableTile("Fuel Details ", [
             _buildSubMenuItem("Generate Fuel Entry Ticket", Icons.arrow_right, () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/fuel_ticket_entry_screen');
@@ -79,6 +80,8 @@ class _SideMenuState extends State<SideMenu> {
           ]),
           _buildExpandableTile("Cases ", [
             _buildSubMenuItem("Login Report Self", Icons.arrow_right, () {
+              Navigator.pop(context); // Close drawer
+
               Navigator.pushNamed(context, '/login_report_screen'); // N
 
             }),
@@ -96,9 +99,10 @@ class _SideMenuState extends State<SideMenu> {
             }),
             // _buildSubMenuItem("Live Case ", Icons.arrow_right, () {}),
             // _buildSubMenuItem("Case Registration ", Icons.arrow_right, () {}),
-            _buildSubMenuItem("Case Registration New", Icons.arrow_right, () {
+            _buildSubMenuItem("New Case Registration", Icons.arrow_right, () {
               Navigator.pop(context); // Close drawer
-              Navigator.pushNamed(context, '/case_registration_new'); // N
+              // Navigator.pushNamed(context, '/case_registration_new'); // N
+              Get.to(CaseSelectionScreen());
             }),
           ]),
           ListTile(

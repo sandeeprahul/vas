@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vas/widgets/animal_bg_widget.dart';
 import '../controllers/blocks_controller.dart';
 import '../controllers/districts_controller.dart';
 import '../controllers/live_stock_controller.dart';
@@ -86,188 +87,193 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
             ],
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                Obx(() {
-                  final trip = tripController.tripDetails.value;
-                  if(tripController.isLoading.value){
-                    return const Center(child: CircularProgressIndicator(),);
-                  }
-                  if (trip == null) {
-                    return const Center(child: Text("No trip details available"));
-                  }
-                  return _buildInputCard(
-                    icon: Icons.emergency,
-                    title: 'Ambulance No',
-                    value: trip.vehicle,
-                    edit: false,
-                  );
-                }),
-                const SizedBox(height: 16),
+        child: Column(
+          children: [
+            const AnimalBgWidget(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    Obx(() {
+                      final trip = tripController.tripDetails.value;
+                      if(tripController.isLoading.value){
+                        return const Center(child: CircularProgressIndicator(),);
+                      }
+                      if (trip == null) {
+                        return const Center(child: Text("No trip details available"));
+                      }
+                      return _buildInputCard(
+                        icon: Icons.emergency,
+                        title: 'Ambulance No',
+                        value: trip.vehicle,
+                        edit: false,
+                      );
+                    }),
+                    const SizedBox(height: 16),
 
-                // Owner's Contact No
-                _buildInputCard(
-                  icon: Icons.phone,
-                  title: 'Owner\'s Contact No',
+                    // Owner's Contact No
+                    _buildInputCard(
+                      icon: Icons.phone,
+                      title: 'Owner\'s Contact No',
 
-                  controller: _ownerContactNoController,
-                  keyboardType: TextInputType.phone,
-                  edit: false,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the contact number';
-                    }
-                    if (value.length != 10) {
-                      return 'Contact number must be 10 digits';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
+                      controller: _ownerContactNoController,
+                      keyboardType: TextInputType.phone,
+                      edit: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the contact number';
+                        }
+                        if (value.length != 10) {
+                          return 'Contact number must be 10 digits';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
 
-                // Owner's Name
-                _buildInputCard(
-                  icon: Icons.person,
-                  title: 'Owner\'s Name',
-                  controller: _ownerNameController,
-                  edit: false,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the owner\'s name';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
+                    // Owner's Name
+                    _buildInputCard(
+                      icon: Icons.person,
+                      title: 'Owner\'s Name',
+                      controller: _ownerNameController,
+                      edit: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the owner\'s name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
 
-                // District Dropdown
-                Obx(() => GestureDetector(
-                  onTap: () {
-                    _showSelectionDialog(
-                      "District",
-                      districtsController.selectedDistrict,
-                      districtsController.selectedDistrictId,
-                      districtsController.districtsList,
-                      "id",
-                      "name",
-                    );
-                  },
-                  child: _buildInputCard(
-                    icon: Icons.location_city,
-                    title: 'District',
-                    value: districtsController.selectedDistrict.value,
-                    edit: false,
-                  ),
-                )),
-                const SizedBox(height: 16),
+                    // District Dropdown
+                    Obx(() => GestureDetector(
+                      onTap: () {
+                        _showSelectionDialog(
+                          "District",
+                          districtsController.selectedDistrict,
+                          districtsController.selectedDistrictId,
+                          districtsController.districtsList,
+                          "id",
+                          "name",
+                        );
+                      },
+                      child: _buildInputCard(
+                        icon: Icons.location_city,
+                        title: 'District',
+                        value: districtsController.selectedDistrict.value,
+                        edit: false,
+                      ),
+                    )),
+                    const SizedBox(height: 16),
 
 
-                // Block Dropdown
-                _buildDropdownField(
-                  "Block",
-                  blocksController.selectedBlock,
-                  blocksController.selectedBlockId,
-                  blocksController.blocksList,
-                  "blockId",
-                  "name",Icons.streetview
-                ),
-                const SizedBox(height: 16),
+                    // Block Dropdown
+                    _buildDropdownField(
+                      "Block",
+                      blocksController.selectedBlock,
+                      blocksController.selectedBlockId,
+                      blocksController.blocksList,
+                      "blockId",
+                      "name",Icons.streetview
+                    ),
+                    const SizedBox(height: 16),
 
-                // Location Type Dropdown
-                Obx(() => GestureDetector(
-                  onTap: () {
-                    _showSelectionDialog(
-                      "LocationType",
-                      locationTypeController.selectedLocationType,
-                      locationTypeController.selectedLocationTypeId,
-                      locationTypeController.locationTypes,
-                      "stopType_ID",
-                      "stopType_Name",
-                    );
-                  },
-                  child: _buildInputCard(
-                    icon: Icons.place,
-                    title: 'Location Type',
-                    value: locationTypeController.selectedLocationType.value,
-                    edit: false,
-                  ),
-                )),
-                const SizedBox(height: 16),
+                    // Location Type Dropdown
+                    Obx(() => GestureDetector(
+                      onTap: () {
+                        _showSelectionDialog(
+                          "LocationType",
+                          locationTypeController.selectedLocationType,
+                          locationTypeController.selectedLocationTypeId,
+                          locationTypeController.locationTypes,
+                          "stopType_ID",
+                          "stopType_Name",
+                        );
+                      },
+                      child: _buildInputCard(
+                        icon: Icons.place,
+                        title: 'Location Type',
+                        value: locationTypeController.selectedLocationType.value,
+                        edit: false,
+                      ),
+                    )),
+                    const SizedBox(height: 16),
 
-                // Location Dropdown
-                _buildDropdownField(
-                  "Location",
-                  locationSubTypeController.selectedLocationName,
-                  locationSubTypeController.selectedLocationId,
-                  locationSubTypeController.location,
-                  "stop_ID",
-                  "stop_Name",
-                    Icons.add_location_alt_rounded
+                    // Location Dropdown
+                    _buildDropdownField(
+                      "Location",
+                      locationSubTypeController.selectedLocationName,
+                      locationSubTypeController.selectedLocationId,
+                      locationSubTypeController.location,
+                      "stop_ID",
+                      "stop_Name",
+                        Icons.add_location_alt_rounded
 
-                ),
-                const SizedBox(height: 16),
+                    ),
+                    const SizedBox(height: 16),
 
-                // Category Dropdown
-                _buildInputCard(
-                  icon: Icons.category,
-                  title: 'Category',
-                  value: _category,
-                  edit: false,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Select Category'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: _categories.map((category) {
-                            return ListTile(
-                              title: Text(category),
-                              onTap: () {
-                                setState(() {
-                                  _category = category;
-                                });
-                                Get.back();
-                              },
-                            );
-                          }).toList(),
+                    // Category Dropdown
+                    _buildInputCard(
+                      icon: Icons.category,
+                      title: 'Category',
+                      value: _category,
+                      edit: false,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Select Category'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: _categories.map((category) {
+                                return ListTile(
+                                  title: Text(category),
+                                  onTap: () {
+                                    setState(() {
+                                      _category = category;
+                                    });
+                                    Get.back();
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Submit Button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _submitForm,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'CONTINUE',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 24),
-
-                // Submit Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _submitForm,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
                     ),
-                    child: Text(
-                      'CONTINUE',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -322,7 +328,7 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> {
                         decoration:  InputDecoration(
                           border: InputBorder.none,
                           isDense: true,
-                          contentPadding: EdgeInsets.symmetric(vertical: 8),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 8),
                           hintText: "$title"
                         ),
                         style: GoogleFonts.poppins(

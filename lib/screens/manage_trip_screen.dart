@@ -127,19 +127,28 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
         backgroundColor: AppThemes.light.primaryColor,
       ),
       body: Container(
-        decoration: BoxDecoration(
+       // color: AppThemes.light.primaryColor,
+
+         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-               AppThemes.light.primaryColor,
-              Colors.black,
-              Colors.black,
+              AppThemes.light.primaryColor,
+              AppThemes.light.primaryColor.withOpacity(0.55),
+              AppThemes.light.primaryColor.withOpacity(0.6),
+              Colors.white,
+
             ],
           ),
         ),
         child: Stack(
           children: [
+
+            Align(
+              alignment: Alignment.bottomCenter,
+                child: Image.asset('assets/bg_animals.png',)),
+
             SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -192,7 +201,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                         icon: Icons.place,
                         title: "Location Type",
                         value:
-                            locationTypeController.selectedLocationType.value,
+                        locationTypeController.selectedLocationType.value,
                         onTap: () => _showSelectionDialog(
                             "LocationType",
                             locationTypeController.selectedLocationType,
@@ -218,6 +227,10 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                             "stop_Name"),
                       );
                     }),
+
+
+
+
                     _buildSectionTitle("Vehicle Details : "),
                     Obx(() {
                       return _buildSelectionCard(
@@ -458,6 +471,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                   ? const Center(child: CircularProgressIndicator())
                   : const SizedBox.shrink();
             }),
+
           ],
         ),
       ),
@@ -472,7 +486,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
         style: GoogleFonts.poppins(
           fontSize: 18,
           fontWeight: FontWeight.w600,
-                                 color: Colors.white,
+                                 color: Colors.red,
 
         ),
       ),
@@ -589,6 +603,7 @@ class _ManageTripScreenState extends State<ManageTripScreen> {
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 8),
+
                     ),
                     style: GoogleFonts.poppins(
                       color:  edit ? Colors.red:Colors.black,

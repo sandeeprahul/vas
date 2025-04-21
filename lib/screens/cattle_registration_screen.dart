@@ -16,6 +16,7 @@ import 'package:vas/screens/case_details_screen.dart';
 import 'package:vas/screens/dashboard_page.dart';
 import 'package:vas/services/api_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vas/widgets/animal_bg_widget.dart';
 import 'package:vas/widgets/trip_details_widget.dart';
 
 import '../controllers/case_registration_new_controller.dart';
@@ -1346,109 +1347,116 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
             end: Alignment.bottomCenter,
             colors: [
               AppThemes.light.primaryColor,
-              Colors.black,
-              Colors.black,
+              AppThemes.light.primaryColor.withOpacity(0.55),
+              AppThemes.light.primaryColor.withOpacity(0.6),
+              Colors.white,
             ],
           ),
         ),
-        child: isLoading
-            ? Container(
-          color: Colors.white,
-              child: const Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Please wait..'),
-                      SizedBox(
-                        height: 6,
-                      ),
-                      CircularProgressIndicator()
-                    ],
-                  ),
-                ),
-            )
-            : Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: [
-                      Card(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(color: Colors.grey.shade200),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: AppThemes.light.primaryColor
-                                      .withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Icon(Icons.app_registration,
-                                    color: AppThemes.light.primaryColor),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: DropdownButtonFormField<String>(
-                                  decoration: const InputDecoration(
-                                    labelText: 'Registration Type',
-                                    labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                                    border: InputBorder.none,
-                                  ),
-                                  value: _registrationType,
-                                  items: [
-                                    'Individual Registration',
-                                    // 'Lab Sample',
-                                    'Mass Registration',
-                                  ].map((type) {
-                                    return DropdownMenuItem(
-                                      value: type,
-                                      child: Text(type),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _registrationType = value!;
-                                      _formData
-                                          .clear(); // Clear form data when type changes
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
+        child: Stack(
+
+          children: [
+            AnimalBgWidget(),
+            isLoading
+                ? Container(
+              color: Colors.white,
+                  child: const Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Please wait..'),
+                          SizedBox(
+                            height: 6,
                           ),
-                        ),
+                          CircularProgressIndicator()
+                        ],
                       ),
-                      const SizedBox(height: 10),
-                      ..._buildFormFields(),
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.all(6),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            elevation: 2,
+                    ),
+                )
+                : Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Form(
+                      key: _formKey,
+                      child: ListView(
+                        children: [
+                          Card(
+                            elevation: 0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(color: Colors.grey.shade200),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppThemes.light.primaryColor
+                                          .withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Icon(Icons.app_registration,
+                                        color: AppThemes.light.primaryColor),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: DropdownButtonFormField<String>(
+                                      decoration: const InputDecoration(
+                                        labelText: 'Registration Type',
+                                        labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                                        border: InputBorder.none,
+                                      ),
+                                      value: _registrationType,
+                                      items: [
+                                        'Individual Registration',
+                                        // 'Lab Sample',
+                                        'Mass Registration',
+                                      ].map((type) {
+                                        return DropdownMenuItem(
+                                          value: type,
+                                          child: Text(type),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _registrationType = value!;
+                                          _formData
+                                              .clear(); // Clear form data when type changes
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          onPressed: () {
-                            showApprovalDialog();
-                            caseRegistrationController.getCurrentLocation();
-                          },
-                          child: const Text('REGISTER CASE',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black),),
-                        ),
+                          const SizedBox(height: 10),
+                          ..._buildFormFields(),
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                elevation: 2,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              onPressed: () {
+                                showApprovalDialog();
+                                caseRegistrationController.getCurrentLocation();
+                              },
+                              child: const Text('REGISTER CASE',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black),),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
+          ],
+        ),
       ),
     );
   }

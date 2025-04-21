@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/screens/fuel_entry_screen.dart';
 import 'package:vas/screens/vehicle_details_screen.dart';
+import 'package:vas/widgets/animal_bg_widget.dart';
 
 import '../controllers/ambulance_controller.dart';
 import '../controllers/blocks_controller.dart';
@@ -61,112 +62,118 @@ class _GenerateFuelEntryTicketState extends State<GenerateFuelEntryTicket> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-                  AppThemes.light.primaryColor,
-                  Colors.black,
-                  Colors.black,
+                AppThemes.light.primaryColor,
+              AppThemes.light.primaryColor.withOpacity(0.55),
+              AppThemes.light.primaryColor.withOpacity(0.6),
+              Colors.white,
             ],
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: isLoading?const Center(child: CircularProgressIndicator(),):ListView(
+        child: Stack(
           children: [
-            Obx(() => GestureDetector(
-                  onTap: () {
-                    _showSelectionDialog(
-                        "Ambulance",
-                        ambulanceController.selectedAmbulanceName,
-                        ambulanceController.selectedAmbulanceId,
-                        ambulanceController.ambulanceList,
-                        "id",
-                        "asseT_NO");
-                  },
-                  child: Card(
-                    elevation: 0,
+            AnimalBgWidget(),
+            isLoading?const Center(child: CircularProgressIndicator(),):ListView(
+              children: [
+                Obx(() => GestureDetector(
+                      onTap: () {
+                        _showSelectionDialog(
+                            "Ambulance",
+                            ambulanceController.selectedAmbulanceName,
+                            ambulanceController.selectedAmbulanceId,
+                            ambulanceController.ambulanceList,
+                            "id",
+                            "asseT_NO");
+                      },
+                      child: Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          side: BorderSide(color:  Colors.grey.shade200),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+
+                          child: Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: AppThemes.light.primaryColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Icon(Icons.emergency, color: AppThemes.light.primaryColor),
+                              ),
+                              const SizedBox(width: 16),
+
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Select Ambulance",
+                                      style: TextStyle(
+                                          color: ambulanceController
+                                              .selectedAmbulanceName.value ==
+                                              "Ambulance"
+                                              ? Colors.grey
+                                              : Colors.black),
+                                    ),
+                                    Text(
+                                      ambulanceController.selectedAmbulanceName.value,
+                                      style: TextStyle(
+                                          color: ambulanceController
+                                                      .selectedAmbulanceName.value ==
+                                                  "Ambulance"
+                                              ? Colors.grey
+                                              : Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Icon(Icons.arrow_drop_down),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )),
+
+                if (vehicleData == null)
+                  const SizedBox.shrink()
+                else
+                  VehicleDetailsScreen(
+                    vehicleData: vehicleData!,
+                  ),
+                const SizedBox(
+                  height: 28,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color:  Colors.grey.shade200),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-
-                      child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: AppThemes.light.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(Icons.emergency, color: AppThemes.light.primaryColor),
-                          ),
-                          const SizedBox(width: 16),
-
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Select Ambulance",
-                                  style: TextStyle(
-                                      color: ambulanceController
-                                          .selectedAmbulanceName.value ==
-                                          "Ambulance"
-                                          ? Colors.grey
-                                          : Colors.black),
-                                ),
-                                Text(
-                                  ambulanceController.selectedAmbulanceName.value,
-                                  style: TextStyle(
-                                      color: ambulanceController
-                                                  .selectedAmbulanceName.value ==
-                                              "Ambulance"
-                                          ? Colors.grey
-                                          : Colors.black),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Icon(Icons.arrow_drop_down),
-                        ],
-                      ),
                     ),
                   ),
-                )),
+                  onPressed: () {
 
-            if (vehicleData == null)
-              const SizedBox.shrink()
-            else
-              VehicleDetailsScreen(
-                vehicleData: vehicleData!,
-              ),
-            const SizedBox(
-              height: 28,
+                    Get.to(FuelEntryScreen(vehicleData: vehicleData!,));
+                    // Get.to(FuelEntryScreen(vehicleId: int.parse(ambulanceController.selectedAmbulanceId.value), tripId: int.parse(vehicleData!.schTripDetails.tripId), caseId: int.parse(vehicleData!.emgCaseDetails.caseNo), odometerBase: "${vehicleData!.odometerBase}"));
+                  },
+                  child: isLoading
+                      ? const Center(child: Text('Loading...'))
+                      : const Text(
+                          "CONTINUE",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                )
+              ],
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              onPressed: () {
-
-                Get.to(FuelEntryScreen(vehicleData: vehicleData!,));
-                // Get.to(FuelEntryScreen(vehicleId: int.parse(ambulanceController.selectedAmbulanceId.value), tripId: int.parse(vehicleData!.schTripDetails.tripId), caseId: int.parse(vehicleData!.emgCaseDetails.caseNo), odometerBase: "${vehicleData!.odometerBase}"));
-              },
-              child: isLoading
-                  ? const Center(child: Text('Loading...'))
-                  : const Text(
-                      "CONTINUE",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-            )
           ],
         ),
       ),

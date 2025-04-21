@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/login_controller.dart';
 import '../theme.dart';
+import '../widgets/animal_bg_widget.dart';
 
 ///trip id new 25040500001
 ///
@@ -29,8 +30,9 @@ class SplashScreen extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               AppThemes.light.primaryColor,
-              Colors.black,
-              Colors.black,
+              AppThemes.light.primaryColor.withOpacity(0.55),
+              AppThemes.light.primaryColor.withOpacity(0.6),
+              Colors.white,
               // Colors.blue,
               // Colors.white,
             ],
@@ -38,6 +40,40 @@ class SplashScreen extends StatelessWidget {
         ),
         child:  Stack(
           children: [
+           /* Align(
+              alignment: Alignment.bottomCenter,
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  // Shadow version behind the main image
+                  Transform.translate(
+                    offset: const Offset(5, 5), // Offset to bottom-right
+                    child: Transform.rotate(
+                      angle: 0.05, // Slight angle in radians (~2.8 degrees)
+                      child: Opacity(
+                        opacity: 0.3, // Shadow darkness
+                        child: ColorFiltered(
+                          colorFilter: const ColorFilter.mode(
+                            Colors.black45,
+                            BlendMode.srcIn,
+                          ),
+                          child: Image.asset('assets/bg_animals.png'),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Main image
+                  Image.asset('assets/bg_animals.png'),
+                ],
+              ),
+            ),*/
+            AnimalBgWidget(),
+
+
+            /* Align(
+                alignment: Alignment.bottomCenter,
+                child: Image.asset('assets/bg_animals.png',)),*/
             Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -57,25 +93,25 @@ class SplashScreen extends StatelessWidget {
                       color: Colors.white,
                     ),*/
                   ),
-                  Text(
+                  const Text(
                     '1962',
                     style: TextStyle(fontSize: 44, fontWeight: FontWeight.w600,color: Colors.white),
-                  ), Text(
+                  ), const Text(
                     'MVU APP',
                     style: TextStyle(fontSize: 42, fontWeight: FontWeight.w600,color: Colors.white),
                   ),
-                  SizedBox(height: 12,),
-                  Text(
+                  const SizedBox(height: 12,),
+                  const Text(
                     'Powered By',
                     style: TextStyle(fontSize: 14,color: Colors.white),
                   ),
-                  Text(
+                  const Text(
                     'BHSPL',
                     style: TextStyle(fontSize: 14,color: Colors.white),
                   ),
                   const SizedBox(height: 8),
 
-                  Text(
+                  const Text(
                     'Version:1.0',
                     style: TextStyle(fontSize: 12,color: Colors.white,fontWeight: FontWeight.w600),
                   ),

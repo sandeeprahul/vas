@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:vas/widgets/animal_bg_widget.dart';
 
 import '../controllers/login_report_controller.dart';
 import '../theme.dart';
@@ -43,133 +44,139 @@ class _LoginReportScreenState extends State<LoginReportScreen> {
             end: Alignment.bottomCenter,
             colors: [
               AppThemes.light.primaryColor,
-              Colors.black,
-              Colors.black,
+              AppThemes.light.primaryColor.withOpacity(0.55),
+              AppThemes.light.primaryColor.withOpacity(0.6),
+              Colors.white,
             ],
           ),
         ),
-        child: Column(
-          // mainAxisSize: MainAxisSize.min,
+        child: Stack(
           children: [
-            // Date Range Pickers
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.white,
+            AnimalBgWidget(),
+            Column(
+              // mainAxisSize: MainAxisSize.min,
+              children: [
+                // Date Range Pickers
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: Colors.white,
+                          ),
+                          child: GestureDetector(
+                            onTap: () => _selectDate(context, true),
+                            child: Obx(() => Text(
+                                  "From: ${DateFormat('dd/MM/yyyy').format(controller.fromDate.value)}",
+                                  style: const TextStyle(fontSize: 16),
+                                )),
+                          ),
+                        ),
                       ),
-                      child: GestureDetector(
-                        onTap: () => _selectDate(context, true),
-                        child: Obx(() => Text(
-                              "From: ${DateFormat('dd/MM/yyyy').format(controller.fromDate.value)}",
-                              style: const TextStyle(fontSize: 16),
-                            )),
+                      // const Icon(Icons.arrow_drop_down),
+                      // const Spacer(),
+                      SizedBox(
+                        width: 4,
                       ),
-                    ),
-                  ),
-                  // const Icon(Icons.arrow_drop_down),
-                  // const Spacer(),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.white,
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: Colors.white,
+                          ),
+                          child: GestureDetector(
+                            onTap: () => _selectDate(context, false),
+                            child: Obx(() => Text(
+                                  "To: ${DateFormat('dd/MM/yyyy').format(controller.toDate.value)}",
+                                  style: const TextStyle(fontSize: 16),
+                                )),
+                          ),
+                        ),
                       ),
-                      child: GestureDetector(
-                        onTap: () => _selectDate(context, false),
-                        child: Obx(() => Text(
-                              "To: ${DateFormat('dd/MM/yyyy').format(controller.toDate.value)}",
-                              style: const TextStyle(fontSize: 16),
-                            )),
-                      ),
-                    ),
-                  ),
-                  // const Icon(Icons.arrow_drop_down),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: EdgeInsets.all(16),
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                      // const Icon(Icons.arrow_drop_down),
+                    ],
                   ),
                 ),
-                onPressed: () => controller.fetchLoginReport(),
-                child: Text(
-                  "SHOW",
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // ListView for Report Data
-            Expanded(
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  return const Center(
-                      child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ));
-                }
-                if (controller.reportData.isEmpty) {
-                  return const Center(
-                      child: Text(
-                    "No data found.",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ));
-                }
-
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.reportData.length,
-                  itemBuilder: (context, index) {
-                    final row = controller.reportData[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 6),
+                const SizedBox(height: 12),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      child: ListTile(
-                        title: Text("Login: ${row['login_Time'] ?? ''}"),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Logout: ${row['logout_Time'] ?? ''}"),
-                            Text("Duration: ${row['duration'] ?? ''}"),
-                            Text("Sessions: ${row['sessions'].toString()}"),
-                          ],
-                        ),
-                        leading: CircleAvatar(
-                          child: Text('${row['sn']}'),
-                        ),
+                    ),
+                    onPressed: () => controller.fetchLoginReport(),
+                    child: Text(
+                      "SHOW",
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
                       ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // ListView for Report Data
+                Expanded(
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(
+                          child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ));
+                    }
+                    if (controller.reportData.isEmpty) {
+                      return const Center(
+                          child: Text(
+                        "No data found.",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ));
+                    }
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.reportData.length,
+                      itemBuilder: (context, index) {
+                        final row = controller.reportData[index];
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ListTile(
+                            title: Text("Login: ${row['login_Time'] ?? ''}"),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Logout: ${row['logout_Time'] ?? ''}"),
+                                Text("Duration: ${row['duration'] ?? ''}"),
+                                Text("Sessions: ${row['sessions'].toString()}"),
+                              ],
+                            ),
+                            leading: CircleAvatar(
+                              child: Text('${row['sn']}'),
+                            ),
+                          ),
+                        );
+                      },
                     );
-                  },
-                );
-              }),
-            )
+                  }),
+                )
+              ],
+            ),
           ],
         ),
       ),

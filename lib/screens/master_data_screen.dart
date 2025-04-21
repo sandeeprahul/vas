@@ -92,9 +92,10 @@ class _MasterDataScreenState extends State<MasterDataScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-               AppThemes.light.primaryColor,
-              Colors.black,
-              Colors.black,
+              AppThemes.light.primaryColor,
+              AppThemes.light.primaryColor.withOpacity(0.55),
+              AppThemes.light.primaryColor.withOpacity(0.6),
+              Colors.white,
             ],
           ),
         ),

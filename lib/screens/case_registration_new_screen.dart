@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vas/widgets/animal_bg_widget.dart';
 
 import '../controllers/case_registration_new_controller.dart';
 import '../theme.dart';
@@ -40,91 +41,95 @@ class _CaseRegistrationNewScreenState extends State<CaseRegistrationNewScreen> {
             end: Alignment.bottomCenter,
             colors: [
               AppThemes.light.primaryColor,
-              Colors.black,
-              Colors.black,
+              AppThemes.light.primaryColor.withOpacity(0.55),
+              AppThemes.light.primaryColor.withOpacity(0.6),
+              Colors.white,
             ],
           ),
         ),
         padding: const EdgeInsets.all(16.0),
-        child: Obx(() {
-          final trip = tripController.tripDetails.value;
-          if (trip == null) {
-            return Container(
-              color: Colors.white,
-                child: const Center(child: Text("No trip details available",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),)));
-          }
+        child: Stack(
+          children: [
+            AnimalBgWidget(),
+            Obx(() {
+              final trip = tripController.tripDetails.value;
+              if (trip == null) {
+                return const Center(child: Text("No trip details available",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),));
+              }
 
-          return Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  children: [
-                    // _buildInputCard(icon: Icons.near_me, title: 'Name', value:"${trip.tripId}"),
-                    _buildInputCard(
-                        icon: Icons.near_me,
-                        title: 'Trip ID',
-                        value: "${trip.tripId}"),
-                    _buildInputCard(
-                        icon: Icons.emergency,
-                        title: 'Ambulance No',
-                        value: trip.vehicle),
-                    _buildInputCard(
-                        icon: Icons.near_me,
-                        title: 'No Of Cases',
-                        value: "${trip.noOfCases}"),
-                    _buildInputCard(
-                        icon: Icons.speed,
-                        title: 'Odometer',
-                        value: "${trip.startKm}"),
-                    _buildInputCard(
-                        icon: Icons.speed,
-                        title: 'Seen Arrival Odometer',
-                        value: "${trip.reachKm}"),
-                    _buildInputCard(
-                        icon: Icons.speed,
-                        title: 'Seen Departure Odometer',
-                        value: "${trip.departKm}"),
-                    _buildInputCard(
-                        icon: Icons.vaccines,
-                        title: 'Service Village',
-                        value: trip.location),
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        // _buildInputCard(icon: Icons.near_me, title: 'Name', value:"${trip.tripId}"),
+                        _buildInputCard(
+                            icon: Icons.near_me,
+                            title: 'Trip ID',
+                            value: "${trip.tripId}"),
+                        _buildInputCard(
+                            icon: Icons.emergency,
+                            title: 'Ambulance No',
+                            value: trip.vehicle),
+                        _buildInputCard(
+                            icon: Icons.near_me,
+                            title: 'No Of Cases',
+                            value: "${trip.noOfCases}"),
+                        _buildInputCard(
+                            icon: Icons.speed,
+                            title: 'Odometer',
+                            value: "${trip.startKm}"),
+                        _buildInputCard(
+                            icon: Icons.speed,
+                            title: 'Seen Arrival Odometer',
+                            value: "${trip.reachKm}"),
+                        _buildInputCard(
+                            icon: Icons.speed,
+                            title: 'Seen Departure Odometer',
+                            value: "${trip.departKm}"),
+                        _buildInputCard(
+                            icon: Icons.vaccines,
+                            title: 'Service Village',
+                            value: trip.location),
 
-                    // buildTextField("Name","${trip.tripId}", icon: Icons.near_me),
-                    // buildTextField("Ambulance No", trip.vehicle, icon: Icons.emergency),
-                    // buildTextField("No Of Cases", controller.noOfCases.value, icon: Icons.library_books_sharp),
-                    // buildTextField("Start Odometer", "${trip.startKm}", icon: Icons.speed),
-                    // buildTextField("Seen Arrival Odometer",
-                    //     "${trip.reachKm}", icon: Icons.view_sidebar),
-                    // buildTextField("Seen Departure Odometer",
-                    //     "${trip.departKm}", icon: Icons.foggy),
-                    // buildTextField(
-                    //     "Service Village ", trip.location, icon: Icons.vaccines),
+                        // buildTextField("Name","${trip.tripId}", icon: Icons.near_me),
+                        // buildTextField("Ambulance No", trip.vehicle, icon: Icons.emergency),
+                        // buildTextField("No Of Cases", controller.noOfCases.value, icon: Icons.library_books_sharp),
+                        // buildTextField("Start Odometer", "${trip.startKm}", icon: Icons.speed),
+                        // buildTextField("Seen Arrival Odometer",
+                        //     "${trip.reachKm}", icon: Icons.view_sidebar),
+                        // buildTextField("Seen Departure Odometer",
+                        //     "${trip.departKm}", icon: Icons.foggy),
+                        // buildTextField(
+                        //     "Service Village ", trip.location, icon: Icons.vaccines),
 
-                    // buildTextField("Location Type",trip.address),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.to(() => const CaseDetailsScreen());
-
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                        // buildTextField("Location Type",trip.address),
+                      ],
                     ),
                   ),
-                  child: const Text("CONTINUE",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                ),
-              ),
-            ],
-          );
-        }),
+                  const SizedBox(height: 16.0),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.to(() => const CaseDetailsScreen());
+
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: const Text("CONTINUE",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ],
+        ),
       ),
     );
   }

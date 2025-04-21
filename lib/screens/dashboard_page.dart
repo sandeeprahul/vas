@@ -60,6 +60,7 @@ class _DashboardPageState extends State<DashboardPage> {
       body: Stack(
 
         children: [
+
           Container(
             decoration:  BoxDecoration(
               gradient: LinearGradient(
@@ -67,8 +68,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 end: Alignment.bottomCenter,
                 colors: [
                   AppThemes.light.primaryColor,
-                  Colors.black,
-                  Colors.black,
+                  AppThemes.light.primaryColor.withOpacity(0.55),
+                  AppThemes.light.primaryColor.withOpacity(0.6),
+                  Colors.white,
                  /* Colors.blue,
                   Colors.blue.withOpacity(0.8),
                   Colors.white.withOpacity(0.6),*/
@@ -123,7 +125,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 width: 16,
                               ),
                               const CircleAvatar(
-                                backgroundColor: Colors.blue,
+                                backgroundColor: Colors.black,
                                 radius: 38,
                                 child: Icon(
                                   Icons.person,
@@ -154,7 +156,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     padding: const EdgeInsets.all(6),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(28),
-                                      color: Colors.blue, //#dcdee7
+                                      color: Colors.black, //#dcdee7
                                     ),
                                     child: Text(
                                       " ClientId: ${userController.clientId.value} ",
@@ -288,6 +290,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ],
             ),
           ),
+
         ],
       ),
     );

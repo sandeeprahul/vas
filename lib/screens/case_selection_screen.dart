@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vas/screens/animal_case__details_screen.dart';
+import 'package:vas/widgets/animal_bg_widget.dart';
 import '../controllers/case_selection_controller.dart';
 import '../theme.dart';
 import 'new_animal_case_screen.dart';
@@ -34,162 +35,168 @@ class CaseSelectionScreen extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               AppThemes.light.primaryColor,
-              Colors.black,
-              Colors.black,
+              AppThemes.light.primaryColor.withOpacity(0.55),
+              AppThemes.light.primaryColor.withOpacity(0.6),
+              Colors.white,
             ],
           ),
         ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Selection Cards Section
-                _buildSelectionSection(),
+        child: Stack(
+          children: [
+            const AnimalBgWidget(),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Selection Cards Section
+                    _buildSelectionSection(),
 
-                // const SizedBox(height: 24),
+                    // const SizedBox(height: 24),
 
-                // Selected Case Details Section
-          /*      Obx(() => controller.selectedCase.value != null
-                    ? _buildSelectedCaseDetails()
-                    : const SizedBox.shrink()),*/
-// Update the Obx wrapper to show a message when no case is selected
-                _buildSectionTitle("Primary case no"),
-                Obx(() => controller.selectedCase.value != null
-                    ? _buildSelectedCaseDetails()
-                    : const SizedBox.shrink()
-                ),
+                    // Selected Case Details Section
+              /*      Obx(() => controller.selectedCase.value != null
+                        ? _buildSelectedCaseDetails()
+                        : const SizedBox.shrink()),*/
+            // Update the Obx wrapper to show a message when no case is selected
+                    _buildSectionTitle("Primary case no"),
+                    Obx(() => controller.selectedCase.value != null
+                        ? _buildSelectedCaseDetails()
+                        : const SizedBox.shrink()
+                    ),
 
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.blue.shade200),
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.blue.shade200),
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Selected Case Details',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
+                          Row(
+                            children: [
+                              const Text(
+                                'Selected Case Details',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              const Spacer(),
+                              IconButton(
+                                icon: const Icon(Icons.close, color: Colors.blue),
+                                onPressed: () => controller.clearSelectedCase(),
+                              ),
+                            ],
                           ),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.blue),
-                            onPressed: () => controller.clearSelectedCase(),
+                          const Divider(color: Colors.blue),
+                          const SizedBox(height: 8),
+                          _buildDetailRow(
+                            'Case No',
+                            'Not Available',
+                            // caseItem.caseNo.isEmpty ?  : caseItem.caseNo,
+                            isEmpty: true,
+                          ),
+                          _buildDetailRow(
+                            'Primary Case No',
+                            // caseItem.caseNo?.isEmpty ?? true ? : caseItem.caseNo!,
+                            'Not Available',
+
+                            isEmpty:  true,
+                          ),
+                          _buildDetailRow(
+                            'Livestock Type',
+                            // caseItem.livestockDetails.isEmpty ? 'Not Available' : caseItem.livestockDetails,
+                            // isEmpty: caseItem.livestockDetails.isEmpty,
+                            'Not Available',
+
+                            isEmpty:  true,
+                          ),
+                          _buildDetailRow(
+                            'Block',
+                            // caseItem.block.isEmpty ? 'Not Available' : caseItem.block,
+                            // isEmpty: caseItem.block.isEmpty,
+                            'Not Available',
+
+                            isEmpty:  true,
+                          ),
+                          _buildDetailRow(
+                            'District',
+                            // caseItem.district.isEmpty ? 'Not Available' : caseItem.district,
+                            // isEmpty: caseItem.district.isEmpty,
+                            'Not Available',
+
+                            isEmpty:  true,
+                          ),
+                          _buildDetailRow(
+                            'Service Address',
+                            // caseItem.serviceAddress.isEmpty ? 'Not Available' : caseItem.serviceAddress,
+                            // isEmpty: caseItem.serviceAddress.isEmpty,
+                            'Not Available',
+
+                            isEmpty:  true,
+                          ),
+                          _buildDetailRow(
+                            'Caller Name',
+                            // caseItem.callerName.isEmpty ? 'Not Available' : caseItem.callerName,
+                            // isEmpty: caseItem.callerName.isEmpty,
+                            'Not Available',
+
+                            isEmpty:  true,
+                          ),
+                          _buildDetailRow(
+                            'Status',
+                            // caseItem.status.isEmpty ? 'Not Available' : caseItem.status,
+                            // isEmpty: caseItem.status.isEmpty,
+                            'Not Available',
+
+                            isEmpty:  true,
+                          ),
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: (){
+
+                                Get.to(BuffaloCaseDetailsScreen());
+                                // Get.to(BuffaloCaseDetailsScreen());
+                              },
+                              // onPressed: () => controller.proceedWithCase(caseItem),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                'PROCEED',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      const Divider(color: Colors.blue),
-                      const SizedBox(height: 8),
-                      _buildDetailRow(
-                        'Case No',
-                        'Not Available',
-                        // caseItem.caseNo.isEmpty ?  : caseItem.caseNo,
-                        isEmpty: true,
-                      ),
-                      _buildDetailRow(
-                        'Primary Case No',
-                        // caseItem.caseNo?.isEmpty ?? true ? : caseItem.caseNo!,
-                        'Not Available',
+                    ),
+                    const SizedBox(height: 16),
 
-                        isEmpty:  true,
-                      ),
-                      _buildDetailRow(
-                        'Livestock Type',
-                        // caseItem.livestockDetails.isEmpty ? 'Not Available' : caseItem.livestockDetails,
-                        // isEmpty: caseItem.livestockDetails.isEmpty,
-                        'Not Available',
-
-                        isEmpty:  true,
-                      ),
-                      _buildDetailRow(
-                        'Block',
-                        // caseItem.block.isEmpty ? 'Not Available' : caseItem.block,
-                        // isEmpty: caseItem.block.isEmpty,
-                        'Not Available',
-
-                        isEmpty:  true,
-                      ),
-                      _buildDetailRow(
-                        'District',
-                        // caseItem.district.isEmpty ? 'Not Available' : caseItem.district,
-                        // isEmpty: caseItem.district.isEmpty,
-                        'Not Available',
-
-                        isEmpty:  true,
-                      ),
-                      _buildDetailRow(
-                        'Service Address',
-                        // caseItem.serviceAddress.isEmpty ? 'Not Available' : caseItem.serviceAddress,
-                        // isEmpty: caseItem.serviceAddress.isEmpty,
-                        'Not Available',
-
-                        isEmpty:  true,
-                      ),
-                      _buildDetailRow(
-                        'Caller Name',
-                        // caseItem.callerName.isEmpty ? 'Not Available' : caseItem.callerName,
-                        // isEmpty: caseItem.callerName.isEmpty,
-                        'Not Available',
-
-                        isEmpty:  true,
-                      ),
-                      _buildDetailRow(
-                        'Status',
-                        // caseItem.status.isEmpty ? 'Not Available' : caseItem.status,
-                        // isEmpty: caseItem.status.isEmpty,
-                        'Not Available',
-
-                        isEmpty:  true,
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: (){
-
-                            Get.to(BuffaloCaseDetailsScreen());
-                            // Get.to(BuffaloCaseDetailsScreen());
-                          },
-                          // onPressed: () => controller.proceedWithCase(caseItem),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'PROCEED',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    // Cases List Section
+                    Obx(() => controller.cases.isEmpty
+                        ? const SizedBox.shrink()
+                        : _buildCasesList()),
+                  ],
                 ),
-                const SizedBox(height: 16),
-
-                // Cases List Section
-                Obx(() => controller.cases.isEmpty
-                    ? const SizedBox.shrink()
-                    : _buildCasesList()),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

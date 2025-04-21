@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../theme.dart';
+
 class BuffaloCaseDetailsScreen extends StatelessWidget {
   final controller = Get.put(BuffaloCaseDetailsController());
   final primaryColor = const Color(0xFF3B3486);
@@ -11,6 +13,7 @@ class BuffaloCaseDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
@@ -19,7 +22,8 @@ class BuffaloCaseDetailsScreen extends StatelessWidget {
           'Buffalo - L',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: primaryColor,
+        backgroundColor:               AppThemes.light.primaryColor,
+
         actions: [
           IconButton(
             icon: const Icon(Icons.chat_bubble, color: Colors.white),
@@ -41,9 +45,10 @@ class BuffaloCaseDetailsScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              primaryColor,
-              Colors.black,
-              Colors.black,
+              AppThemes.light.primaryColor,
+              AppThemes.light.primaryColor.withOpacity(0.55),
+              AppThemes.light.primaryColor.withOpacity(0.6),
+              Colors.white,
             ],
           ),
         ),

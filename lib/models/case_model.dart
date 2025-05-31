@@ -1,32 +1,299 @@
 // lib/models/case_model.dart
 class CaseModel {
-  final String caseNo;
-  final String status;
-  final String district;
-  final String block;
-  final String livestockDetails;
-  final String serviceAddress;
-  final String callerName; // Added this field
+  int sn;
+  int jobID;
+  int caseNo;
+  String mergedWith;
+  int stepNo;
+  String district;
+  String block;
+  int noOfPatients;
+  int driverID;
+  String driver;
+  String vehicle;
+  String patient;
+  int patientTypeID;
+  String patientType;
+  int patientSubTypeID;
+  String patientSubType;
+  String disease;
+  String caller;
+  String attendent;
+  String pickAddr;
+  String hospital;
+  String dropAddr;
+  String callTime;
+  String bookingTime;
+  String pickTime;
+  String dispatchTime;
+  String attendTime;
+  String response;
+  String status;
+  String respondedAt;
+  String reachedAt;
+  String startTime;
+  String closeTime;
+  String admittedAt;
+  int distance;
+  int billedAmount;
+  String registerdBy;
+  String dispatchedBy;
+  String dispatchRemark;
+  int baseKM;
+  int pickKM;
+  int dropKM;
+  int baseEndKM;
+  String pfn;
+  String opdNo;
+  String billNo;
+  String focDetails;
+  String focID;
+  String paymentRemark;
+  String referralIn;
+  String referralOut;
+  String agent;
+  String cancelStatus;
+  String emergencyType;
+  String emergencySubType;
+  int lastJobCloseKM;
+  int zoneID;
+  int zoneIDDrop;
+  int blockIDDrop;
+  String thirdPartyRefNo;
+  String priority;
+  double pickLat;
+  double pickLong;
+  int dropStopID;
+  int emergencyTypeID;
+  int emergencySubTypeID;
+  double pafLat;
+  double pafLong;
+  String pafDoc;
+  String pafDoc1;
+  String pafDoc2;
+  int serviceTypeID;
+  int stdRemarkID;
+  String stdRemark;
+  List<CaseItem> items;
+  int noOfItems;
+  String date1;
+  String date2;
+  String date3;
+  String result1;
+  String result2;
+  String result3;
+  String ddlBreed;
+  String ddlDisease;
+  String gender1;
+  String remark1;
+  String remark2;
+  String remark3;
+  int updateAllowed;
 
   CaseModel({
+    required this.sn,
+    required this.jobID,
     required this.caseNo,
-    required this.status,
+    required this.mergedWith,
+    required this.stepNo,
     required this.district,
     required this.block,
-    required this.livestockDetails,
-    required this.serviceAddress,
-    required this.callerName, // Added this parameter
+    required this.noOfPatients,
+    required this.driverID,
+    required this.driver,
+    required this.vehicle,
+    required this.patient,
+    required this.patientTypeID,
+    required this.patientType,
+    required this.patientSubTypeID,
+    required this.patientSubType,
+    required this.disease,
+    required this.caller,
+    required this.attendent,
+    required this.pickAddr,
+    required this.hospital,
+    required this.dropAddr,
+    required this.callTime,
+    required this.bookingTime,
+    required this.pickTime,
+    required this.dispatchTime,
+    required this.attendTime,
+    required this.response,
+    required this.status,
+    required this.respondedAt,
+    required this.reachedAt,
+    required this.startTime,
+    required this.closeTime,
+    required this.admittedAt,
+    required this.distance,
+    required this.billedAmount,
+    required this.registerdBy,
+    required this.dispatchedBy,
+    required this.dispatchRemark,
+    required this.baseKM,
+    required this.pickKM,
+    required this.dropKM,
+    required this.baseEndKM,
+    required this.pfn,
+    required this.opdNo,
+    required this.billNo,
+    required this.focDetails,
+    required this.focID,
+    required this.paymentRemark,
+    required this.referralIn,
+    required this.referralOut,
+    required this.agent,
+    required this.cancelStatus,
+    required this.emergencyType,
+    required this.emergencySubType,
+    required this.lastJobCloseKM,
+    required this.zoneID,
+    required this.zoneIDDrop,
+    required this.blockIDDrop,
+    required this.thirdPartyRefNo,
+    required this.priority,
+    required this.pickLat,
+    required this.pickLong,
+    required this.dropStopID,
+    required this.emergencyTypeID,
+    required this.emergencySubTypeID,
+    required this.pafLat,
+    required this.pafLong,
+    required this.pafDoc,
+    required this.pafDoc1,
+    required this.pafDoc2,
+    required this.serviceTypeID,
+    required this.stdRemarkID,
+    required this.stdRemark,
+    required this.items,
+    required this.noOfItems,
+    required this.date1,
+    required this.date2,
+    required this.date3,
+    required this.result1,
+    required this.result2,
+    required this.result3,
+    required this.ddlBreed,
+    required this.ddlDisease,
+    required this.gender1,
+    required this.remark1,
+    required this.remark2,
+    required this.remark3,
+    required this.updateAllowed,
   });
 
-  factory CaseModel.fromJson(Map<String, dynamic> json) {
-    return CaseModel(
-      caseNo: json['caseNo'] ?? '',
-      status: json['status'] ?? '',
-      district: json['district'] ?? '',
-      block: json['block'] ?? '',
-      livestockDetails: json['livestockDetails'] ?? '',
-      serviceAddress: json['serviceAddress'] ?? '',
-      callerName: json['callerName'] ?? '', // Added this field
-    );
-  }
+  factory CaseModel.fromJson(Map<String, dynamic> json) => CaseModel(
+    sn: json["sn"],
+    jobID: json["job_ID"],
+    caseNo: json["case_No"],
+    mergedWith: json["merged_With"],
+    stepNo: json["step_No"],
+    district: json["district"],
+    block: json["block"],
+    noOfPatients: json["no_Of_Patients"],
+    driverID: json["driver_ID"],
+    driver: json["driver"],
+    vehicle: json["vehicle"],
+    patient: json["patient"],
+    patientTypeID: json["patient_Type_ID"],
+    patientType: json["patient_Type"],
+    patientSubTypeID: json["patient_Sub_Type_ID"],
+    patientSubType: json["patient_Sub_Type"],
+    disease: json["disease"],
+    caller: json["caller"],
+    attendent: json["attendent"],
+    pickAddr: json["pick_Addr"],
+    hospital: json["hospital"],
+    dropAddr: json["drop_Addr"],
+    callTime: json["call_Time"],
+    bookingTime: json["booking_Time"],
+    pickTime: json["pick_Time"],
+    dispatchTime: json["dispatch_Time"],
+    attendTime: json["attend_Time"],
+    response: json["response"],
+    status: json["status"],
+    respondedAt: json["responded_At"],
+    reachedAt: json["reached_At"],
+    startTime: json["start_Time"],
+    closeTime: json["close_Time"],
+    admittedAt: json["admitted_At"],
+    distance: json["distance"],
+    billedAmount: json["billed_Amount"],
+    registerdBy: json["registerd_By"],
+    dispatchedBy: json["dispatched_By"],
+    dispatchRemark: json["dispatch_Remark"],
+    baseKM: json["base_KM"],
+    pickKM: json["pick_KM"],
+    dropKM: json["drop_KM"],
+    baseEndKM: json["base_End_KM"],
+    pfn: json["pfn"],
+    opdNo: json["opd_No"],
+    billNo: json["bill_No"],
+    focDetails: json["foc_Details"],
+    focID: json["foc_ID"],
+    paymentRemark: json["payment_Remark"],
+    referralIn: json["referral_In"],
+    referralOut: json["referral_Out"],
+    agent: json["agent"],
+    cancelStatus: json["cancel_Status"],
+    emergencyType: json["emergency_Type"],
+    emergencySubType: json["emergency_Sub_Type"],
+    lastJobCloseKM: json["last_Job_Close_KM"],
+    zoneID: json["zone_ID"],
+    zoneIDDrop: json["zone_ID_Drop"],
+    blockIDDrop: json["block_ID_Drop"],
+    thirdPartyRefNo: json["thirdPartyRefNo"],
+    priority: json["priority"],
+    pickLat: json["pick_Lat"].toDouble(),
+    pickLong: json["pick_Long"].toDouble(),
+    dropStopID: json["drop_Stop_ID"],
+    emergencyTypeID: json["emergency_Type_ID"],
+    emergencySubTypeID: json["emergency_Sub_Type_ID"],
+    pafLat: json["paF_Lat"].toDouble(),
+    pafLong: json["paF_Long"].toDouble(),
+    pafDoc: json["paF_Doc"],
+    pafDoc1: json["paF_Doc_1"],
+    pafDoc2: json["paF_Doc_2"],
+    serviceTypeID: json["service_Type_ID"],
+    stdRemarkID: json["stD_REMARK_ID"],
+    stdRemark: json["stD_Remark"],
+    items: List<CaseItem>.from(json["items"].map((x) => CaseItem.fromJson(x))),
+    noOfItems: json["no_Of_Items"],
+    date1: json["date_1"],
+    date2: json["date_2"],
+    date3: json["date_3"],
+    result1: json["result_1"],
+    result2: json["result_2"],
+    result3: json["result_3"],
+    ddlBreed: json["ddL_Breed"],
+    ddlDisease: json["ddL_Disease"],
+    gender1: json["gender_1"],
+    remark1: json["remark_1"],
+    remark2: json["remark_2"],
+    remark3: json["remark_3"],
+    updateAllowed: json["update_Allowed"],
+  );
+}
+class CaseItem {
+  int itemID;
+  String itemNumber;
+  int quantity;
+  String idName;
+  String idValue;
+
+  CaseItem({
+    required this.itemID,
+    required this.itemNumber,
+    required this.quantity,
+    required this.idName,
+    required this.idValue,
+  });
+
+  factory CaseItem.fromJson(Map<String, dynamic> json) => CaseItem(
+    itemID: json["item_ID"],
+    itemNumber: json["item_Number"],
+    quantity: json["quantity"],
+    idName: json["iD_Name"],
+    idValue: json["iD_Value"],
+  );
 }

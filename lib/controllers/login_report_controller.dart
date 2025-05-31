@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:vas/constants.dart';
 import 'package:vas/controllers/user_controller.dart';
 
 class LoginReportController extends GetxController {
@@ -19,7 +20,7 @@ class LoginReportController extends GetxController {
     final to = DateFormat("dd/MM/yyyy").format(toDate.value);
 
     final url = Uri.parse(
-      "http://49.207.44.107/mvas/SelfLoginReport?userId=${userController.userId}&deptId=${userController.deptId}&emplId=${userController.userId}&FromDate=$from&ToDate=$to&pageSize=1&pageNo=1",
+      "${Constants.baseUrl}/SelfLoginReport?userId=${userController.userId}&deptId=${userController.deptId}&emplId=${userController.userId}&FromDate=$from&ToDate=$to&pageSize=1&pageNo=1",
     );
 
     try {

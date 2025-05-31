@@ -19,6 +19,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vas/widgets/animal_bg_widget.dart';
 import 'package:vas/widgets/trip_details_widget.dart';
 
+import '../constants.dart';
 import '../controllers/case_registration_new_controller.dart';
 import '../controllers/live_stock_controller.dart';
 import '../data/DiseaseType.dart';
@@ -1226,7 +1227,7 @@ class _CattleRegistrationScreenState extends State<CattleRegistrationScreen> {
 
         // Send the request
         final response = await http.post(
-          Uri.parse('http://49.207.44.107/mvas/CreateCase'),
+          Uri.parse('${Constants.baseUrl}/CreateCase'),
           headers: {
             'Content-Type': 'application/json',
           },

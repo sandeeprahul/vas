@@ -1,6 +1,7 @@
 // lib/controllers/case_selection_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vas/controllers/user_controller.dart';
 import 'package:vas/services/api_service.dart';
 
 import '../models/case_model.dart';
@@ -13,11 +14,12 @@ class CaseSelectionController extends GetxController {
   final selectedVehicleId = ''.obs;
   final cases = <CaseModel>[].obs;
   final selectedCase = Rxn<CaseModel>();
- RxBool isLoading  = false.obs;
+  RxBool isLoading = false.obs;
   final doctors = <String>[].obs;
   final drivers = <String>[].obs;
   final vehicles = <String>[].obs;
-  final AmbulanceController ambulanceController = Get.put(AmbulanceController());
+  final AmbulanceController ambulanceController =
+      Get.put(AmbulanceController());
 
   ApiService apiService = ApiService();
 
@@ -34,19 +36,19 @@ class CaseSelectionController extends GetxController {
 
       await ambulanceController.getAmbulances();
 
-    /*  final doctorsResponse = await apiService.getRequest("/GetDoctors");
+      /*  final doctorsResponse = await apiService.getRequest("/GetDoctors");
       if (doctorsResponse != null) {
         doctors.value = List<String>.from(doctorsResponse['data'].map((doc) => doc['name'].toString()));
       }*/
 
       // Fetch drivers
-    /*  final driversResponse = await apiService.getRequest("/GetDrivers");
+      /*  final driversResponse = await apiService.getRequest("/GetDrivers");
       if (driversResponse != null) {
         drivers.value = List<String>.from(driversResponse['data'].map((driver) => driver['name'].toString()));
       }
 */
       // Fetch vehicles
-    /*  final vehiclesResponse = await apiService.getRequest("/GetVehicles");
+      /*  final vehiclesResponse = await apiService.getRequest("/GetVehicles");
       if (vehiclesResponse != null) {
         vehicles.value = List<String>.from(vehiclesResponse['data'].map((vehicle) => "${vehicle['district']} - ${vehicle['number']}"));
       }*/
@@ -63,7 +65,7 @@ class CaseSelectionController extends GetxController {
   }
 
   Future<void> fetchCases() async {
-   /* if (selectedVehicle.value.isEmpty) {
+    if (selectedVehicle.value.isEmpty) {
       Get.snackbar(
         'Error',
         'Please select a vehicle first',
@@ -74,16 +76,32 @@ class CaseSelectionController extends GetxController {
     }
 
     isLoading.value = true;
+    UserController userController = Get.put(UserController());
+
     try {
       // Replace with your actual API endpoint and parameters
-      final response = await apiService.getRequest(
-        "/GetCases",
-        queryParameters: {
-          "vehicleId": selectedVehicle.value,
-          "doctorId": selectedDoctor.value,
-          "driverId": selectedDriver.value,
+      final response = await apiService.postRequest(
+        '/GetEmergencyCase',
+        {
+          "vehicleId": selectedVehicleId.value,
+          // "depT_ID": userController.deptId.value,
+          "userId": userController.userId.value,
+          "pageSize": 1,
+          "pageNo": 0,
+          // "imeI_Number": userController.imeiNumber.value,
+          // "os_Version": "13",
+          // "page_Size": 1,
+          // "page_No": 1,
         },
       );
+      print(response);
+      print({
+        "vehicleId": selectedVehicleId.value,
+        // "depT_ID": userController.deptId.value,
+        "userId": userController.userId.value,
+        "pageSize": 0,
+        "pageNo": 0,
+      });
 
       if (response != null && response['data'] != null) {
         cases.value = List<CaseModel>.from(
@@ -99,7 +117,7 @@ class CaseSelectionController extends GetxController {
       );
     } finally {
       isLoading.value = false;
-    }*/
+    }
   }
 
   void refreshData() async {
@@ -193,7 +211,8 @@ class CaseSelectionController extends GetxController {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.1),
@@ -221,29 +240,31 @@ class CaseSelectionController extends GetxController {
             ),
             Expanded(
               child: Obx(() => ListView.builder(
-                itemCount: ambulanceController.ambulanceList.length,
-                itemBuilder: (context, index) {
-                  final vehicle = ambulanceController.ambulanceList[index];
-                  return ListTile(
-                    title: Text(vehicle['vehicle_Number'] ?? ''),
-                    subtitle: Text(vehicle['vehicle_Name'] ?? ''),
-                    onTap: () {
-                      selectedVehicle.value = vehicle['vehicle_Number'] ?? '';
-                      selectedVehicleId.value = vehicle['vehicle_ID']?.toString() ?? '';
-                      Navigator.pop(context);
-                      // Fetch cases when vehicle is selected
-                      fetchCases();
+                    itemCount: ambulanceController.ambulanceList.length,
+                    itemBuilder: (context, index) {
+                      final vehicle = ambulanceController.ambulanceList[index];
+                      return ListTile(
+                        title: Text(vehicle['vehicle_Number'] ?? ''),
+                        subtitle: Text(vehicle['vehicle_Name'] ?? ''),
+                        onTap: () {
+                          selectedVehicle.value =
+                              vehicle['vehicle_Number'] ?? '';
+                          selectedVehicleId.value =
+                              vehicle['vehicle_ID']?.toString() ?? '';
+                          Navigator.pop(context);
+                          // Fetch cases when vehicle is selected
+                          fetchCases();
+                        },
+                      );
                     },
-                  );
-                },
-              )),
+                  )),
             ),
           ],
         ),
       ),
     );
   }
- /* void onCaseSelected(CaseModel caseItem) {
+/* void onCaseSelected(CaseModel caseItem) {
     if (selectedCase.value?.caseNo == caseItem.caseNo) {
       selectedCase.value = null; // Deselect if already selected
     } else {
@@ -257,7 +278,7 @@ class CaseSelectionController extends GetxController {
     selectedCase.value = null;
   }
 */
- /* void proceedWithCase(CaseModel caseItem) {
+/* void proceedWithCase(CaseModel caseItem) {
     // Implement your proceed logic here
     Get.snackbar(
       'Processing',

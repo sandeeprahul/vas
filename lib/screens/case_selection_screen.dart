@@ -439,18 +439,18 @@ class CaseSelectionScreen extends StatelessWidget {
           const SizedBox(height: 8),
           _buildDetailRow(
             'Case No',
-            caseItem.caseNo.isEmpty ? 'Not Available' : caseItem.caseNo,
-            isEmpty: caseItem.caseNo.isEmpty,
+            caseItem.caseNo==0 ? 'Not Available' : "${caseItem.caseNo}",
+            isEmpty: caseItem.caseNo==0,
           ),
           _buildDetailRow(
             'Primary Case No',
-            caseItem.caseNo?.isEmpty ?? true ? 'Not Available' : caseItem.caseNo!,
-            isEmpty: caseItem.caseNo?.isEmpty ?? true,
+            caseItem.caseNo==0  ? 'Not Available' : "${caseItem.caseNo}",
+            isEmpty: caseItem.caseNo==0,
           ),
           _buildDetailRow(
             'Livestock Type',
-            caseItem.livestockDetails.isEmpty ? 'Not Available' : caseItem.livestockDetails,
-            isEmpty: caseItem.livestockDetails.isEmpty,
+            caseItem.patient.isEmpty ? 'Not Available' : caseItem.patient,
+            isEmpty: caseItem.patient.isEmpty,
           ),
           _buildDetailRow(
             'Block',
@@ -464,13 +464,13 @@ class CaseSelectionScreen extends StatelessWidget {
           ),
           _buildDetailRow(
             'Service Address',
-            caseItem.serviceAddress.isEmpty ? 'Not Available' : caseItem.serviceAddress,
-            isEmpty: caseItem.serviceAddress.isEmpty,
+            caseItem.pickAddr.isEmpty ? 'Not Available' : caseItem.pickAddr,
+            isEmpty: caseItem.pickAddr.isEmpty,
           ),
           _buildDetailRow(
             'Caller Name',
-            caseItem.callerName.isEmpty ? 'Not Available' : caseItem.callerName,
-            isEmpty: caseItem.callerName.isEmpty,
+            caseItem.caller.isEmpty ? 'Not Available' : caseItem.caller,
+            isEmpty: caseItem.caller.isEmpty,
           ),
           _buildDetailRow(
             'Status',
@@ -528,100 +528,6 @@ class CaseSelectionScreen extends StatelessWidget {
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSelectedCaseDetailds() {
-    final caseItem = controller.selectedCase.value!;
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.shade200),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'Selected Case Details',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.close, color: Colors.blue),
-                onPressed: () => controller.clearSelectedCase(),
-              ),
-            ],
-          ),
-          const Divider(color: Colors.blue),
-          const SizedBox(height: 8),
-          _buildDetailRow('Case No', caseItem.caseNo),
-          _buildDetailRow('Livestock Type', caseItem.livestockDetails),
-          _buildDetailRow('Block', caseItem.block),
-          _buildDetailRow('Service Address', caseItem.serviceAddress),
-          _buildDetailRow('Caller Name', caseItem.callerName),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => controller.proceedWithCase(caseItem),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                'PROCEED',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailRowd(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -702,8 +608,8 @@ class CaseSelectionScreen extends StatelessWidget {
                       const SizedBox(height: 12),
                       _buildInfoRow('District', caseItem.district),
                       _buildInfoRow('Block', caseItem.block),
-                      _buildInfoRow('Livestock', caseItem.livestockDetails),
-                      _buildInfoRow('Address', caseItem.serviceAddress),
+                      _buildInfoRow('Livestock', caseItem.patient),
+                      _buildInfoRow('Address', caseItem.pickAddr),
                     ],
                   ),
                 ),

@@ -6,7 +6,8 @@ import 'package:http/http.dart' as http;
 import '../utils/showDialogNoContext.dart';
 
 class ApiService {
-  final String baseUrl = "http://49.207.44.107/mvas";
+  final String baseUrl_Old = "http://49.207.44.107/mvas";
+  final String baseUrl = "http://47.29.106.43/mvas";
 
   Future<Map<String, dynamic>?> postRequest(String endpoint, Map<String, dynamic> data) async {
     try {
@@ -96,7 +97,7 @@ class ApiService {
       final response = await http.get(
         Uri.parse("$baseUrl$endpoint"),
         headers: {"Content-Type": "application/json"},
-      ).timeout(const Duration(seconds: 10));
+      ).timeout(const Duration(seconds: 100));
       print("GETTING request");
       print("$baseUrl$endpoint");
 

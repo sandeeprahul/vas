@@ -6,6 +6,7 @@ import 'package:vas/utils/showLoadingDialog.dart';
 import 'package:vas/widgets/trip_history_seek_bar.dart';
 import 'dart:convert';
 
+import '../constants.dart';
 import '../controllers/ambulance_controller.dart';
 import '../data/TripDetails.dart';
 import '../services/api_service.dart';
@@ -49,7 +50,7 @@ class TripController extends GetxController {
           "/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/$vehicleId/1/1");
       print(response);
       print(
-          "http://49.207.44.107/mvas/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/$vehicleId/1/1");
+          "${Constants.baseUrl}/getCurrentTripDetail/${userController.deptId.value}/${userController.userId.value}/$vehicleId/1/1");
       // tripDetails.value = null;
 
       if (response != null &&

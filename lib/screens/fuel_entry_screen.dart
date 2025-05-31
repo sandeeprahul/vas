@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:vas/constants.dart';
 import '../controllers/user_controller.dart';
 import '../models/fuel_entry_model.dart';
 import '../models/vehicle_details_model.dart';
@@ -194,7 +195,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
         // Send the request
         final response = await http.post(
-          Uri.parse('http://49.207.44.107/mvas/SetFuelRecord'),
+          Uri.parse('${Constants.baseUrl}/SetFuelRecord'),
           headers: {
             'Content-Type': 'application/json',
           },
